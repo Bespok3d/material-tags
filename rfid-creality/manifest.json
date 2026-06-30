@@ -1,0 +1,85 @@
+{
+  "name": "rfid-creality",
+  "title": "Creality Filament Tag",
+  "version": "0.1.0",
+  "description": "Reads Creality CFS filament spool tags (encrypted Mifare Classic) and decodes the filament: color, weight, manufacture date, and material id into the shared rfid_data.json. REQUIRES TWO KEYS YOU SUPPLY: Creality tags are encrypted, so you must paste the public Creality master key and payload key into this plugin's config (see the documentation for where to get them) before a tag can be decoded. Without the keys the spool is still tracked by its tag UID. Creality's tag carries no diameter or temperatures (the printer resolves those from an unpublished material database), and the material id stays a numeric id. Installs the RFID Spool Reader automatically. Read-only: it never writes a tag. Experiment channel until verified on a real tag.",
+  "tagline": "Decode Creality CFS spools on stock firmware (you supply the keys).",
+  "category": "filament",
+  "channel": "experiment",
+  "printer_specific": true,
+  "source": "https://github.com/Bespok3d/all-the-tags",
+  "homepage": "https://github.com/Bambu-Research-Group/RFID-Tag-Guide",
+  "changelog": "doc/CHANGELOG.md",
+  "published_at": "2026-06-30",
+  "updated_at": "2026-06-30",
+  "publisher": "PLACEHOLDER",
+  "provides": [],
+  "require": [
+    {
+      "service": "rfid-service",
+      "cardinality": "one"
+    }
+  ],
+  "conflicts": [],
+  "requires": {
+    "capabilities": [
+      "rfid-spi"
+    ],
+    "variables": []
+  },
+  "config": [
+    {
+      "key": "CREALITY_KEY",
+      "label": "Creality master key (hex)",
+      "type": "text",
+      "placeholder": "32 hex characters",
+      "hint": "The public Creality master key (derives the card key from the tag UID). You paste it; we never ship it. See the plugin documentation. Leave empty to track Creality spools by UID only (no decode).",
+      "default": "",
+      "userEditable": true
+    },
+    {
+      "key": "CREALITY_ENCRYPTION_KEY",
+      "label": "Creality payload key (hex)",
+      "type": "text",
+      "placeholder": "32 hex characters",
+      "hint": "The public Creality payload key (decrypts the filament block). You paste it; we never ship it. See the plugin documentation. Both keys are needed to decode; leave empty for UID-only tracking.",
+      "default": "",
+      "userEditable": true
+    }
+  ],
+  "permissions": [
+    "klipper-extra",
+    "klipper-config",
+    "restart"
+  ],
+  "install": {
+    "place": [
+      {
+        "class": "klipper-config",
+        "src": "files/klipper/rfid-creality.cfg.tmpl",
+        "name": "rfid-creality.cfg",
+        "render": true
+      },
+      {
+        "class": "klipper-extra",
+        "src": "files/klipper/klippy/extras/rfid-tags/creality/rfid_tag_creality.py"
+      },
+      {
+        "class": "klipper-extra",
+        "src": "files/klipper/klippy/extras/rfid-tags/creality/creality_keys.py"
+      },
+      {
+        "class": "klipper-extra",
+        "src": "files/klipper/klippy/extras/rfid-tags/creality/creality_fields.py"
+      },
+      {
+        "class": "klipper-extra",
+        "src": "files/klipper/klippy/extras/rfid-tags/creality/aes_min.py"
+      }
+    ],
+    "restart": [
+      "klipper"
+    ]
+  },
+  "files": []
+}

@@ -1,0 +1,13 @@
+# Build outputs, never committed. The published sub-list (index.json at the repo root) IS committed.
+dist/
+.DS_Store
+__pycache__/
+*.pyc
+*/files/site-packages/
+*/files/wheels/
+*/files/bin/
+
+# Relay coordination notes (PLAN / PROGRESS / KICKOFF / RELAY-*). These are session handoff
+# scratch for building this repo and are NOT part of the published package set - keep them out
+# of the org repo.
+relay/

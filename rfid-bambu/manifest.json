@@ -1,0 +1,72 @@
+{
+  "name": "rfid-bambu",
+  "title": "Bambu Filament Tag",
+  "version": "0.1.0",
+  "description": "Reads Bambu Lab filament spool tags (encrypted Mifare Classic) and decodes the full filament: material, color, diameter, weight, and nozzle/bed temperatures into the shared rfid_data.json. REQUIRES A KEY YOU SUPPLY: Bambu tags are encrypted, so you must paste the public Bambu master key into this plugin's config (see the documentation for where to get it) before the tag can be decoded. Without a key the spool is still tracked by its tag UID. Installs the RFID Spool Reader automatically. Read-only: it never writes a tag. Experiment channel until verified on a real tag.",
+  "tagline": "Decode Bambu spools on stock firmware (you supply the key).",
+  "category": "filament",
+  "channel": "experiment",
+  "printer_specific": true,
+  "source": "https://github.com/Bespok3d/all-the-tags",
+  "homepage": "https://github.com/Bambu-Research-Group/RFID-Tag-Guide",
+  "changelog": "doc/CHANGELOG.md",
+  "published_at": "2026-06-29",
+  "updated_at": "2026-06-29",
+  "publisher": "PLACEHOLDER",
+  "provides": [],
+  "require": [
+    {
+      "service": "rfid-service",
+      "cardinality": "one"
+    }
+  ],
+  "conflicts": [],
+  "requires": {
+    "capabilities": [
+      "rfid-spi"
+    ],
+    "variables": []
+  },
+  "config": [
+    {
+      "key": "BAMBU_KEY",
+      "label": "Bambu master key (hex)",
+      "type": "text",
+      "placeholder": "32 hex characters",
+      "hint": "The public Bambu master key. You paste it; we never ship it. See the plugin documentation for where to get it. Leave empty to track Bambu spools by UID only (no decode).",
+      "default": "",
+      "userEditable": true
+    }
+  ],
+  "permissions": [
+    "klipper-extra",
+    "klipper-config",
+    "restart"
+  ],
+  "install": {
+    "place": [
+      {
+        "class": "klipper-config",
+        "src": "files/klipper/rfid-bambu.cfg.tmpl",
+        "name": "rfid-bambu.cfg",
+        "render": true
+      },
+      {
+        "class": "klipper-extra",
+        "src": "files/klipper/klippy/extras/rfid-tags/bambu/rfid_tag_bambu.py"
+      },
+      {
+        "class": "klipper-extra",
+        "src": "files/klipper/klippy/extras/rfid-tags/bambu/bambu_keys.py"
+      },
+      {
+        "class": "klipper-extra",
+        "src": "files/klipper/klippy/extras/rfid-tags/bambu/bambu_fields.py"
+      }
+    ],
+    "restart": [
+      "klipper"
+    ]
+  },
+  "files": []
+}

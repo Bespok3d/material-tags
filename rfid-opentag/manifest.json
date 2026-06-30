@@ -1,0 +1,55 @@
+{
+  "name": "rfid-opentag",
+  "title": "OpenTag3D Filament Tag",
+  "version": "0.1.0",
+  "description": "Reads OpenTag3D (queengooborg open standard) filament NFC tags: the big-endian binary payload carried in an NDEF application/opentag3d record (manufacturer, material, color, diameter, weight, nozzle and bed temperatures) is decoded into the shared rfid_data.json. Plaintext, no key needed. Requires the RFID Spool Reader, which it installs automatically. Read-only: it never writes a tag. Experiment channel until verified on a real tag.",
+  "tagline": "Read OpenTag3D open-standard filament tags on stock firmware.",
+  "category": "filament",
+  "channel": "experiment",
+  "printer_specific": true,
+  "source": "https://github.com/Bespok3d/all-the-tags",
+  "homepage": "https://opentag3d.info/",
+  "changelog": "doc/CHANGELOG.md",
+  "published_at": "2026-06-29",
+  "updated_at": "2026-06-29",
+  "publisher": "PLACEHOLDER",
+  "provides": [],
+  "require": [
+    {
+      "service": "rfid-service",
+      "cardinality": "one"
+    }
+  ],
+  "conflicts": [],
+  "requires": {
+    "capabilities": [
+      "rfid-spi"
+    ],
+    "variables": []
+  },
+  "permissions": [
+    "klipper-extra",
+    "klipper-config",
+    "restart"
+  ],
+  "install": {
+    "place": [
+      {
+        "class": "klipper-config",
+        "src": "files/klipper/rfid-opentag.cfg"
+      },
+      {
+        "class": "klipper-extra",
+        "src": "files/klipper/klippy/extras/rfid-tags/opentag/rfid_tag_opentag.py"
+      },
+      {
+        "class": "klipper-extra",
+        "src": "files/klipper/klippy/extras/rfid-tags/opentag/opentag_fields.py"
+      }
+    ],
+    "restart": [
+      "klipper"
+    ]
+  },
+  "files": []
+}
