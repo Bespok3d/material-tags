@@ -1,0 +1,59 @@
+{
+  "name": "rfid-openprinttag",
+  "title": "OpenPrintTag Filament Tag",
+  "version": "0.1.0",
+  "description": "Decodes the OpenPrintTag (prusa3d) filament data format - an open CBOR payload - off any NTAG21x the reader can read, mapping material, brand, color, diameter, weight, manufacture date, and nozzle/bed/drying temperatures into the shared rfid_data.json. No key required. Note: Prusa's own factory spools use ISO-15693 tags the U1 reader cannot read; this targets OpenPrintTag payloads written onto a standard NTAG21x. Installs the RFID Spool Reader automatically. Read-only. Experiment channel until verified on a real tag.",
+  "tagline": "Decode the OpenPrintTag data format on NTAG (no key).",
+  "category": "filament",
+  "channel": "experiment",
+  "printer_specific": true,
+  "source": "https://github.com/Bespok3d/all-the-tags",
+  "homepage": "https://specs.openprinttag.org",
+  "changelog": "doc/CHANGELOG.md",
+  "published_at": "2026-06-30",
+  "updated_at": "2026-06-30",
+  "publisher": "PLACEHOLDER",
+  "provides": [],
+  "require": [
+    {
+      "service": "rfid-service",
+      "cardinality": "one"
+    }
+  ],
+  "conflicts": [],
+  "requires": {
+    "capabilities": [
+      "rfid-spi"
+    ],
+    "variables": []
+  },
+  "permissions": [
+    "klipper-extra",
+    "klipper-config",
+    "restart"
+  ],
+  "install": {
+    "place": [
+      {
+        "class": "klipper-config",
+        "src": "files/klipper/rfid-openprinttag.cfg"
+      },
+      {
+        "class": "klipper-extra",
+        "src": "files/klipper/klippy/extras/rfid-tags/openprinttag/rfid_tag_openprinttag.py"
+      },
+      {
+        "class": "klipper-extra",
+        "src": "files/klipper/klippy/extras/rfid-tags/openprinttag/openprinttag_fields.py"
+      },
+      {
+        "class": "klipper-extra",
+        "src": "files/klipper/klippy/extras/rfid-tags/openprinttag/cbor_min.py"
+      }
+    ],
+    "restart": [
+      "klipper"
+    ]
+  },
+  "files": []
+}

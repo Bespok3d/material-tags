@@ -1,0 +1,59 @@
+{
+  "name": "rfid-elegoo",
+  "title": "Elegoo Filament Tag",
+  "version": "0.1.2",
+  "description": "EXPERIMENTAL. Decoder for Elegoo's published NTAG EPC-256 tag layout (material, color, diameter, weight), anchored on Elegoo's manufacturer signature in the raw page dump. IMPORTANT (verified on a real U1, 2026-06-29): the FACTORY Elegoo Centauri spool tags do NOT read on the U1 today. The cause is the U1 reader's antenna coupling with that specific tag, not this decoder and not a locked tag: the data is open NTAG213 memory, but the reader gets no RF wake-up response from the factory tag, across the entire register space and both coils, while M1/NTAG read fine and phones/Canvas read the Elegoo. The decoder is correct and ready for any Elegoo tag presenting the published layout (or the day the reader can wake the factory tag). Workaround: an OpenSpool NTAG on the opposite side of the spool ring. See the doc for full findings + a community call to action. Requires the RFID Spool Reader. Read-only.",
+  "tagline": "Elegoo NTAG EPC-256 decoder (factory U1 tags blocked by reader RF, see doc).",
+  "category": "filament",
+  "channel": "experiment",
+  "printer_specific": true,
+  "source": "https://github.com/Bespok3d/all-the-tags",
+  "homepage": "https://github.com/ELEGOO-3D/ELEGOO-RFID-Tag-Guide",
+  "changelog": "doc/CHANGELOG.md",
+  "published_at": "2026-06-29",
+  "updated_at": "2026-06-29",
+  "publisher": "PLACEHOLDER",
+  "provides": [],
+  "require": [
+    {
+      "service": "rfid-service",
+      "cardinality": "one"
+    }
+  ],
+  "conflicts": [],
+  "requires": {
+    "capabilities": [
+      "rfid-spi"
+    ],
+    "variables": []
+  },
+  "permissions": [
+    "klipper-extra",
+    "klipper-config",
+    "restart"
+  ],
+  "install": {
+    "place": [
+      {
+        "class": "klipper-config",
+        "src": "files/klipper/rfid-elegoo.cfg"
+      },
+      {
+        "class": "klipper-extra",
+        "src": "files/klipper/klippy/extras/rfid-tags/elegoo/rfid_tag_elegoo.py"
+      },
+      {
+        "class": "klipper-extra",
+        "src": "files/klipper/klippy/extras/rfid-tags/elegoo/elegoo_fields.py"
+      },
+      {
+        "class": "klipper-extra",
+        "src": "files/klipper/klippy/extras/rfid-tags/elegoo/elegoo_reader.py"
+      }
+    ],
+    "restart": [
+      "klipper"
+    ]
+  },
+  "files": []
+}

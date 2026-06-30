@@ -1,0 +1,55 @@
+{
+  "name": "rfid-tigertag",
+  "title": "TigerTag Filament Tag",
+  "version": "0.1.0",
+  "description": "Reads TigerTag filament tags (open NTAG21x, no key required) and decodes the physical filament data - color (RGBA), diameter, nozzle and bed temperatures, drying temperature, and weight - into the shared rfid_data.json. The brand and material are stored on a TigerTag as numeric ids whose human-name tables are GPLv3, so this decoder keeps them as ids rather than vendoring a GPL table; the product id is surfaced as the SKU. Works on the standard NTAG reader (no key, no reader change). Installs the RFID Spool Reader automatically. Read-only. Experiment channel until verified on a real tag.",
+  "tagline": "Decode open TigerTag NTAG spools (color, temps, diameter, weight).",
+  "category": "filament",
+  "channel": "experiment",
+  "printer_specific": true,
+  "source": "https://github.com/Bespok3d/all-the-tags",
+  "homepage": "https://tigertag.io",
+  "changelog": "doc/CHANGELOG.md",
+  "published_at": "2026-06-30",
+  "updated_at": "2026-06-30",
+  "publisher": "PLACEHOLDER",
+  "provides": [],
+  "require": [
+    {
+      "service": "rfid-service",
+      "cardinality": "one"
+    }
+  ],
+  "conflicts": [],
+  "requires": {
+    "capabilities": [
+      "rfid-spi"
+    ],
+    "variables": []
+  },
+  "permissions": [
+    "klipper-extra",
+    "klipper-config",
+    "restart"
+  ],
+  "install": {
+    "place": [
+      {
+        "class": "klipper-config",
+        "src": "files/klipper/rfid-tigertag.cfg"
+      },
+      {
+        "class": "klipper-extra",
+        "src": "files/klipper/klippy/extras/rfid-tags/tigertag/rfid_tag_tigertag.py"
+      },
+      {
+        "class": "klipper-extra",
+        "src": "files/klipper/klippy/extras/rfid-tags/tigertag/tigertag_fields.py"
+      }
+    ],
+    "restart": [
+      "klipper"
+    ]
+  },
+  "files": []
+}
