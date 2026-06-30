@@ -1,0 +1,256 @@
+{
+  "schema_version": 1,
+  "name": "Material Tags",
+  "publisher": "PLACEHOLDER",
+  "updated": "2026-06-30",
+  "plugins": [
+    {
+      "name": "rfid-anycubic",
+      "title": "Anycubic ACE Filament Tag",
+      "version": "0.1.0",
+      "description": "Reads Anycubic ACE filament tags (plaintext NTAG21x, no key) and decodes the dispute-free fields - brand, material, and nozzle/bed temperatures - into the shared rfid_data.json. PARTIAL by design: the public reverse engineering disagrees on three fields (the SKU length, the color byte order, and whether page 31 is weight), and no real tag dump has been published to settle them, so this decoder does NOT decode color, diameter, or weight yet rather than guess. One captured tag from a tester pins those, then they are added. Installs the RFID Spool Reader automatically. Read-only. Experiment channel.",
+      "tagline": "Decode Anycubic ACE brand/material/temps (color+weight pending a tag dump).",
+      "category": "filament",
+      "channel": "experiment",
+      "publisher": "PLACEHOLDER",
+      "printer_specific": true,
+      "published_at": "2026-06-30",
+      "updated_at": "2026-06-30",
+      "requires": {
+        "capabilities": [
+          "rfid-spi"
+        ]
+      },
+      "provides": [],
+      "conflicts": [],
+      "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-anycubic/doc/README.md",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/462066969",
+      "homepage": "https://github.com/DnG-Crafts/ACE-RFID",
+      "changelog_url": "rfid-anycubic/doc/CHANGELOG.md",
+      "deps": [
+        "rfid-service"
+      ]
+    },
+    {
+      "name": "rfid-bambu",
+      "title": "Bambu Filament Tag",
+      "version": "0.1.0",
+      "description": "Reads Bambu Lab filament spool tags (encrypted Mifare Classic) and decodes the full filament: material, color, diameter, weight, and nozzle/bed temperatures into the shared rfid_data.json. REQUIRES A KEY YOU SUPPLY: Bambu tags are encrypted, so you must paste the public Bambu master key into this plugin's config (see the documentation for where to get it) before the tag can be decoded. Without a key the spool is still tracked by its tag UID. Installs the RFID Spool Reader automatically. Read-only: it never writes a tag. Experiment channel until verified on a real tag.",
+      "tagline": "Decode Bambu spools on stock firmware (you supply the key).",
+      "category": "filament",
+      "channel": "experiment",
+      "publisher": "PLACEHOLDER",
+      "printer_specific": true,
+      "published_at": "2026-06-29",
+      "updated_at": "2026-06-29",
+      "requires": {
+        "capabilities": [
+          "rfid-spi"
+        ]
+      },
+      "provides": [],
+      "conflicts": [],
+      "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-bambu/doc/README.md",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/462067023",
+      "homepage": "https://github.com/Bambu-Research-Group/RFID-Tag-Guide",
+      "config": [
+        {
+          "key": "BAMBU_KEY",
+          "label": "Bambu master key (hex)",
+          "type": "text",
+          "placeholder": "32 hex characters",
+          "hint": "The public Bambu master key. You paste it; we never ship it. See the plugin documentation for where to get it. Leave empty to track Bambu spools by UID only (no decode).",
+          "default": "",
+          "userEditable": true
+        }
+      ],
+      "changelog_url": "rfid-bambu/doc/CHANGELOG.md",
+      "deps": [
+        "rfid-service"
+      ]
+    },
+    {
+      "name": "rfid-creality",
+      "title": "Creality Filament Tag",
+      "version": "0.1.0",
+      "description": "Reads Creality CFS filament spool tags (encrypted Mifare Classic) and decodes the filament: color, weight, manufacture date, and material id into the shared rfid_data.json. REQUIRES TWO KEYS YOU SUPPLY: Creality tags are encrypted, so you must paste the public Creality master key and payload key into this plugin's config (see the documentation for where to get them) before a tag can be decoded. Without the keys the spool is still tracked by its tag UID. Creality's tag carries no diameter or temperatures (the printer resolves those from an unpublished material database), and the material id stays a numeric id. Installs the RFID Spool Reader automatically. Read-only: it never writes a tag. Experiment channel until verified on a real tag.",
+      "tagline": "Decode Creality CFS spools on stock firmware (you supply the keys).",
+      "category": "filament",
+      "channel": "experiment",
+      "publisher": "PLACEHOLDER",
+      "printer_specific": true,
+      "published_at": "2026-06-30",
+      "updated_at": "2026-06-30",
+      "requires": {
+        "capabilities": [
+          "rfid-spi"
+        ]
+      },
+      "provides": [],
+      "conflicts": [],
+      "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-creality/doc/README.md",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/462067049",
+      "homepage": "https://github.com/Bambu-Research-Group/RFID-Tag-Guide",
+      "config": [
+        {
+          "key": "CREALITY_KEY",
+          "label": "Creality master key (hex)",
+          "type": "text",
+          "placeholder": "32 hex characters",
+          "hint": "The public Creality master key (derives the card key from the tag UID). You paste it; we never ship it. See the plugin documentation. Leave empty to track Creality spools by UID only (no decode).",
+          "default": "",
+          "userEditable": true
+        },
+        {
+          "key": "CREALITY_ENCRYPTION_KEY",
+          "label": "Creality payload key (hex)",
+          "type": "text",
+          "placeholder": "32 hex characters",
+          "hint": "The public Creality payload key (decrypts the filament block). You paste it; we never ship it. See the plugin documentation. Both keys are needed to decode; leave empty for UID-only tracking.",
+          "default": "",
+          "userEditable": true
+        }
+      ],
+      "changelog_url": "rfid-creality/doc/CHANGELOG.md",
+      "deps": [
+        "rfid-service"
+      ]
+    },
+    {
+      "name": "rfid-elegoo",
+      "title": "Elegoo Filament Tag",
+      "version": "0.1.2",
+      "description": "EXPERIMENTAL. Decoder for Elegoo's published NTAG EPC-256 tag layout (material, color, diameter, weight), anchored on Elegoo's manufacturer signature in the raw page dump. IMPORTANT (verified on a real U1, 2026-06-29): the FACTORY Elegoo Centauri spool tags do NOT read on the U1 today. The cause is the U1 reader's antenna coupling with that specific tag, not this decoder and not a locked tag: the data is open NTAG213 memory, but the reader gets no RF wake-up response from the factory tag, across the entire register space and both coils, while M1/NTAG read fine and phones/Canvas read the Elegoo. The decoder is correct and ready for any Elegoo tag presenting the published layout (or the day the reader can wake the factory tag). Workaround: an OpenSpool NTAG on the opposite side of the spool ring. See the doc for full findings + a community call to action. Requires the RFID Spool Reader. Read-only.",
+      "tagline": "Elegoo NTAG EPC-256 decoder (factory U1 tags blocked by reader RF, see doc).",
+      "category": "filament",
+      "channel": "experiment",
+      "publisher": "PLACEHOLDER",
+      "printer_specific": true,
+      "published_at": "2026-06-29",
+      "updated_at": "2026-06-29",
+      "requires": {
+        "capabilities": [
+          "rfid-spi"
+        ]
+      },
+      "provides": [],
+      "conflicts": [],
+      "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-elegoo/doc/README.md",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/462067080",
+      "homepage": "https://github.com/ELEGOO-3D/ELEGOO-RFID-Tag-Guide",
+      "changelog_url": "rfid-elegoo/doc/CHANGELOG.md",
+      "deps": [
+        "rfid-service"
+      ]
+    },
+    {
+      "name": "rfid-generic-ndef",
+      "title": "Generic NDEF Filament Tag",
+      "version": "0.1.0",
+      "description": "Best-effort reader for filament NFC tags that store their data as plain JSON in an NDEF record but do not use a recognized protocol (OpenSpool and other protocol-keyed tags are handled by their own decoders). Maps common field names (brand, type, color_hex, min_temp/max_temp, bed_temp, diameter, weight) into the shared rfid_data.json. Requires the RFID Spool Reader, which it installs automatically. Read-only: it never writes a tag. Experiment channel until verified on a real tag.",
+      "tagline": "Read any plain-JSON NFC filament tag the U1 reader can see.",
+      "category": "filament",
+      "channel": "experiment",
+      "publisher": "PLACEHOLDER",
+      "printer_specific": true,
+      "published_at": "2026-06-29",
+      "updated_at": "2026-06-29",
+      "requires": {
+        "capabilities": [
+          "rfid-spi"
+        ]
+      },
+      "provides": [],
+      "conflicts": [],
+      "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-generic-ndef/doc/README.md",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/462067110",
+      "homepage": "https://github.com/Bespok3d/all-the-tags",
+      "changelog_url": "rfid-generic-ndef/doc/CHANGELOG.md",
+      "deps": [
+        "rfid-service"
+      ]
+    },
+    {
+      "name": "rfid-openprinttag",
+      "title": "OpenPrintTag Filament Tag",
+      "version": "0.1.0",
+      "description": "Decodes the OpenPrintTag (prusa3d) filament data format - an open CBOR payload - off any NTAG21x the reader can read, mapping material, brand, color, diameter, weight, manufacture date, and nozzle/bed/drying temperatures into the shared rfid_data.json. No key required. Note: Prusa's own factory spools use ISO-15693 tags the U1 reader cannot read; this targets OpenPrintTag payloads written onto a standard NTAG21x. Installs the RFID Spool Reader automatically. Read-only. Experiment channel until verified on a real tag.",
+      "tagline": "Decode the OpenPrintTag data format on NTAG (no key).",
+      "category": "filament",
+      "channel": "experiment",
+      "publisher": "PLACEHOLDER",
+      "printer_specific": true,
+      "published_at": "2026-06-30",
+      "updated_at": "2026-06-30",
+      "requires": {
+        "capabilities": [
+          "rfid-spi"
+        ]
+      },
+      "provides": [],
+      "conflicts": [],
+      "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-openprinttag/doc/README.md",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/462067137",
+      "homepage": "https://specs.openprinttag.org",
+      "changelog_url": "rfid-openprinttag/doc/CHANGELOG.md",
+      "deps": [
+        "rfid-service"
+      ]
+    },
+    {
+      "name": "rfid-opentag",
+      "title": "OpenTag3D Filament Tag",
+      "version": "0.1.0",
+      "description": "Reads OpenTag3D (queengooborg open standard) filament NFC tags: the big-endian binary payload carried in an NDEF application/opentag3d record (manufacturer, material, color, diameter, weight, nozzle and bed temperatures) is decoded into the shared rfid_data.json. Plaintext, no key needed. Requires the RFID Spool Reader, which it installs automatically. Read-only: it never writes a tag. Experiment channel until verified on a real tag.",
+      "tagline": "Read OpenTag3D open-standard filament tags on stock firmware.",
+      "category": "filament",
+      "channel": "experiment",
+      "publisher": "PLACEHOLDER",
+      "printer_specific": true,
+      "published_at": "2026-06-29",
+      "updated_at": "2026-06-29",
+      "requires": {
+        "capabilities": [
+          "rfid-spi"
+        ]
+      },
+      "provides": [],
+      "conflicts": [],
+      "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-opentag/doc/README.md",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/462067178",
+      "homepage": "https://opentag3d.info/",
+      "changelog_url": "rfid-opentag/doc/CHANGELOG.md",
+      "deps": [
+        "rfid-service"
+      ]
+    },
+    {
+      "name": "rfid-tigertag",
+      "title": "TigerTag Filament Tag",
+      "version": "0.1.0",
+      "description": "Reads TigerTag filament tags (open NTAG21x, no key required) and decodes the physical filament data - color (RGBA), diameter, nozzle and bed temperatures, drying temperature, and weight - into the shared rfid_data.json. The brand and material are stored on a TigerTag as numeric ids whose human-name tables are GPLv3, so this decoder keeps them as ids rather than vendoring a GPL table; the product id is surfaced as the SKU. Works on the standard NTAG reader (no key, no reader change). Installs the RFID Spool Reader automatically. Read-only. Experiment channel until verified on a real tag.",
+      "tagline": "Decode open TigerTag NTAG spools (color, temps, diameter, weight).",
+      "category": "filament",
+      "channel": "experiment",
+      "publisher": "PLACEHOLDER",
+      "printer_specific": true,
+      "published_at": "2026-06-30",
+      "updated_at": "2026-06-30",
+      "requires": {
+        "capabilities": [
+          "rfid-spi"
+        ]
+      },
+      "provides": [],
+      "conflicts": [],
+      "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-tigertag/doc/README.md",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/462067207",
+      "homepage": "https://tigertag.io",
+      "changelog_url": "rfid-tigertag/doc/CHANGELOG.md",
+      "deps": [
+        "rfid-service"
+      ]
+    }
+  ],
+  "lists": []
+}
