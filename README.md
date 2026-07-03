@@ -1,7 +1,8 @@
 # all-the-tags
 
-Filament RFID/NFC **decoder plugins** for Bespok3d, plus the future **"All the
-Tags" collection** that installs the whole family at once.
+Filament RFID/NFC **decoder plugins** for Bespok3d, plus the **"All the Tags"
+collection** (`all-the-tags/`, `kind:collection`) that installs the whole family
+(reader + every decoder + Spoolman tracking) at once.
 
 A decoder here is *just the payload decoder*. It does **not** re-architect the
 reader: it plugs into the live RFID hub shipped by the **RFID Spool Reader**
@@ -65,8 +66,9 @@ raw-page binary (`rfid-elegoo`, `rfid-tigertag`), and encrypted Mifare-Classic w
 user-supplied keys (`rfid-bambu`, `rfid-creality`).
 
 All are on the **experiment** channel until verified against a real tag on a printer
-(junior `u1jr` is the bench; testers verify the spool kinds we do not own). The full "All
-the Tags" collection (D1) is the device-trial vehicle.
+(junior `u1jr` is the bench; testers verify the spool kinds we do not own). The **"All the
+Tags" collection** (`all-the-tags/`, shipped) bundles the reader + all decoders + Spoolman
+into a one-click "Install all" and is the device-trial vehicle; see `relay/RELAY-D1.md`.
 
 **`rfid-anycubic` is **partial by design**. The tag is plaintext NTAG (no key) and the public
 RE agrees on the magic, version, ASCII brand/material, and nozzle/bed temps - which it decodes.
