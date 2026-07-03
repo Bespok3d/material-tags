@@ -24,7 +24,7 @@
       "provides": [],
       "conflicts": [],
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-anycubic/doc/README.md",
-      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/465419109",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/465422048",
       "homepage": "https://github.com/DnG-Crafts/ACE-RFID",
       "changelog_url": "rfid-anycubic/doc/CHANGELOG.md",
       "deps": [
@@ -51,7 +51,7 @@
       "provides": [],
       "conflicts": [],
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-bambu/doc/README.md",
-      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/465419131",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/465422067",
       "homepage": "https://github.com/Bambu-Research-Group/RFID-Tag-Guide",
       "config": [
         {
@@ -89,7 +89,7 @@
       "provides": [],
       "conflicts": [],
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-creality/doc/README.md",
-      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/465419161",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/465422089",
       "homepage": "https://github.com/Bambu-Research-Group/RFID-Tag-Guide",
       "config": [
         {
@@ -136,7 +136,7 @@
       "provides": [],
       "conflicts": [],
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-elegoo/doc/README.md",
-      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/465419199",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/465422102",
       "homepage": "https://github.com/ELEGOO-3D/ELEGOO-RFID-Tag-Guide",
       "changelog_url": "rfid-elegoo/doc/CHANGELOG.md",
       "deps": [
@@ -163,7 +163,7 @@
       "provides": [],
       "conflicts": [],
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-generic-ndef/doc/README.md",
-      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/465419226",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/465422113",
       "homepage": "https://github.com/Bespok3d/all-the-tags",
       "changelog_url": "rfid-generic-ndef/doc/CHANGELOG.md",
       "deps": [
@@ -190,7 +190,7 @@
       "provides": [],
       "conflicts": [],
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-openprinttag/doc/README.md",
-      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/465419256",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/465422127",
       "homepage": "https://specs.openprinttag.org",
       "changelog_url": "rfid-openprinttag/doc/CHANGELOG.md",
       "deps": [
@@ -217,7 +217,7 @@
       "provides": [],
       "conflicts": [],
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-opentag/doc/README.md",
-      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/465419280",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/465422151",
       "homepage": "https://opentag3d.info/",
       "changelog_url": "rfid-opentag/doc/CHANGELOG.md",
       "deps": [
@@ -244,7 +244,7 @@
       "provides": [],
       "conflicts": [],
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-tigertag/doc/README.md",
-      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/465419310",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/465422166",
       "homepage": "https://tigertag.io",
       "changelog_url": "rfid-tigertag/doc/CHANGELOG.md",
       "deps": [
