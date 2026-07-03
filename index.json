@@ -24,7 +24,7 @@
       "provides": [],
       "conflicts": [],
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-anycubic/doc/README.md",
-      "download_url": "rfid-anycubic-0.1.0.b3",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/465419109",
       "homepage": "https://github.com/DnG-Crafts/ACE-RFID",
       "changelog_url": "rfid-anycubic/doc/CHANGELOG.md",
       "deps": [
@@ -51,7 +51,7 @@
       "provides": [],
       "conflicts": [],
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-bambu/doc/README.md",
-      "download_url": "rfid-bambu-0.1.0.b3",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/465419131",
       "homepage": "https://github.com/Bambu-Research-Group/RFID-Tag-Guide",
       "config": [
         {
@@ -89,7 +89,7 @@
       "provides": [],
       "conflicts": [],
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-creality/doc/README.md",
-      "download_url": "rfid-creality-0.1.0.b3",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/465419161",
       "homepage": "https://github.com/Bambu-Research-Group/RFID-Tag-Guide",
       "config": [
         {
@@ -136,7 +136,7 @@
       "provides": [],
       "conflicts": [],
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-elegoo/doc/README.md",
-      "download_url": "rfid-elegoo-0.1.2.b3",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/465419199",
       "homepage": "https://github.com/ELEGOO-3D/ELEGOO-RFID-Tag-Guide",
       "changelog_url": "rfid-elegoo/doc/CHANGELOG.md",
       "deps": [
@@ -163,7 +163,7 @@
       "provides": [],
       "conflicts": [],
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-generic-ndef/doc/README.md",
-      "download_url": "rfid-generic-ndef-0.1.0.b3",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/465419226",
       "homepage": "https://github.com/Bespok3d/all-the-tags",
       "changelog_url": "rfid-generic-ndef/doc/CHANGELOG.md",
       "deps": [
@@ -173,7 +173,7 @@
     {
       "name": "rfid-openprinttag",
       "title": "OpenPrintTag Filament Tag",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "description": "Decodes the OpenPrintTag (prusa3d) filament data format - an open CBOR payload - off any NTAG21x the reader can read, mapping material, brand, color, diameter, weight, manufacture date, and nozzle/bed/drying temperatures into the shared rfid_data.json. No key required. Note: Prusa's own factory spools use ISO-15693 tags the U1 reader cannot read; this targets OpenPrintTag payloads written onto a standard NTAG21x. Installs the RFID Spool Reader automatically. Read-only. Experiment channel until verified on a real tag.",
       "tagline": "Decode the OpenPrintTag data format on NTAG (no key).",
       "category": "filament",
@@ -190,7 +190,7 @@
       "provides": [],
       "conflicts": [],
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-openprinttag/doc/README.md",
-      "download_url": "rfid-openprinttag-0.1.0.b3",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/465419256",
       "homepage": "https://specs.openprinttag.org",
       "changelog_url": "rfid-openprinttag/doc/CHANGELOG.md",
       "deps": [
@@ -217,7 +217,7 @@
       "provides": [],
       "conflicts": [],
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-opentag/doc/README.md",
-      "download_url": "rfid-opentag-0.1.0.b3",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/465419280",
       "homepage": "https://opentag3d.info/",
       "changelog_url": "rfid-opentag/doc/CHANGELOG.md",
       "deps": [
@@ -244,7 +244,7 @@
       "provides": [],
       "conflicts": [],
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-tigertag/doc/README.md",
-      "download_url": "rfid-tigertag-0.1.0.b3",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/465419310",
       "homepage": "https://tigertag.io",
       "changelog_url": "rfid-tigertag/doc/CHANGELOG.md",
       "deps": [
