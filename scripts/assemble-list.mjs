@@ -39,18 +39,34 @@ function resolveDeps(atom, providers) {
   return resolved
 }
 
+function isCollectionAtom(atom) {
+  return atom.kind === 'collection'
+}
+
+// A collection atom carries `kind` only so the assembler can route it; strip it from the published
+// entry (a collection's type is the collections[] array it sits in, just as a plugin entry carries
+// no `kind:plugin`). Collections have no `require`/`deps`; their members[] passes through verbatim.
+function toCollectionEntry(atom) {
+  const { kind: _kind, ...entry } = atom
+  return entry
+}
+
 // Drop the internal `require` (only the assembler needs it) and replace it with the resolved `deps`,
 // so each published entry matches the catalog entry shape the app expects. This is a leaf list
-// (lists: []); main-index is the list-of-lists that references it.
+// (lists: []); main-index is the list-of-lists that references it. Collection atoms are partitioned
+// into a sibling collections[] (install-orchestration metadata, never resolved to a .b3).
 export function assemble(atoms) {
   const sorted = [...atoms].sort((earlier, later) => earlier.name.localeCompare(later.name))
-  const providers = providerByService(sorted)
-  const plugins = sorted.map((atom) => {
+  const pluginAtoms = sorted.filter((atom) => !isCollectionAtom(atom))
+  const collectionAtoms = sorted.filter(isCollectionAtom)
+  const providers = providerByService(pluginAtoms)
+  const plugins = pluginAtoms.map((atom) => {
     const { require: _require, ...entry } = atom
     return { ...entry, deps: resolveDeps(atom, providers) }
   })
-  const updated = plugins.reduce((latest, plugin) => (plugin.updated_at > latest ? plugin.updated_at : latest), '')
-  return { schema_version: 1, name: LIST_NAME, publisher: LIST_PUBLISHER, updated, plugins, lists: [] }
+  const collections = collectionAtoms.map(toCollectionEntry)
+  const updated = [...plugins, ...collections].reduce((latest, entry) => (entry.updated_at > latest ? entry.updated_at : latest), '')
+  return { schema_version: 1, name: LIST_NAME, publisher: LIST_PUBLISHER, updated, plugins, collections, lists: [] }
 }
 
 async function main() {
@@ -61,7 +77,7 @@ async function main() {
   const atoms = await Promise.all(names.map((name) => readFile(join(distDir, name), 'utf8').then(JSON.parse)))
   const index = assemble(atoms)
   await writeFile(join(repoDir, 'index.json'), `${JSON.stringify(index, null, 2)}\n`)
-  process.stdout.write(`Wrote index.json (${index.plugins.length} plugins)\n`)
+  process.stdout.write(`Wrote index.json (${index.plugins.length} plugins, ${index.collections.length} collections)\n`)
 }
 
 if (process.argv[1] && process.argv[1].endsWith('assemble-list.mjs')) {

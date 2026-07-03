@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.1
+
+- Fix a Klipper load failure that auto-deactivated the plugin on install ("the Python import
+  of 'cbor_min' failed"). The `openprinttag_fields` helper imported its `cbor_min` sibling with
+  a flat `import cbor_min`, which resolves in the unit tests but not at runtime: Klipper loads
+  the placed files into the `extras` package, so the sibling is `extras.cbor_min` and must be
+  imported relatively (`from . import cbor_min`), matching every other decoder in this list. The
+  unit tests now import the modules through their package, so a future flat-import regression
+  fails the suite instead of only the printer.
+
 ## 0.1.0
 
 - First release. Clean-room OpenPrintTag (prusa3d) decoder: a minimal vendored pure-python

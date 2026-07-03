@@ -6,7 +6,7 @@ prusa3d/OpenPrintTag tests/encode_decode/01_info.yaml), so the decode is pinned 
 ground truth. A synthetic payload covers the fields that one happens not to carry (filament
 diameter, material abbreviation, an alpha color channel, drying).
 """
-from openprinttag_fields import OPENPRINTTAG_MIME_TYPE, build_struct
+from openprinttag.openprinttag_fields import OPENPRINTTAG_MIME_TYPE, build_struct
 
 # Real Prusament payload = meta map {2: 210} + the main map + an empty aux map.
 META = "a10218d2"

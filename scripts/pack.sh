@@ -61,8 +61,8 @@ pack_one() {
   rm -f "$output"
   (
     cd "$plugin_dir"
-    zip -qr "$output" files/
-    if [ -d doc ]; then zip -qr "$output" doc/; fi
+    zip -qr "$output" files/ -x '*/__pycache__/*' '*.pyc' '*.DS_Store'
+    if [ -d doc ]; then zip -qr "$output" doc/ -x '*.DS_Store'; fi
     for req in requirements.txt klipper_requirements.txt; do
       [ -f "$req" ] && zip -q "$output" "$req"
     done
@@ -76,15 +76,23 @@ pack_one() {
 
 mkdir -p "$DIST_DIR"
 packed=0
+collections=0
 for dir in "$REPO_DIR"/*/; do
   [ -f "${dir}manifest.json" ] || continue
+  # A collection (kind:collection) is index-only orchestration metadata with no files/ and no .b3;
+  # the atom/assemble tooling carries it, but there is nothing to archive here, so skip it.
+  if [ "$(jq -r '.kind // "plugin"' "${dir}manifest.json")" = "collection" ]; then
+    echo "Skip (collection, index-only): ${dir%/}"
+    collections=$((collections + 1))
+    continue
+  fi
   pack_one "${dir%/}"
   packed=$((packed + 1))
 done
 
-if [ "$packed" -eq 0 ]; then
+if [ "$packed" -eq 0 ] && [ "$collections" -eq 0 ]; then
   echo "ERROR: no plugins found (expected <plugin-id>/manifest.json dirs)." >&2
   exit 1
 fi
 echo ""
-echo "Packed $packed plugin(s)."
+echo "Packed $packed plugin(s), skipped $collections collection(s)."

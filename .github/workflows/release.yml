@@ -50,6 +50,12 @@ jobs:
           for dir in */; do
             [ -f "${dir}manifest.json" ] || continue
             id="${dir%/}"
+            # A collection (kind:collection) is install-orchestration metadata with no .b3: skip the
+            # GitHub release + upload, emit only its atom (members + metadata, no download_url).
+            if [ "$(jq -r '.kind // "plugin"' "${dir}manifest.json")" = "collection" ]; then
+              node scripts/generate-atom.mjs --plugin "$id" --repo "$GITHUB_REPOSITORY"
+              continue
+            fi
             name=$(jq -r '.name' "${dir}manifest.json")
             version=$(jq -r '.version' "${dir}manifest.json")
             tag="${name}-v${version}"
@@ -69,16 +75,29 @@ jobs:
         run: node scripts/assemble-list.mjs
 
       - name: Commit index.json
+        # Resilient self-push, mirroring main-index/assemble.yml: a concurrent push to this repo's
+        # main (e.g. a follow-up commit landing while CI runs) moves the remote tip and rejects a bare
+        # push non-fast-forward, which previously killed the job BEFORE the main-index registration step
+        # below and left the whole tag family unregistered. index.json is fully derived from the dist/
+        # atoms (gitignored, so `git reset --hard` preserves them), so on rejection we resync to remote
+        # and regenerate rather than rebase.
         run: |
           git config user.name "bespok3d-bot"
           git config user.email "bot@bespok3d.local"
-          git add index.json
-          if git diff --cached --quiet; then
-            echo "index unchanged; nothing to commit"
-          else
+          for attempt in 1 2 3 4 5; do
+            node scripts/assemble-list.mjs
+            git add index.json
+            if git diff --cached --quiet; then
+              echo "index unchanged; nothing to commit"
+              break
+            fi
             git commit -m "assemble sub-list index.json"
-            git push
-          fi
+            git push && { echo "pushed index.json (attempt ${attempt})"; break; }
+            [ "$attempt" = 5 ] && { echo "index.json push failed after ${attempt} attempts"; exit 1; }
+            echo "index.json push rejected; resyncing to remote main (attempt ${attempt})"
+            git fetch origin main
+            git reset --hard origin/main
+          done
 
       - name: Register this sub-list in Bespok3d/main-index (idempotent)
         env:
@@ -86,6 +105,10 @@ jobs:
           # cannot write a sibling repo). Create it in the org and add it as this repo's secret.
           MAIN_INDEX_TOKEN: ${{ secrets.MAIN_INDEX_TOKEN }}
         run: |
+          if [ -z "${MAIN_INDEX_TOKEN}" ]; then
+            echo "::error::MAIN_INDEX_TOKEN secret is not set on this repo. Add a fine-grained PAT with contents:write on Bespok3d/main-index as the repo secret MAIN_INDEX_TOKEN (reuse the same one the other sub-list repos use), then re-run this job. Everything else (releases + index.json) already succeeded."
+            exit 1
+          fi
           repo_name="${GITHUB_REPOSITORY##*/}"
           # github: ref (not a raw.githubusercontent URL): the app fetches sub-lists via the
           # authenticated GitHub API, which works for private repos and public alike. Raw URLs

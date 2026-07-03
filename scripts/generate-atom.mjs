@@ -21,6 +21,36 @@ function copyIfPresent(target, source, keys) {
   })
 }
 
+function isCollection(manifest) {
+  return manifest.kind === 'collection'
+}
+
+// A collection (kind:collection) is install-orchestration metadata: it lists member plugin ids +
+// version constraints and ships no files/, no install block, no .b3. The atom carries `kind` so the
+// list assembler routes it into collections[] (and strips `kind` from the published entry). There is
+// no download_url: a collection is never downloaded, only its members are.
+export function buildCollectionAtom(manifest, docUrl) {
+  const entry = {
+    kind: 'collection',
+    name: manifest.name,
+    title: manifest.title,
+    version: manifest.version,
+    description: manifest.description,
+    tagline: manifest.tagline,
+    category: manifest.category,
+    channel: manifest.channel,
+    publisher: manifest.publisher,
+    printer_specific: manifest.printer_specific ?? false,
+    published_at: manifest.published_at,
+    updated_at: manifest.updated_at,
+    members: manifest.members ?? [],
+    doc_url: docUrl,
+  }
+  copyIfPresent(entry, manifest, ['icon', 'homepage'])
+  if (manifest.changelog) entry.changelog_url = `${manifest.name}/${manifest.changelog}`
+  return entry
+}
+
 export function buildAtom(manifest, downloadUrl, docUrl) {
   const entry = {
     name: manifest.name,
@@ -53,6 +83,12 @@ function arg(flag, fallback) {
   return index >= 0 && process.argv[index + 1] ? process.argv[index + 1] : fallback
 }
 
+function buildAtomFor(manifest, docUrl) {
+  if (isCollection(manifest)) return buildCollectionAtom(manifest, docUrl)
+  const downloadUrl = arg('--download-url', `${manifest.name}-${manifest.version}.b3`)
+  return buildAtom(manifest, downloadUrl, docUrl)
+}
+
 async function main() {
   const scriptDir = dirname(fileURLToPath(import.meta.url))
   const repoDir = dirname(scriptDir)
@@ -60,14 +96,13 @@ async function main() {
   if (!pluginId) throw new Error('missing required --plugin <plugin-id>')
   const manifest = JSON.parse(await readFile(join(repoDir, pluginId, 'manifest.json'), 'utf8'))
   const repo = arg('--repo', 'Bespok3d/material-tags')
-  const downloadUrl = arg('--download-url', `${manifest.name}-${manifest.version}.b3`)
   const docUrl = arg('--doc-url', `https://github.com/${repo}/blob/main/${pluginId}/doc/README.md`)
-  const atom = buildAtom(manifest, downloadUrl, docUrl)
+  const atom = buildAtomFor(manifest, docUrl)
   const outDir = join(repoDir, 'dist')
   await mkdir(outDir, { recursive: true })
   const outFile = join(outDir, `${manifest.name}.atom.json`)
   await writeFile(outFile, `${JSON.stringify(atom, null, 2)}\n`)
-  process.stdout.write(`Wrote ${outFile} (download_url=${downloadUrl})\n`)
+  process.stdout.write(`Wrote ${outFile}\n`)
 }
 
 if (process.argv[1] && process.argv[1].endsWith('generate-atom.mjs')) {

@@ -15,13 +15,15 @@ We decode the PAYLOAD, not Prusa's hardware: Prusa's own factory spools use ISO-
 U1 reader cannot read, but an OpenPrintTag payload written onto a standard NTAG21x reads fine
 and decodes here. The brand/material name strings are used directly (no enum table needed).
 
-Pure helper: stdlib + the vendored cbor_min, no relative imports, so it is unit-testable.
+Pure helper: stdlib + the vendored cbor_min sibling, imported relatively so it resolves at
+runtime as a flat ``klippy.extras`` sibling (Klipper loads the placed files into the ``extras``
+package); the tests reach it through the same ``openprinttag`` package.
 """
 import copy
 import datetime
 from typing import Any
 
-import cbor_min
+from . import cbor_min
 
 OPENPRINTTAG_MIME_TYPE = "application/vnd.openprinttag"
 

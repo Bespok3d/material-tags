@@ -1,7 +1,7 @@
 # ruff: noqa: PLR2004  Tests assert on literal CBOR values by design.
 """Unit tests for the minimal CBOR reader (RFC 8949 subset)."""
 import pytest
-from cbor_min import CborError, load_at
+from openprinttag.cbor_min import CborError, load_at
 
 
 def _value(hexstr: str):
