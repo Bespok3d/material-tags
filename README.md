@@ -26,26 +26,37 @@ material-tags/
     doc/README.md          # rendered in-app; not deployed
     doc/CHANGELOG.md
     README.md              # browse-the-repo summary (status + gotchas); NOT shipped in the .b3
-  scripts/{pack.sh,generate-atom.mjs,assemble-list.mjs,bake-deps.sh}
   .github/workflows/release.yml
   index.json               # the published sub-list (CI-generated + committed; main-index lists[] it)
   dist/                    # build output (gitignored)
   relay/                   # session handoff notes - LOCAL ONLY, gitignored, never published
 ```
 
-## Building and publishing
+## Build locally
 
-Bump a decoder's `manifest.json` `version` and push to `main`. CI (`release.yml`) bakes any
-Python deps (none today - these are pure stdlib), packs each `.b3` (`scripts/pack.sh`), cuts a
-GitHub release per plugin, generates each atom (`scripts/generate-atom.mjs`), assembles this
-repo's `index.json` sub-list (`scripts/assemble-list.mjs`), and registers it in
-`Bespok3d/main-index` so the official catalog picks it up. To dry-run locally:
-`sh scripts/pack.sh && for d in rfid-*/; do node scripts/generate-atom.mjs --plugin "${d%/}"; done && node scripts/assemble-list.mjs`.
+Needs Node.js 20+. Builds run through the shared `Bespok3d/b3-builder` tool:
 
-**Required repo secret:** `MAIN_INDEX_TOKEN` - a fine-grained PAT with `contents:write` on
-`Bespok3d/main-index` (the per-repo `GITHUB_TOKEN` cannot write a sibling repo). Signing is
-deferred. The `relay/` dir is build-coordination scratch and is **gitignored** - it never lands
-in the org repo.
+```sh
+npm install github:Bespok3d/b3-builder
+npx b3-builder build --source ./rfid-opentag --atom-repo Bespok3d/material-tags
+# -> dist/rfid-opentag-<ver>.b3 + dist/rfid-opentag.atom.json
+```
+
+Drop `--source` to build every plugin in the repo at once.
+
+The Action runs with `bake: 'true'`: a plugin that ships a `requirements.txt` or
+`klipper_requirements.txt` at its root gets its Python deps downloaded for the printer platform
+(aarch64, CPython 3.11) at build time. Pass `--bake` to do the same locally.
+
+## Releasing
+
+Bump a plugin's `manifest.json` `version` and push to `main`. CI runs the `Bespok3d/b3-builder`
+Action over the whole repo, which packs each `.b3`, cuts a release per plugin, assembles this repo's
+`index.json` sub-list as `Material Tags`, and registers it in `Bespok3d/main-index`
+(`lists/<repo>.json`). Secret: `MAIN_INDEX_TOKEN` (contents:write on main-index). Signing deferred.
+
+
+The `relay/` dir is build-coordination scratch and is **gitignored**: it never lands in the org repo.
 
 ## Shipped decoders
 
