@@ -36,7 +36,7 @@ jobs:
           bake: 'true'
           atom-repo: ${{ github.repository }}
           list-name: 'Material Tags'
-          list-publisher: 'PLACEHOLDER'
+          list-publisher: '679939555819fb5f6423dc68c4388e76bfa9b4e0'
           list-ref-name: 'Material Tags'
           main-index-repo: Bespok3d/main-index
           # Per-repo Actions secret today (GitHub Free cannot org-secret private repos); becomes ONE org
