@@ -27,13 +27,16 @@ jobs:
         with:
           fetch-depth: 0   # full history so the index.json push can rebase on a concurrent update
 
-      - uses: Bespok3d/b3-builder@main
+      - uses: Bespok3d/b3-builder@76d815a56dc5708b3d0c3a587fc2b027deca4640  # main @ 2026-07-21
         with:
           unit: repo
+          # Per-repo Actions secret today (GitHub Free cannot org-secret private repos); becomes ONE org
+          # secret every repo inherits when the repos go public. See b3-builder README (secrets model).
+          signing-key: ${{ secrets.REGISTRY_SIGNING_KEY }}
           bake: 'true'
           atom-repo: ${{ github.repository }}
           list-name: 'Material Tags'
-          list-publisher: 'PLACEHOLDER'
+          list-publisher: '679939555819fb5f6423dc68c4388e76bfa9b4e0'
           list-ref-name: 'Material Tags'
           main-index-repo: Bespok3d/main-index
           # Per-repo Actions secret today (GitHub Free cannot org-secret private repos); becomes ONE org
