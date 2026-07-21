@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "name": "Material Tags",
-  "publisher": "PLACEHOLDER",
+  "publisher": "679939555819fb5f6423dc68c4388e76bfa9b4e0",
   "updated": "2026-06-30",
   "plugins": [
     {
@@ -12,7 +12,7 @@
       "tagline": "Decode Anycubic ACE brand/material/temps (color+weight pending a tag dump).",
       "category": "filament",
       "channel": "experiment",
-      "publisher": "PLACEHOLDER",
+      "publisher": "679939555819fb5f6423dc68c4388e76bfa9b4e0",
       "printer_specific": true,
       "published_at": "2026-06-30",
       "updated_at": "2026-06-30",
@@ -26,7 +26,7 @@
       "homepage": "https://github.com/DnG-Crafts/ACE-RFID",
       "changelog_url": "rfid-anycubic/doc/CHANGELOG.md",
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-anycubic/doc/README.md",
-      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/481362325",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/484993769",
       "deps": [
         "rfid-service"
       ]
@@ -39,7 +39,7 @@
       "tagline": "Decode Bambu spools on stock firmware (you supply the key).",
       "category": "filament",
       "channel": "experiment",
-      "publisher": "PLACEHOLDER",
+      "publisher": "679939555819fb5f6423dc68c4388e76bfa9b4e0",
       "printer_specific": true,
       "published_at": "2026-06-29",
       "updated_at": "2026-06-29",
@@ -64,7 +64,7 @@
       ],
       "changelog_url": "rfid-bambu/doc/CHANGELOG.md",
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-bambu/doc/README.md",
-      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/481362340",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/484993795",
       "deps": [
         "rfid-service"
       ]
@@ -77,7 +77,7 @@
       "tagline": "Decode Creality CFS spools on stock firmware (you supply the keys).",
       "category": "filament",
       "channel": "experiment",
-      "publisher": "PLACEHOLDER",
+      "publisher": "679939555819fb5f6423dc68c4388e76bfa9b4e0",
       "printer_specific": true,
       "published_at": "2026-06-30",
       "updated_at": "2026-06-30",
@@ -111,7 +111,7 @@
       ],
       "changelog_url": "rfid-creality/doc/CHANGELOG.md",
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-creality/doc/README.md",
-      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/481362366",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/484993819",
       "deps": [
         "rfid-service"
       ]
@@ -124,7 +124,7 @@
       "tagline": "Elegoo NTAG EPC-256 decoder (factory U1 tags blocked by reader RF, see doc).",
       "category": "filament",
       "channel": "experiment",
-      "publisher": "PLACEHOLDER",
+      "publisher": "679939555819fb5f6423dc68c4388e76bfa9b4e0",
       "printer_specific": true,
       "published_at": "2026-06-29",
       "updated_at": "2026-06-29",
@@ -138,7 +138,7 @@
       "homepage": "https://github.com/ELEGOO-3D/ELEGOO-RFID-Tag-Guide",
       "changelog_url": "rfid-elegoo/doc/CHANGELOG.md",
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-elegoo/doc/README.md",
-      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/481362371",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/484993875",
       "deps": [
         "rfid-service"
       ]
@@ -151,7 +151,7 @@
       "tagline": "Read any plain-JSON NFC filament tag the U1 reader can see.",
       "category": "filament",
       "channel": "experiment",
-      "publisher": "PLACEHOLDER",
+      "publisher": "679939555819fb5f6423dc68c4388e76bfa9b4e0",
       "printer_specific": true,
       "published_at": "2026-06-29",
       "updated_at": "2026-06-29",
@@ -165,7 +165,7 @@
       "homepage": "https://github.com/Bespok3d/all-the-tags",
       "changelog_url": "rfid-generic-ndef/doc/CHANGELOG.md",
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-generic-ndef/doc/README.md",
-      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/481362410",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/484993893",
       "deps": [
         "rfid-service"
       ]
@@ -178,7 +178,7 @@
       "tagline": "Decode the OpenPrintTag data format on NTAG (no key).",
       "category": "filament",
       "channel": "experiment",
-      "publisher": "PLACEHOLDER",
+      "publisher": "679939555819fb5f6423dc68c4388e76bfa9b4e0",
       "printer_specific": true,
       "published_at": "2026-06-30",
       "updated_at": "2026-06-30",
@@ -192,7 +192,7 @@
       "homepage": "https://specs.openprinttag.org",
       "changelog_url": "rfid-openprinttag/doc/CHANGELOG.md",
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-openprinttag/doc/README.md",
-      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/481362423",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/484993939",
       "deps": [
         "rfid-service"
       ]
@@ -205,7 +205,7 @@
       "tagline": "Read OpenTag3D open-standard filament tags on stock firmware.",
       "category": "filament",
       "channel": "experiment",
-      "publisher": "PLACEHOLDER",
+      "publisher": "679939555819fb5f6423dc68c4388e76bfa9b4e0",
       "printer_specific": true,
       "published_at": "2026-06-29",
       "updated_at": "2026-06-29",
@@ -219,7 +219,7 @@
       "homepage": "https://opentag3d.info/",
       "changelog_url": "rfid-opentag/doc/CHANGELOG.md",
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-opentag/doc/README.md",
-      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/481362429",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/484993977",
       "deps": [
         "rfid-service"
       ]
@@ -232,7 +232,7 @@
       "tagline": "Decode open TigerTag NTAG spools (color, temps, diameter, weight).",
       "category": "filament",
       "channel": "experiment",
-      "publisher": "PLACEHOLDER",
+      "publisher": "679939555819fb5f6423dc68c4388e76bfa9b4e0",
       "printer_specific": true,
       "published_at": "2026-06-30",
       "updated_at": "2026-06-30",
@@ -246,7 +246,7 @@
       "homepage": "https://tigertag.io",
       "changelog_url": "rfid-tigertag/doc/CHANGELOG.md",
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-tigertag/doc/README.md",
-      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/481362434",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/484994029",
       "deps": [
         "rfid-service"
       ]
@@ -261,7 +261,7 @@
       "tagline": "Every spool, identified: the whole RFID tag-reading stack in one install.",
       "category": "filament",
       "channel": "experiment",
-      "publisher": "PLACEHOLDER",
+      "publisher": "679939555819fb5f6423dc68c4388e76bfa9b4e0",
       "printer_specific": true,
       "published_at": "2026-06-30",
       "updated_at": "2026-06-30",
