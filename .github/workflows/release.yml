@@ -27,7 +27,7 @@ jobs:
         with:
           fetch-depth: 0   # full history so the index.json push can rebase on a concurrent update
 
-      - uses: Bespok3d/b3-builder@235e6bb8c25616748a795021b14d3ec40f81ee09  # main @ 2026-07-22
+      - uses: Bespok3d/b3-builder@bac35915867f639b1e9f4c94410222e161af317a  # main @ 2026-07-23
         with:
           unit: repo
           # Per-repo Actions secret today (GitHub Free cannot org-secret private repos); becomes ONE org
