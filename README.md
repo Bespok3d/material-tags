@@ -29,7 +29,6 @@ material-tags/
   .github/workflows/release.yml
   index.json               # the published sub-list (CI-generated + committed; main-index lists[] it)
   dist/                    # build output (gitignored)
-  relay/                   # session handoff notes - LOCAL ONLY, gitignored, never published
 ```
 
 ## Build locally
@@ -195,7 +194,7 @@ Parsers are tried first-OK-wins, so each must decline payloads it does not own:
 
 ### Tests + checks
 
-`cd Bespok3d && ./scripts/check.sh` runs `pytest`/`ruff`/`mypy` on the new Python
+`./scripts/check.sh` runs `pytest`/`ruff`/`mypy` on the new Python
 (see the `Plugin: all-the-tags` block in `scripts/check.sh`) plus the
 `plugin-invariants` vitest over every manifest. The pure `*_fields.py` modules are
 mypy-checked; the relative-import shells are linted by ruff only (like
