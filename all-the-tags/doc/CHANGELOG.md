@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.1 - 2026-07-26
+
+- Updates the `rfid-bambu` plugin to version 0.2.0, the first stable release.
+
 ## 0.1.0 - 2026-06-30
 
 - First release of the "All the Tags" collection: installs the RFID Spool Reader, all eight tag
