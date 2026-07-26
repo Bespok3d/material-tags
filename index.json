@@ -2,7 +2,7 @@
   "schema_version": 1,
   "name": "Material Tags",
   "publisher": "679939555819fb5f6423dc68c4388e76bfa9b4e0",
-  "updated": "2026-06-30",
+  "updated": "2026-07-26",
   "plugins": [
     {
       "name": "rfid-anycubic",
@@ -27,7 +27,7 @@
       "homepage": "https://github.com/DnG-Crafts/ACE-RFID",
       "changelog_url": "rfid-anycubic/doc/CHANGELOG.md",
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-anycubic/doc/README.md",
-      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/487122909",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/490454508",
       "deps": [
         "rfid-service"
       ]
@@ -35,15 +35,15 @@
     {
       "name": "rfid-bambu",
       "title": "Bambu Filament Tag",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "description": "Reads Bambu Lab filament spool tags (encrypted Mifare Classic) and decodes the full filament: material, color, diameter, weight, and nozzle/bed temperatures into the shared rfid_data.json. REQUIRES A KEY YOU SUPPLY: Bambu tags are encrypted, so you must paste the public Bambu master key into this plugin's config (see the documentation for where to get it) before the tag can be decoded. Without a key the spool is still tracked by its tag UID. Installs the RFID Spool Reader automatically. Read-only: it never writes a tag. Experiment channel until verified on a real tag.",
       "tagline": "Decode Bambu spools on stock firmware (you supply the key).",
       "category": "filament",
-      "channel": "experiment",
+      "channel": "stable",
       "publisher": "679939555819fb5f6423dc68c4388e76bfa9b4e0",
       "printer_specific": true,
       "published_at": "2026-06-29",
-      "updated_at": "2026-06-29",
+      "updated_at": "2026-07-26",
       "author": "bespoked",
       "requires": {
         "capabilities": [
@@ -66,7 +66,7 @@
       ],
       "changelog_url": "rfid-bambu/doc/CHANGELOG.md",
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-bambu/doc/README.md",
-      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/487122934",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/490454526",
       "deps": [
         "rfid-service"
       ]
@@ -114,7 +114,7 @@
       ],
       "changelog_url": "rfid-creality/doc/CHANGELOG.md",
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-creality/doc/README.md",
-      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/487122959",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/490454546",
       "deps": [
         "rfid-service"
       ]
@@ -142,7 +142,7 @@
       "homepage": "https://github.com/ELEGOO-3D/ELEGOO-RFID-Tag-Guide",
       "changelog_url": "rfid-elegoo/doc/CHANGELOG.md",
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-elegoo/doc/README.md",
-      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/487122976",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/490454561",
       "deps": [
         "rfid-service"
       ]
@@ -170,7 +170,7 @@
       "homepage": "https://github.com/Bespok3d/all-the-tags",
       "changelog_url": "rfid-generic-ndef/doc/CHANGELOG.md",
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-generic-ndef/doc/README.md",
-      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/487122993",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/490454570",
       "deps": [
         "rfid-service"
       ]
@@ -198,7 +198,7 @@
       "homepage": "https://specs.openprinttag.org",
       "changelog_url": "rfid-openprinttag/doc/CHANGELOG.md",
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-openprinttag/doc/README.md",
-      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/487123015",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/490454584",
       "deps": [
         "rfid-service"
       ]
@@ -226,7 +226,7 @@
       "homepage": "https://opentag3d.info/",
       "changelog_url": "rfid-opentag/doc/CHANGELOG.md",
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-opentag/doc/README.md",
-      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/487123050",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/490454600",
       "deps": [
         "rfid-service"
       ]
@@ -254,7 +254,7 @@
       "homepage": "https://tigertag.io",
       "changelog_url": "rfid-tigertag/doc/CHANGELOG.md",
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-tigertag/doc/README.md",
-      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/487123077",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/490454634",
       "deps": [
         "rfid-service"
       ]
@@ -264,7 +264,7 @@
     {
       "name": "all-the-tags",
       "title": "All the Tags",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "description": "Installs the whole RFID filament-tag reading stack in one click: the NFC reader and hub, every shipped tag-standard decoder, and Spoolman tracking, so almost any spool you tap is identified and tracked. Includes the open standards (OpenTag3D, OpenPrintTag, generic NDEF JSON, TigerTag) plus full payload decoders for the proprietary tags (Bambu and Creality, with your own keys pasted into their config; without a key they fall back to UID-only tracking). Anycubic decodes the dispute-free fields today (a tester dump finishes it). The members install together with a single service restart. Experiment channel until the stack is verified end to end on a real printer.",
       "tagline": "Every spool, identified: the whole RFID tag-reading stack in one install.",
       "category": "filament",
@@ -272,7 +272,7 @@
       "publisher": "679939555819fb5f6423dc68c4388e76bfa9b4e0",
       "printer_specific": true,
       "published_at": "2026-06-30",
-      "updated_at": "2026-06-30",
+      "updated_at": "2026-07-26",
       "author": "bespoked",
       "members": [
         {
@@ -301,7 +301,7 @@
         },
         {
           "id": "rfid-bambu",
-          "version": ">=0.1.0"
+          "version": ">=0.2.0"
         },
         {
           "id": "rfid-creality",
