@@ -2,7 +2,7 @@
   "kind": "collection",
   "name": "all-the-tags",
   "title": "All the Tags",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "bespoked",
   "description": "Installs the whole RFID filament-tag reading stack in one click: the NFC reader and hub, every shipped tag-standard decoder, and Spoolman tracking, so almost any spool you tap is identified and tracked. Includes the open standards (OpenTag3D, OpenPrintTag, generic NDEF JSON, TigerTag) plus full payload decoders for the proprietary tags (Bambu and Creality, with your own keys pasted into their config; without a key they fall back to UID-only tracking). Anycubic decodes the dispute-free fields today (a tester dump finishes it). The members install together with a single service restart. Experiment channel until the stack is verified end to end on a real printer.",
   "tagline": "Every spool, identified: the whole RFID tag-reading stack in one install.",
@@ -10,9 +10,9 @@
   "channel": "experiment",
   "printer_specific": true,
   "source": "https://github.com/Bespok3d/all-the-tags",
-  "publisher": "PLACEHOLDER",
+  "publisher": "Mauricio Pessoa (Mauker)",
   "published_at": "2026-06-30",
-  "updated_at": "2026-06-30",
+  "updated_at": "2026-07-26",
   "changelog": "doc/CHANGELOG.md",
   "members": [
     {
@@ -41,7 +41,7 @@
     },
     {
       "id": "rfid-bambu",
-      "version": ">=0.1.0"
+      "version": ">=0.2.0"
     },
     {
       "id": "rfid-creality",

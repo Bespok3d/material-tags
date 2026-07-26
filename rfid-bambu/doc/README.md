@@ -44,6 +44,6 @@ them to a Spoolman spool by UID); they just are not decoded into material/colour
 
 ## Status
 
-Experiment channel. The key derivation is verified against the RFC 5869 HKDF test vector and
+Stable channel. The key derivation is verified against the RFC 5869 HKDF test vector and
 the decode is unit-tested against blocks built to the public Bambu memory map. End-to-end
-reading of a real Bambu spool is pending device verification on the U1 bench.
+reading of a real Bambu spool is already device verified on a U1 printer.
