@@ -56,7 +56,7 @@ def test_derive_depends_on_uid():
 
 def test_derive_wires_salt_uid_ikm_master():
     # The spec: PRK = HMAC(salt=UID, ikm=master); keys are the expand output split by six.
-    okm = hkdf_sha256(SAMPLE_UID, DUMMY_MASTER, bambu_keys.HKDF_INFO, bambu_keys.DERIVE_LENGTH)
+    okm = hkdf_sha256(DUMMY_MASTER, SAMPLE_UID, bambu_keys.HKDF_INFO, bambu_keys.DERIVE_LENGTH)
     expected = [list(okm[i * 6:(i + 1) * 6]) for i in range(16)]
     assert derive_sector_keys(SAMPLE_UID, DUMMY_MASTER) == expected
 
