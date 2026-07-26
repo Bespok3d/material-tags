@@ -45,6 +45,7 @@ class BambuReader:
     def read_hw_tag(self, reader):
         uid = list(reader.selected_card_uid()[0:4])
         keys = bambu_keys.derive_sector_keys(bytes(uid), self._master_key)
+        _log.info("Spool UID: %s",uid)
         if reader.reactivate_card() != fm_mod.FM175XX_OK:
             _log.error("Bambu: could not re-select card after stock read")
             return BAMBU_CARD_TYPE, None, fm_mod.FM175XX_CARD_READ_ERR
@@ -52,13 +53,14 @@ class BambuReader:
         for sector in BAMBU_SECTORS:
             err = self._read_sector(reader, sector, keys[sector], uid, buffer)
             if err != fm_mod.FM175XX_OK:
+                _log.warning("Err: %s", err)
                 return BAMBU_CARD_TYPE, None, err
         return BAMBU_CARD_TYPE, buffer, fm_mod.FM175XX_OK
 
     def _read_sector(self, reader, sector, key, uid, buffer):
         blocks = [sector * BLOCKS_PER_SECTOR + n for n in range(DATA_BLOCKS_PER_SECTOR)]
-        err, data = reader.read_mifare_classic(
-            fm_mod.FM175XX_M1_CARD_AUTH_MODE_A, sector, key, uid, blocks)
+        err, data = \
+            reader.read_mifare_classic(fm_mod.FM175XX_M1_CARD_AUTH_MODE_A, sector, key, uid, blocks)
         if err != fm_mod.FM175XX_OK:
             _log.warning("Bambu: sector %d auth/read failed (err=%d)", sector, err)
             return err
