@@ -1,6 +1,6 @@
 # Changelog
 
-# 0.2.0
+## 0.2.0
 
 - Second release. This is the first working version of this plugin, verified to be working on a U1 printer.
 
