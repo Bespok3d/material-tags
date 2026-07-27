@@ -2,7 +2,7 @@
   "schema_version": 1,
   "name": "Material Tags",
   "publisher": "679939555819fb5f6423dc68c4388e76bfa9b4e0",
-  "updated": "2026-07-26",
+  "updated": "2026-07-27",
   "plugins": [
     {
       "name": "rfid-anycubic",
@@ -27,7 +27,7 @@
       "homepage": "https://github.com/DnG-Crafts/ACE-RFID",
       "changelog_url": "rfid-anycubic/doc/CHANGELOG.md",
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-anycubic/doc/README.md",
-      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/490661906",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/491827663",
       "deps": [
         "rfid-service"
       ]
@@ -66,7 +66,7 @@
       ],
       "changelog_url": "rfid-bambu/doc/CHANGELOG.md",
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-bambu/doc/README.md",
-      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/490661924",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/491827684",
       "deps": [
         "rfid-service"
       ]
@@ -114,7 +114,7 @@
       ],
       "changelog_url": "rfid-creality/doc/CHANGELOG.md",
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-creality/doc/README.md",
-      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/490661936",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/491827714",
       "deps": [
         "rfid-service"
       ]
@@ -142,7 +142,7 @@
       "homepage": "https://github.com/ELEGOO-3D/ELEGOO-RFID-Tag-Guide",
       "changelog_url": "rfid-elegoo/doc/CHANGELOG.md",
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-elegoo/doc/README.md",
-      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/490661947",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/491827758",
       "deps": [
         "rfid-service"
       ]
@@ -170,7 +170,7 @@
       "homepage": "https://github.com/Bespok3d/all-the-tags",
       "changelog_url": "rfid-generic-ndef/doc/CHANGELOG.md",
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-generic-ndef/doc/README.md",
-      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/490661972",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/491827781",
       "deps": [
         "rfid-service"
       ]
@@ -198,7 +198,7 @@
       "homepage": "https://specs.openprinttag.org",
       "changelog_url": "rfid-openprinttag/doc/CHANGELOG.md",
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-openprinttag/doc/README.md",
-      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/490661981",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/491827800",
       "deps": [
         "rfid-service"
       ]
@@ -226,7 +226,7 @@
       "homepage": "https://opentag3d.info/",
       "changelog_url": "rfid-opentag/doc/CHANGELOG.md",
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-opentag/doc/README.md",
-      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/490661999",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/491827816",
       "deps": [
         "rfid-service"
       ]
@@ -254,7 +254,7 @@
       "homepage": "https://tigertag.io",
       "changelog_url": "rfid-tigertag/doc/CHANGELOG.md",
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-tigertag/doc/README.md",
-      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/490662010",
+      "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/491827840",
       "deps": [
         "rfid-service"
       ]
@@ -318,6 +318,72 @@
       ],
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/all-the-tags/doc/README.md",
       "changelog_url": "all-the-tags/doc/CHANGELOG.md"
+    },
+    {
+      "name": "materials-tracker-plus",
+      "title": "Materials Tracker Plus",
+      "version": "0.1.0",
+      "description": "Know what filament is loaded, how much of it is left, and see it in the right colour on screen. Installs the whole RFID tag-reading stack (the NFC reader and hub plus every shipped tag decoder, so almost any spool you tap is identified), Spoolman tracking to keep the remaining length up to date, AFC Lite for the automated filament changer, and the U1 G-code preview colours so the sliced preview shows each tool in its real filament colour. Everything installs together with a single service restart. Experiment channel until the stack is verified end to end on a real printer.",
+      "tagline": "Tap a spool, and the printer knows what it is, how much is left, and what colour it prints.",
+      "category": "filament",
+      "channel": "experiment",
+      "publisher": "679939555819fb5f6423dc68c4388e76bfa9b4e0",
+      "printer_specific": true,
+      "published_at": "2026-07-27",
+      "updated_at": "2026-07-27",
+      "author": "bespoked",
+      "members": [
+        {
+          "id": "rfid-ntag",
+          "version": ">=0.1.6"
+        },
+        {
+          "id": "rfid-generic-ndef",
+          "version": ">=0.1.0"
+        },
+        {
+          "id": "rfid-opentag",
+          "version": ">=0.1.0"
+        },
+        {
+          "id": "rfid-openprinttag",
+          "version": ">=0.1.0"
+        },
+        {
+          "id": "rfid-tigertag",
+          "version": ">=0.1.0"
+        },
+        {
+          "id": "rfid-anycubic",
+          "version": ">=0.1.0"
+        },
+        {
+          "id": "rfid-bambu",
+          "version": ">=0.2.0"
+        },
+        {
+          "id": "rfid-creality",
+          "version": ">=0.1.0"
+        },
+        {
+          "id": "rfid-elegoo",
+          "version": ">=0.1.2"
+        },
+        {
+          "id": "spoolman",
+          "version": ">=0.1.11"
+        },
+        {
+          "id": "afc-lite",
+          "version": ">=0.1.7"
+        },
+        {
+          "id": "u1-gcode-colors",
+          "version": ">=0.1.1"
+        }
+      ],
+      "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/materials-tracker-plus/doc/README.md",
+      "changelog_url": "materials-tracker-plus/doc/CHANGELOG.md"
     }
   ],
   "lists": []
