@@ -1,8 +1,13 @@
 # all-the-tags
 
-Filament RFID/NFC **decoder plugins** for Bespok3d, plus the **"All the Tags"
-collection** (`all-the-tags/`, `kind:collection`) that installs the whole family
-(reader + every decoder + Spoolman tracking) at once.
+Filament RFID/NFC **decoder plugins** for Bespok3d, plus two collections
+(`kind:collection`, a members list with no payload of their own):
+
+- **"All the Tags"** (`all-the-tags/`) installs the whole family at once: reader + every
+  decoder + Spoolman tracking.
+- **"Materials Tracker Plus"** (`materials-tracker-plus/`) is that same family plus
+  `afc-lite` and `u1-gcode-colors`, for a printer with the filament changer. Those two
+  members ship from other repos; a collection may name a member published elsewhere.
 
 A decoder here is *just the payload decoder*. It does **not** re-architect the
 reader: it plugs into the live RFID hub shipped by the **RFID Spool Reader**

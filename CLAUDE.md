@@ -27,6 +27,8 @@ decode core plus a thin registration shell); the collection is a bundle manifest
 - `rfid-creality`: Creality CFS, encrypted Mifare Classic
 - `all-the-tags`: the "All the Tags" collection (`kind:collection`) that bundles the reader, every
   decoder, and Spoolman tracking into one install
+- `materials-tracker-plus`: the "Materials Tracker Plus" collection, the same family plus `afc-lite`
+  and `u1-gcode-colors` (both published by other repos; a collection may name a member from anywhere)
 
 Read `README.md` for the repo's layout, build, and release mechanics before you change anything.
 
