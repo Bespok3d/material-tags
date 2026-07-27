@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1 - 2026-07-27
+
+- Say what the Bambu and Creality decoders actually fall back to without a key: the tag's own ID, not
+  the spool's serial number.
+
 ## 0.1.0 - 2026-07-27
 
 - First release of the "Materials Tracker Plus" collection: the whole RFID tag-reading stack (reader,
