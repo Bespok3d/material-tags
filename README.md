@@ -74,7 +74,7 @@ The `relay/` dir is build-coordination scratch and is **gitignored**: it never l
 | `rfid-elegoo` | Elegoo (Centauri), raw-page binary (NOT NDEF) | payload parser (raw page) | experiment (open tags)* |
 | `rfid-tigertag` | TigerTag, raw-page binary (NOT NDEF) | payload parser (raw page) | experiment |
 | `rfid-anycubic` | Anycubic ACE, plaintext raw-page (NOT NDEF) | payload parser (raw page) | experiment (partial)** |
-| `rfid-bambu` | Bambu Lab, encrypted Mifare Classic | HW claim reader + crypto1 (user key) | experiment |
+| `rfid-bambu` | Bambu Lab, encrypted Mifare Classic | HW claim reader + crypto1 (user key) | stable |
 | `rfid-creality` | Creality CFS, encrypted Mifare Classic | HW claim reader + crypto1 + AES (user keys) | experiment |
 
 The decoders cover every payload shape a decoder can take, so each is a worked template:
