@@ -1,5 +1,10 @@
 # all-the-tags
 
+[![licence](https://img.shields.io/badge/licence-AGPL--3.0-blue)](LICENSE)
+[![release](https://img.shields.io/github/v/release/Bespok3d/material-tags)](https://github.com/Bespok3d/material-tags/releases)
+![printer](https://img.shields.io/badge/printer-Snapmaker%20U1-informational)
+![stock firmware](https://img.shields.io/badge/stock%20firmware-no%20flashing-brightgreen)
+
 Filament RFID/NFC **decoder plugins** for Bespok3d, plus two collections
 (`kind:collection`, a members list with no payload of their own):
 
@@ -74,7 +79,7 @@ The `relay/` dir is build-coordination scratch and is **gitignored**: it never l
 | `rfid-elegoo` | Elegoo (Centauri), raw-page binary (NOT NDEF) | payload parser (raw page) | experiment (open tags)* |
 | `rfid-tigertag` | TigerTag, raw-page binary (NOT NDEF) | payload parser (raw page) | experiment |
 | `rfid-anycubic` | Anycubic ACE, plaintext raw-page (NOT NDEF) | payload parser (raw page) | experiment (partial)** |
-| `rfid-bambu` | Bambu Lab, encrypted Mifare Classic | HW claim reader + crypto1 (user key) | experiment |
+| `rfid-bambu` | Bambu Lab, encrypted Mifare Classic | HW claim reader + crypto1 (user key) | stable |
 | `rfid-creality` | Creality CFS, encrypted Mifare Classic | HW claim reader + crypto1 + AES (user keys) | experiment |
 
 The decoders cover every payload shape a decoder can take, so each is a worked template:
@@ -226,3 +231,26 @@ fine; only the factory IsoDep spools are blocked, as above.)
 - `u1-enhanced-rfid/rfid-ntag` provides `rfid-service` (the hub + chip stack +
   firmware patches). Decoders resolve it cross-repo through main-index, like
   `webcam-*` resolve `camera-hw-accel`.
+
+## Licence
+
+Copyright (C) 2026 unlucio and the Bespok3d contributors
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU
+Affero General Public License as published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero
+General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License along with this program. If
+not, see <https://www.gnu.org/licenses/>. The full text is in [LICENSE](LICENSE).
+
+Bespok3d is a project of the Bespok3d Organisation, which is not a legal entity. Copyright is held by
+the individual authors named above.
+
+## Support this project
+
+Bespok3d is built and maintained in the open, on stock printer firmware. If it saved you an
+afternoon, you can [buy me a coffee](https://buymeacoffee.com/unlucio).
