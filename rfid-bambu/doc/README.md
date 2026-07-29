@@ -1,4 +1,4 @@
-# Bambu Filament Tag (EXPERIMENTAL)
+# Bambu Filament Tag
 
 Reads **Bambu Lab** filament spool tags on the Snapmaker U1 and decodes the full
 filament, the same way a Bambu printer does: material, colour, diameter, weight, and
