@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# SPDX-FileCopyrightText: Copyright (C) 2026 unlucio and the Bespok3d contributors
+# SPDX-License-Identifier: AGPL-3.0-or-later
 # This repo's own gate: it must pass from this repo's root, with no sibling repo cloned except
 # lib_bespok3d. Eight tag decoders live side by side here, so most checks are per decoder. Exits
 # non-zero on any failure.

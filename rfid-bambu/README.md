@@ -12,7 +12,8 @@ full filament once you supply the key.
     tracked **UID-only** (no decode).
   - Bambu cards share Snapmaker's M1 **SAK 0x08**; the reader routes a 0x08 card the stock key
     cannot open to this claim handler (so it never disturbs the Snapmaker M1 path).
-  - **Not yet device-verified** against a real Bambu spool + key.
+  - Decoding is proven against the published spec and its test vectors. **Not yet read from a
+    real Bambu spool** (we have no Bambu spool to scan).
 - Requires the RFID Spool Reader (`rfid-ntag` >= 0.1.6, the crypto1 substrate; auto-installed
   via `require: rfid-service`).
 

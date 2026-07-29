@@ -18,7 +18,8 @@ filament once you supply the two keys.
   - Creality's tag carries **no diameter or temperatures** (the printer resolves those from the
     material id via its unpublished database), and the **material-id name map is not published**,
     so the material stays a number.
-  - **Not yet device-verified** against a real Creality spool + keys.
+  - Decoding is proven against the published schema and its test vectors. **Not yet read from a
+    real Creality spool** (we have no Creality spool to scan).
 - Requires the RFID Spool Reader (`rfid-ntag` >= 0.1.6, the crypto1 substrate; auto-installed
   via `require: rfid-service`).
 
