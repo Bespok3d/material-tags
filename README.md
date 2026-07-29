@@ -1,5 +1,10 @@
 # all-the-tags
 
+[![licence](https://img.shields.io/badge/licence-AGPL--3.0-blue)](LICENSE)
+[![release](https://img.shields.io/github/v/release/Bespok3d/material-tags)](https://github.com/Bespok3d/material-tags/releases)
+![printer](https://img.shields.io/badge/printer-Snapmaker%20U1-informational)
+![stock firmware](https://img.shields.io/badge/stock%20firmware-no%20flashing-brightgreen)
+
 Filament RFID/NFC **decoder plugins** for Bespok3d, plus two collections
 (`kind:collection`, a members list with no payload of their own):
 
@@ -244,3 +249,8 @@ not, see <https://www.gnu.org/licenses/>. The full text is in [LICENSE](LICENSE)
 
 Bespok3d is a project of the Bespok3d Organisation, which is not a legal entity. Copyright is held by
 the individual authors named above.
+
+## Support this project
+
+Bespok3d is built and maintained in the open, on stock printer firmware. If it saved you an
+afternoon, you can [buy me a coffee](https://buymeacoffee.com/unlucio).

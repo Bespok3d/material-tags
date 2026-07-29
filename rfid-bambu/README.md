@@ -18,3 +18,8 @@ full filament once you supply the key.
   via `require: rfid-service`).
 
 In-app doc: [doc/README.md](doc/README.md) - Changelog: [doc/CHANGELOG.md](doc/CHANGELOG.md)
+
+## Support this project
+
+Bespok3d is built and maintained in the open, on stock printer firmware. If it saved you an
+afternoon, you can [buy me a coffee](https://buymeacoffee.com/unlucio).
