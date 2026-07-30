@@ -42,6 +42,14 @@ paste them into each plugin's config yourself (see that plugin's own documentati
 the key and exactly what to enter). With no key, the spool is still tracked by its hardware UID once
 you bind that UID to a spool in Spoolman.
 
+Snapmaker's own spools work that way too, verified on a Snapmaker U1 running stock firmware with two
+genuine Snapmaker spools: the firmware exposes each card's own hardware UID, and binding that UID to
+a spool in Spoolman makes the lane resolve by the card itself. With the filament's **Article Number**
+cleared in Spoolman, so no SKU match was possible, unloading and reloading the spool still resolved
+to the bound spool. Bind with `SH_BIND_CARD_UID CHANNEL=<lane> SPOOL=<spoolman id>`. Two spools on
+one firmware were tested: that is what those spools do, not a claim about every Snapmaker spool, and
+nothing is claimed about other vendors' tags.
+
 ## What a tag does not fix
 
 Reading a tag tells the printer what is on the lane. It does not make your slicer agree. Snapmaker
