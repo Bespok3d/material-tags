@@ -42,6 +42,28 @@ paste them into each plugin's config yourself (see that plugin's own documentati
 the key and exactly what to enter). With no key, the spool is still tracked by its hardware UID once
 you bind that UID to a spool in Spoolman.
 
+## What a tag does not fix
+
+Reading a tag tells the printer what is on the lane. It does not make your slicer agree. Snapmaker
+Orca's **Sync Filament Information** only ever matches filaments Snorca/Orca ships itself, so anything else
+syncs its colour and falls back to `Generic <material>`. That is Snorca/Orca's own behaviour and nothing
+here changes it.
+
+A tag also has to resolve to a spool that exists in Spoolman. Spools themselves come back after a
+reboot on their own, tagged or not: the tag data is kept on the printer and read back at startup, and
+a spool picked by hand on an untagged lane is kept the same way. What a tag cannot do is land on a
+spool that is not there. While it resolves to nothing the lane shows what the tag says with no
+Spoolman spool behind it, and a spool picked by hand for that lane is not kept, because on a tagged
+lane the tag is what persists. Give the tag
+something to land on once and it stops: bind it (`SH_BIND_CARD_UID CHANNEL={0..3} SPOOL=<id>`), or
+fill the SKU the tag reports into the filament's **Article Number** in Spoolman. Either one is
+enough, and the Article Number route is the one to reach for whenever the tag reports a SKU. When a
+lane looks wrong for any other reason, `DETECT_SPOOLS` is the last line of defence: it re-reads every
+lane on the spot, so you can force the detection without rebooting and without pulling the spool off
+the printer and putting it back on.
+
+The Spoolman Bridge doc covers both under "Limits worth knowing about".
+
 ## Status
 
 Experiment channel until the whole stack is verified end to end on a real printer. The decoders are
