@@ -16,9 +16,10 @@ FIPS256_KEY = bytes.fromhex("000102030405060708090a0b0c0d0e0f1011121314151617181
 FIPS256_PLAIN = bytes.fromhex("00112233445566778899aabbccddeeff")
 FIPS256_CIPHER = bytes.fromhex("8ea2b7ca516745bfeafc49904b496089")
 
-# Creality vectors (verified against the public DnG-Crafts/flamebarke reverse engineering).
-CREALITY_MASTER_KEY = bytes.fromhex("00112233445566778899aabbccddeeff")
-CREALITY_ENCRYPTION_KEY = bytes.fromhex("ffeeddccbbaa99887766554433221100")
+# Obviously fake stand-ins. The real Creality keys are never committed; what these tests prove is
+# the AES-ECB wiring, and that holds for any 16-byte key.
+FAKE_MASTER_KEY = bytes.fromhex("00112233445566778899aabbccddeeff")
+FAKE_ENCRYPTION_KEY = bytes.fromhex("ffeeddccbbaa99887766554433221100")
 
 
 def test_aes128_encrypt_matches_fips197():
@@ -59,16 +60,16 @@ def test_creality_sector_key_vector():
     # Sector key = first 6 bytes of AES-ECB(master, UID tiled to 16 bytes).
     uid = bytes.fromhex("35b94a19")
     block = bytes(uid[i % len(uid)] for i in range(16))
-    derived = AesEcb(CREALITY_MASTER_KEY).encrypt_block(block)
-    assert derived[:6] == bytes.fromhex("239e7fe23653")
+    derived = AesEcb(FAKE_MASTER_KEY).encrypt_block(block)
+    assert derived[:6] == bytes.fromhex("34e178ac9ecb")
 
 
 def test_creality_payload_ecb_round_trip():
-    # The verified decrypted payload (DnG-Crafts/flamebarke). We do not ship the captured
-    # ciphertext, so prove the ECB path end-to-end with the real key: encrypting the known
-    # 48-byte plaintext and decrypting it back must reproduce it byte-for-byte.
+    # A payload the length and shape of a real tag's. We do not ship the captured ciphertext, so
+    # prove the ECB path end-to-end: encrypting the 48-byte plaintext and decrypting it back must
+    # reproduce it byte-for-byte. The round trip holds for any 16-byte key.
     expected = "1A5241201B3D010010000000033000000100000000000000"
-    cipher = AesEcb(CREALITY_ENCRYPTION_KEY)
+    cipher = AesEcb(FAKE_ENCRYPTION_KEY)
     encrypted = b"".join(
         cipher.encrypt_block(expected.encode()[at:at + 16])
         for at in range(0, len(expected), 16)

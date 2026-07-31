@@ -7,8 +7,10 @@ against that primitive. The real Bambu master key is never committed; the valida
 match branch is exercised by pointing the baked hash at a throwaway key via monkeypatch.
 """
 import hashlib
+import os
 
 import bambu_keys
+import pytest
 from bambu_keys import (
     derive_sector_keys,
     hkdf_sha256,
@@ -28,6 +30,8 @@ RFC_OKM = bytes.fromhex(
 
 SAMPLE_UID = bytes([0x04, 0xA1, 0xB2, 0xC3])
 DUMMY_MASTER = bytes(range(16))  # NOT the Bambu key; only exercises the wiring
+FAKE_MASTER_HEX = "00112233445566778899aabbccddeeff"  # NOT the Bambu key; parser input only
+REAL_MASTER_ENV = "B3D_BAMBU_MASTER_KEY"
 
 
 def test_hkdf_matches_rfc5869_vector():
@@ -67,15 +71,14 @@ def test_derive_wires_salt_uid_ikm_master_regression():
     assert derive_sector_keys(SAMPLE_UID, DUMMY_MASTER) != expected
 
 def test_parse_master_key_accepts_clean_hex():
-    parsed = parse_master_key("00112233445566778899aabbccddeeff")
+    parsed = parse_master_key(FAKE_MASTER_HEX)
     assert parsed is not None
     assert len(parsed) == 16
 
 
 def test_parse_master_key_strips_separators_and_case():
     spaced = parse_master_key(" 00:11:22:33:44:55:66:77:88:99:AA:BB:CC:DD:EE:FF ")
-    tight = parse_master_key("00112233445566778899aabbccddeeff")
-    assert spaced == tight
+    assert spaced == parse_master_key(FAKE_MASTER_HEX)
 
 
 def test_parse_master_key_rejects_bad_input():
@@ -90,6 +93,13 @@ def test_validation_matches_baked_hash(monkeypatch):
     monkeypatch.setattr(bambu_keys, "MASTER_KEY_SHA256", hashlib.sha256(probe).hexdigest())
     assert master_key_is_valid(probe) is True
     assert master_key_is_valid(bytes(16)) is False
+
+
+@pytest.mark.skipif(REAL_MASTER_ENV not in os.environ, reason=f"{REAL_MASTER_ENV} not supplied")
+def test_supplied_master_key_matches_the_baked_hash():
+    supplied = parse_master_key(os.environ[REAL_MASTER_ENV])
+    assert supplied is not None
+    assert master_key_is_valid(supplied) is True
 
 
 def test_baked_hash_is_a_sha256_hexdigest():
