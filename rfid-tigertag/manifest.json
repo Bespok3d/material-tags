@@ -6,7 +6,7 @@
   "description": "Reads TigerTag filament tags (open NTAG21x, no key required) and decodes the physical filament data - color (RGBA), diameter, nozzle and bed temperatures, drying temperature, and weight - into the shared rfid_data.json. The brand and material are stored on a TigerTag as numeric ids whose human-name tables are GPLv3, so this decoder keeps them as ids rather than vendoring a GPL table; the product id is surfaced as the SKU. Works on the standard NTAG reader (no key, no reader change). Installs the RFID Spool Reader automatically. Read-only. Experiment channel until verified on a real tag.",
   "tagline": "Decode open TigerTag NTAG spools (color, temps, diameter, weight).",
   "category": "filament",
-  "channel": "experiment",
+  "channel": "testing",
   "printer_specific": true,
   "source": "https://github.com/Bespok3d/all-the-tags",
   "homepage": "https://tigertag.io",
