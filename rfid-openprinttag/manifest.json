@@ -56,5 +56,7 @@
       "klipper"
     ]
   },
-  "files": []
+  "files": [],
+  "license": "https://github.com/Bespok3d/material-tags/blob/dev/rfid-openprinttag/doc/LICENSE",
+  "attributions": "# Attributions - rfid-openprinttag\n\n**Plugin author:** Bespok3d, tag format published by the OpenPrintTag project\n\nReads OpenPrintTag filament tags.\n\n| Upstream project | Author | Licence | Needed at runtime | Code ships in this package |\n| --- | --- | --- | --- | --- |\n| OpenPrintTag specification | the OpenPrintTag project | published specification | no | no |\n\nThe CBOR reader (`cbor_min.py`) is a clean-room implementation of the RFC 8949 subset OpenPrintTag\nuses, because Python's standard library has no CBOR codec. It is not taken from any third-party CBOR\nlibrary.\n"
 }

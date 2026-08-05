@@ -52,5 +52,7 @@
       "klipper"
     ]
   },
-  "files": []
+  "files": [],
+  "license": "https://github.com/Bespok3d/material-tags/blob/dev/rfid-tigertag/doc/LICENSE",
+  "attributions": "# Attributions - rfid-tigertag\n\n**Plugin author:** Bespok3d, tag format published by TigerTag\n\nReads TigerTag filament tags.\n\n| Upstream project | Author | Licence | Needed at runtime | Code ships in this package |\n| --- | --- | --- | --- | --- |\n| TigerTag specification | TigerTag | published specification | no | no |\n"
 }

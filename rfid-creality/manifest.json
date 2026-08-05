@@ -82,5 +82,7 @@
       "klipper"
     ]
   },
-  "files": []
+  "files": [],
+  "license": "https://github.com/Bespok3d/material-tags/blob/dev/rfid-creality/doc/LICENSE",
+  "attributions": "# Attributions - rfid-creality\n\n**Plugin author:** Bespok3d, tag format documented by DnG-Crafts (K2-RFID) and the Bambu Research Group\n\nReads Creality filament tags.\n\n| Upstream project | Author | Licence | Needed at runtime | Code ships in this package |\n| --- | --- | --- | --- | --- |\n| RFID-Tag-Guide and the K2-RFID community schema | DnG-Crafts (K2-RFID) and the Bambu Research Group | MIT | no | no |\n\nThe AES used to derive the sector key and decrypt the payload is a clean-room implementation of the\npublished FIPS-197 standard (`aes_min.py`), tested against the FIPS-197 known-answer vectors. It is\nnot taken from any third-party crypto library.\n"
 }

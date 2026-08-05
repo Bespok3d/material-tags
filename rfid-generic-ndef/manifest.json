@@ -52,5 +52,7 @@
       "klipper"
     ]
   },
-  "files": []
+  "files": [],
+  "license": "https://github.com/Bespok3d/material-tags/blob/dev/rfid-generic-ndef/doc/LICENSE",
+  "attributions": "# Attributions - rfid-generic-ndef\n\n**Plugin author:** Bespok3d, NDEF published by the NFC Forum\n\nReads any plain NDEF tag.\n\n| Upstream project | Author | Licence | Needed at runtime | Code ships in this package |\n| --- | --- | --- | --- | --- |\n| NDEF specification | the NFC Forum | published specification | no | no |\n"
 }

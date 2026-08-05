@@ -52,5 +52,7 @@
       "klipper"
     ]
   },
-  "files": []
+  "files": [],
+  "license": "https://github.com/Bespok3d/material-tags/blob/dev/rfid-opentag/doc/LICENSE",
+  "attributions": "# Attributions - rfid-opentag\n\n**Plugin author:** Bespok3d, tag format published by the OpenTag3D project\n\nReads OpenTag filament tags.\n\n| Upstream project | Author | Licence | Needed at runtime | Code ships in this package |\n| --- | --- | --- | --- | --- |\n| OpenTag specification | the OpenTag3D project | published specification | no | no |\n"
 }

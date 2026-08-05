@@ -63,5 +63,7 @@
       "id": "u1-gcode-colors",
       "version": ">=0.1.1"
     }
-  ]
+  ],
+  "license": "https://github.com/Bespok3d/material-tags/blob/dev/materials-tracker-plus/doc/LICENSE",
+  "attributions": ""
 }

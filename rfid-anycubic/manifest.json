@@ -52,5 +52,7 @@
       "klipper"
     ]
   },
-  "files": []
+  "files": [],
+  "license": "https://github.com/Bespok3d/material-tags/blob/dev/rfid-anycubic/doc/LICENSE",
+  "attributions": "# Attributions - rfid-anycubic\n\n**Plugin author:** Bespok3d, tag format documented by DnG-Crafts\n\nReads Anycubic ACE filament tags.\n\n| Upstream project | Author | Licence | Needed at runtime | Code ships in this package |\n| --- | --- | --- | --- | --- |\n| ACE-RFID tag-format research | DnG-Crafts and contributors | see the project | no | no |\n\nField layout follows the community reverse-engineering write-up at\nhttps://github.com/DnG-Crafts/ACE-RFID. No code from that project is used here.\n"
 }

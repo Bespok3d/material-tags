@@ -56,5 +56,7 @@
       "klipper"
     ]
   },
-  "files": []
+  "files": [],
+  "license": "https://github.com/Bespok3d/material-tags/blob/dev/rfid-elegoo/doc/LICENSE",
+  "attributions": "# Attributions - rfid-elegoo\n\n**Plugin author:** Bespok3d, tag format published by ELEGOO\n\nReads Elegoo filament tags.\n\n| Upstream project | Author | Licence | Needed at runtime | Code ships in this package |\n| --- | --- | --- | --- | --- |\n| ELEGOO-RFID-Tag-Guide | ELEGOO | see the project | no | no |\n\nField layout follows ELEGOO's published guide at https://github.com/ELEGOO-3D/ELEGOO-RFID-Tag-Guide.\nNo code from it is used here.\n"
 }

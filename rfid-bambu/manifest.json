@@ -69,5 +69,7 @@
       "klipper"
     ]
   },
-  "files": []
+  "files": [],
+  "license": "https://github.com/Bespok3d/material-tags/blob/dev/rfid-bambu/doc/LICENSE",
+  "attributions": "# Attributions - rfid-bambu\n\n**Plugin author:** Bespok3d, tag format documented by the Bambu Research Group\n\nReads Bambu Lab filament tags.\n\n| Upstream project | Author | Licence | Needed at runtime | Code ships in this package |\n| --- | --- | --- | --- | --- |\n| RFID-Tag-Guide | the Bambu Research Group | MIT | no | no |\n\nKey derivation is written clean-room from the published HKDF-SHA256 description in\nhttps://github.com/Bambu-Research-Group/RFID-Tag-Guide. No code from that project is used here.\n"
 }
