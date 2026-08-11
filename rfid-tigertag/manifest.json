@@ -8,7 +8,7 @@
   "category": "filament",
   "channel": "testing",
   "printer_specific": true,
-  "source": "https://github.com/Bespok3d/all-the-tags",
+  "source": "https://github.com/Bespok3d/material-tags",
   "homepage": "https://tigertag.io",
   "changelog": "doc/CHANGELOG.md",
   "published_at": "2026-06-30",
