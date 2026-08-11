@@ -57,6 +57,9 @@ The Action runs with `bake: 'true'`: a plugin that ships a `requirements.txt` or
 `klipper_requirements.txt` at its root gets its Python deps downloaded for the printer platform
 (aarch64, CPython 3.11) at build time. Pass `--bake` to do the same locally.
 
+Writing a plugin of your own? Start at the plugin documentation:
+[Bespok3d/b3-builder/doc](https://github.com/Bespok3d/b3-builder/tree/main/doc).
+
 ## Releasing
 
 Bump a plugin's `manifest.json` `version` and push the tag `plugin-<name>-v<version>` naming that
