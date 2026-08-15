@@ -1,0 +1,58 @@
+{
+  "name": "rfid-qidi",
+  "title": "QIDI Filament Tag",
+  "version": "0.1.0",
+  "author": "bespoked",
+  "description": "Reads QIDI filament spool tags and decodes the material, the sub-type and the colour into the shared rfid_data.json, so the touchscreen and Spoolman know what spool is loaded. NO KEY NEEDED: QIDI leaves its tags on the Mifare factory default key, so there is nothing for you to paste and nothing for us to ship. A QIDI tag is also very small: the whole payload is a material code, a colour code and a manufacturer code, so there is no weight, diameter, temperature, date or SKU on the card to read, and those keep coming from your slicer profile or Spoolman. The code tables hold only the pairings confirmed on a physical spool; an unrecognised spool still tracks and reports its codes as numbers so the tables can grow from real tags. Installs the RFID Spool Reader automatically. Read-only: it never writes a tag.",
+  "tagline": "Decode QIDI spools on stock firmware, no key to supply.",
+  "category": "filament",
+  "channel": "stable",
+  "printer_specific": true,
+  "source": "https://github.com/Bespok3d/material-tags",
+  "homepage": "https://github.com/suchmememanyskill/OpenRFID",
+  "changelog": "doc/CHANGELOG.md",
+  "published_at": "2026-08-13",
+  "updated_at": "2026-08-13",
+  "publisher": "PLACEHOLDER",
+  "provides": [],
+  "require": [
+    {
+      "service": "rfid-service",
+      "cardinality": "one"
+    }
+  ],
+  "conflicts": [],
+  "requires": {
+    "capabilities": [
+      "rfid-spi"
+    ],
+    "variables": []
+  },
+  "permissions": [
+    "klipper-extra",
+    "klipper-config",
+    "restart"
+  ],
+  "install": {
+    "place": [
+      {
+        "class": "klipper-config",
+        "src": "files/klipper/rfid-qidi.cfg"
+      },
+      {
+        "class": "klipper-extra",
+        "src": "files/klipper/klippy/extras/rfid-tags/qidi/rfid_tag_qidi.py"
+      },
+      {
+        "class": "klipper-extra",
+        "src": "files/klipper/klippy/extras/rfid-tags/qidi/qidi_fields.py"
+      }
+    ],
+    "restart": [
+      "klipper"
+    ]
+  },
+  "files": [],
+  "license": "https://github.com/Bespok3d/material-tags/blob/dev/rfid-qidi/doc/LICENSE",
+  "attributions": "# Attributions - rfid-qidi\n\n**Plugin author:** Bespok3d\n\nReads QIDI filament tags.\n\n| Upstream project | Author | Licence | Needed at runtime | Code ships in this package |\n| --- | --- | --- | --- | --- |\n| OpenRFID (community QIDI code list) | suchmememanyskill and contributors | GPL-3.0 | no | no |\n\nThe tag layout here was worked out by reading physical QIDI spools on a printer. OpenRFID was\nread as reference only: no code and no code table from it is in this package, and its wider\nmaterial and colour list is linked from the documentation rather than copied.\n"
+}

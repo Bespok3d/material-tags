@@ -83,13 +83,15 @@ The `relay/` dir is build-coordination scratch and is **gitignored**: it never l
 | `rfid-elegoo` | Elegoo (Centauri), raw-page binary (NOT NDEF) | payload parser (raw page) | experiment (open tags)* |
 | `rfid-tigertag` | TigerTag, raw-page binary (NOT NDEF) | payload parser (raw page) | experiment |
 | `rfid-anycubic` | Anycubic ACE, plaintext raw-page (NOT NDEF) | payload parser (raw page) | experiment (partial)** |
+| `rfid-qidi` | QIDI, Mifare Classic on the factory default key | HW claim reader (no user key) | stable (device-proven)*** |
 | `rfid-bambu` | Bambu Lab, encrypted Mifare Classic | HW claim reader + crypto1 (user key) | stable |
 | `rfid-creality` | Creality CFS, encrypted Mifare Classic | HW claim reader + crypto1 + AES (user keys) | experiment |
 
 The decoders cover every payload shape a decoder can take, so each is a worked template:
 NDEF JSON (`rfid-generic-ndef`), NDEF binary (`rfid-opentag`), NDEF CBOR (`rfid-openprinttag`),
-raw-page binary (`rfid-elegoo`, `rfid-tigertag`), and encrypted Mifare-Classic with
-user-supplied keys (`rfid-bambu`, `rfid-creality`).
+raw-page binary (`rfid-elegoo`, `rfid-tigertag`), Mifare-Classic on the factory default key
+(`rfid-qidi`), and encrypted Mifare-Classic with user-supplied keys (`rfid-bambu`,
+`rfid-creality`).
 
 All are on the **experiment** channel until verified against a real tag on a printer
 (junior `u1jr` is the bench; testers verify the spool kinds we do not own). The **"All the
@@ -110,6 +112,17 @@ even RF-wakes them, so the decoder never sees their bytes. Reading factory Elego
 **ISO 14443-4 (APDU) reader track** plus the chip's undocumented auth - tracked as a hardware
 blocker below (A5). The decoder is correct for any open Elegoo NTAG; testers with such a tag
 verify it.
+
+***`rfid-qidi` is **read end to end on junior** against physical QIDI spools (PLA Matte, PETG).
+QIDI leaves its tags on the **Mifare factory default key** (`FF FF FF FF FF FF`), so there is no
+user key and none is shipped. The whole payload is three bytes in sector 1 block 4 (material
+code, colour code, manufacturer code) followed by an all-zero tail, which is also the signature
+used to decline a foreign card. There is genuinely **no weight, diameter, temperature, date, or
+SKU on a QIDI tag**, so those stay at their template defaults rather than being invented. The
+code tables hold only pairings confirmed on a real spool; an unmapped code still tracks and logs
+its number, so testers grow the tables. Wider community lists live at
+[OpenRFID](https://github.com/suchmememanyskill/OpenRFID), read as reference only: no code and no
+table from it is in this tree.
 
 ---
 

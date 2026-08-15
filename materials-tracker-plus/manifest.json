@@ -2,7 +2,7 @@
   "kind": "collection",
   "name": "materials-tracker-plus",
   "title": "Materials Tracker Plus",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "bespoked",
   "description": "Know what filament is loaded, how much of it is left, and see it in the right colour on screen. Installs the whole RFID tag-reading stack (the NFC reader and hub plus every shipped tag decoder, so almost any spool you tap is identified), Spoolman tracking to keep the remaining length up to date, AFC Lite for the automated filament changer, and the U1 G-code preview colours so the sliced preview shows each tool in its real filament colour. Everything installs together with a single service restart. Experiment channel until the stack is verified end to end on a real printer.",
   "tagline": "Tap a spool, and the printer knows what it is, how much is left, and what colour it prints.",
@@ -12,7 +12,7 @@
   "source": "https://github.com/Bespok3d/material-tags",
   "publisher": "PLACEHOLDER",
   "published_at": "2026-07-27",
-  "updated_at": "2026-07-27",
+  "updated_at": "2026-08-13",
   "changelog": "doc/CHANGELOG.md",
   "members": [
     {
@@ -37,6 +37,10 @@
     },
     {
       "id": "rfid-anycubic",
+      "version": ">=0.1.0"
+    },
+    {
+      "id": "rfid-qidi",
       "version": ">=0.1.0"
     },
     {

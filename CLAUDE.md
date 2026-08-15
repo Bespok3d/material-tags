@@ -23,6 +23,7 @@ decode core plus a thin registration shell); the collection is a bundle manifest
 - `rfid-elegoo`: Elegoo (Centauri), raw-page binary (NOT NDEF)
 - `rfid-tigertag`: TigerTag, raw-page binary (NOT NDEF)
 - `rfid-anycubic`: Anycubic ACE, plaintext raw-page (NOT NDEF)
+- `rfid-qidi`: QIDI, Mifare Classic on the factory default key (no user key)
 - `rfid-bambu`: Bambu Lab, encrypted Mifare Classic
 - `rfid-creality`: Creality CFS, encrypted Mifare Classic
 - `all-the-tags`: the "All the Tags" collection (`kind:collection`) that bundles the reader, every

@@ -23,6 +23,10 @@ each on its own. The collection itself is not installed and has nothing to unins
 - **Anycubic ACE (`rfid-anycubic`)** - plaintext Anycubic NTAG. PARTIAL: the dispute-free fields
   (brand, material, nozzle and bed temperatures) decode today; color, diameter, and weight wait for
   one real tester dump.
+- **QIDI (`rfid-qidi`)** - full QIDI payload decode, and no key to supply: QIDI leaves its tags on
+  the factory default key every blank card ships with. A QIDI tag carries only the material, the
+  sub-type, and the colour, so weight, diameter, temperatures, and date keep coming from your slicer
+  profile or Spoolman.
 - **Bambu (`rfid-bambu`)** - full Bambu payload decode. Needs YOUR Bambu master key pasted into the
   plugin's config; without a key it falls back to UID-only tracking. We ship only the key's checksum,
   never the key.
@@ -74,5 +78,4 @@ The Spoolman Bridge doc covers both under "Limits worth knowing about".
 
 ## Status
 
-Experiment channel until the whole stack is verified end to end on a real printer. The decoders are
-read-only; none of them ever writes a tag.
+Stable channel. The decoders are read-only; none of them ever writes a tag.

@@ -2,17 +2,17 @@
   "kind": "collection",
   "name": "all-the-tags",
   "title": "All the Tags",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "author": "bespoked",
-  "description": "Installs the whole RFID filament-tag reading stack in one click: the NFC reader and hub, every shipped tag-standard decoder, and Spoolman tracking, so almost any spool you tap is identified and tracked. Includes the open standards (OpenTag3D, OpenPrintTag, generic NDEF JSON, TigerTag) plus full payload decoders for the proprietary tags (Bambu and Creality, with your own keys pasted into their config; without a key they fall back to UID-only tracking). Anycubic decodes the dispute-free fields today (a tester dump finishes it). The members install together with a single service restart. Experiment channel until the stack is verified end to end on a real printer.",
+  "description": "Installs the whole RFID filament-tag reading stack in one click: the NFC reader and hub, every shipped tag-standard decoder, and Spoolman tracking, so almost any spool you tap is identified and tracked. Includes the open standards (OpenTag3D, OpenPrintTag, generic NDEF JSON, TigerTag) plus full payload decoders for the proprietary tags (Bambu and Creality, with your own keys pasted into their config; without a key they fall back to UID-only tracking). QIDI needs no key at all: its tags sit on the Mifare factory default key, so those spools read out of the box. Anycubic decodes the dispute-free fields today (a tester dump finishes it). The members install together with a single service restart.",
   "tagline": "Every spool, identified: the whole RFID tag-reading stack in one install.",
   "category": "filament",
-  "channel": "testing",
+  "channel": "stable",
   "printer_specific": true,
   "source": "https://github.com/Bespok3d/material-tags",
   "publisher": "PLACEHOLDER",
   "published_at": "2026-06-30",
-  "updated_at": "2026-07-26",
+  "updated_at": "2026-08-15",
   "changelog": "doc/CHANGELOG.md",
   "members": [
     {
@@ -37,6 +37,10 @@
     },
     {
       "id": "rfid-anycubic",
+      "version": ">=0.1.0"
+    },
+    {
+      "id": "rfid-qidi",
       "version": ">=0.1.0"
     },
     {

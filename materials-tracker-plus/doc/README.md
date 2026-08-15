@@ -9,7 +9,7 @@ prints. The full filament-awareness setup in one install.
 | --- | --- |
 | RFID Spool Reader | Reads the tag on the spool and runs the decoder hub |
 | Generic NDEF, OpenTag3D, OpenPrintTag, TigerTag | The open tag standards |
-| Anycubic, Bambu, Creality, Elegoo | The vendor tags (Bambu and Creality need your own key pasted into their settings; without one they still track the spool by the tag's own ID) |
+| Anycubic, Bambu, Creality, Elegoo, QIDI | The vendor tags (Bambu and Creality need your own key pasted into their settings; without one they still track the spool by the tag's own ID. QIDI needs no key) |
 | Spoolman Bridge | Keeps the remaining length of the loaded spool up to date |
 | AFC Lite | Four-lane filament tracking and tool-change macros for the U1 |
 | U1 G-code Preview Colors | Shows each tool in the preview in the colour actually loaded |

@@ -6,7 +6,7 @@
   "description": "Best-effort reader for filament NFC tags that store their data as plain JSON in an NDEF record but do not use a recognized protocol (OpenSpool and other protocol-keyed tags are handled by their own decoders). Maps common field names (brand, type, color_hex, min_temp/max_temp, bed_temp, diameter, weight) into the shared rfid_data.json. Requires the RFID Spool Reader, which it installs automatically. Read-only: it never writes a tag. Experiment channel until verified on a real tag.",
   "tagline": "Read any plain-JSON NFC filament tag the U1 reader can see.",
   "category": "filament",
-  "channel": "testing",
+  "channel": "stable",
   "printer_specific": true,
   "source": "https://github.com/Bespok3d/material-tags",
   "homepage": "https://github.com/Bespok3d/material-tags",
@@ -23,16 +23,10 @@
   ],
   "conflicts": [],
   "requires": {
-    "capabilities": [
-      "rfid-spi"
-    ],
+    "capabilities": ["rfid-spi"],
     "variables": []
   },
-  "permissions": [
-    "klipper-extra",
-    "klipper-config",
-    "restart"
-  ],
+  "permissions": ["klipper-extra", "klipper-config", "restart"],
   "install": {
     "place": [
       {
@@ -48,9 +42,7 @@
         "src": "files/klipper/klippy/extras/rfid-tags/generic-ndef/generic_ndef_fields.py"
       }
     ],
-    "restart": [
-      "klipper"
-    ]
+    "restart": ["klipper"]
   },
   "files": [],
   "license": "https://github.com/Bespok3d/material-tags/blob/dev/rfid-generic-ndef/doc/LICENSE",

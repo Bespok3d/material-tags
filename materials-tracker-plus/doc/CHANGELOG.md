@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.2 - 2026-08-13
+
+- QIDI spools now read. The new QIDI decoder comes with the stack and needs no key from you: QIDI
+  leaves its tags on the factory default key every blank card ships with. A QIDI tag carries the
+  material, the sub-type, and the colour, and nothing else, so weight, diameter, temperatures, and
+  date still come from your slicer profile or from Spoolman.
+
 ## 0.1.1 - 2026-07-27
 
 - Say what the Bambu and Creality decoders actually fall back to without a key: the tag's own ID, not

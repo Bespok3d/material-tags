@@ -27,7 +27,7 @@ fi
 cd "$REPO_ROOT" || exit 1
 
 DECODERS=(rfid-generic-ndef rfid-opentag rfid-elegoo rfid-bambu rfid-creality rfid-tigertag
-          rfid-openprinttag rfid-anycubic)
+          rfid-openprinttag rfid-anycubic rfid-qidi)
 EXTRAS="files/klipper/klippy/extras"
 OPENPRINTTAG_EX="rfid-openprinttag/$EXTRAS/rfid-tags/openprinttag"
 
@@ -49,7 +49,8 @@ run_check "ruff"    ruff_in_dir "$REPO_ROOT" \
     rfid-generic-ndef/files rfid-generic-ndef/tests rfid-opentag/files rfid-opentag/tests \
     rfid-elegoo/files rfid-elegoo/tests rfid-bambu/files rfid-bambu/tests \
     rfid-creality/files rfid-creality/tests rfid-tigertag/files rfid-tigertag/tests \
-    rfid-openprinttag/files rfid-openprinttag/tests rfid-anycubic/files rfid-anycubic/tests
+    rfid-openprinttag/files rfid-openprinttag/tests rfid-anycubic/files rfid-anycubic/tests \
+    rfid-qidi/files rfid-qidi/tests
 
 run_check "mypy"    mypy_in_dir "$REPO_ROOT" \
     "rfid-generic-ndef/$EXTRAS/rfid-tags/generic-ndef/generic_ndef_fields.py" \
@@ -61,7 +62,8 @@ run_check "mypy"    mypy_in_dir "$REPO_ROOT" \
     "rfid-creality/$EXTRAS/rfid-tags/creality/creality_keys.py" \
     "rfid-creality/$EXTRAS/rfid-tags/creality/creality_fields.py" \
     "rfid-tigertag/$EXTRAS/rfid-tags/tigertag/tigertag_fields.py" \
-    "rfid-anycubic/$EXTRAS/rfid-tags/anycubic/anycubic_fields.py"
+    "rfid-anycubic/$EXTRAS/rfid-tags/anycubic/anycubic_fields.py" \
+    "rfid-qidi/$EXTRAS/rfid-tags/qidi/qidi_fields.py"
 
 # openprinttag_fields.py relatively imports its cbor_min sibling (from . import cbor_min), which
 # resolves at runtime as a flat klippy.extras package member; mypy needs the package parent (the

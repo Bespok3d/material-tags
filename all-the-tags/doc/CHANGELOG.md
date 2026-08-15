@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.3 - 2026-08-15
+
+- All the Tags is on the stable channel. It used to sit on the experiment channel, so anyone who
+  takes only stable releases never saw it in the store at all.
+- QIDI spools now read. The collection includes the new QIDI decoder, and it needs no key from you:
+  QIDI leaves its tags on the factory default key every blank card ships with. Tap a QIDI spool and
+  the material, the sub-type, and the colour arrive like any other tag.
+- What a QIDI tag does not carry: weight, diameter, temperatures, date, and SKU are simply not
+  written on the card, so those still come from your slicer profile or from Spoolman.
+
 ## 0.1.2 - 2026-07-30
 
 - The collection page now says what a tag does not fix. Your slicer only syncs to filaments it ships
