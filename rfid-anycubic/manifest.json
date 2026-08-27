@@ -1,7 +1,7 @@
 {
   "name": "rfid-anycubic",
   "title": "Anycubic ACE Filament Tag",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "bespoked",
   "description": "Reads Anycubic ACE filament tags (plaintext NTAG21x, no key) and decodes the dispute-free fields - brand, material, and nozzle/bed temperatures - into the shared rfid_data.json. PARTIAL by design: the public reverse engineering disagrees on three fields (the SKU length, the color byte order, and whether page 31 is weight), and no real tag dump has been published to settle them, so this decoder does NOT decode color, diameter, or weight yet rather than guess. One captured tag from a tester pins those, then they are added. Installs the RFID Spool Reader automatically. Read-only. Experiment channel.",
   "tagline": "Decode Anycubic ACE brand/material/temps (color+weight pending a tag dump).",
@@ -12,8 +12,8 @@
   "homepage": "https://github.com/DnG-Crafts/ACE-RFID",
   "changelog": "doc/CHANGELOG.md",
   "published_at": "2026-06-30",
-  "updated_at": "2026-06-30",
-  "publisher": "PLACEHOLDER",
+  "updated_at": "2026-08-26",
+  "publisher": "Mauker",
   "provides": [],
   "require": [
     {
