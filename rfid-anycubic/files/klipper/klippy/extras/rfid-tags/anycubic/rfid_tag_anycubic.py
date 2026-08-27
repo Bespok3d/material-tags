@@ -17,15 +17,26 @@ from .anycubic_fields import build_struct
 
 _log = logging.getLogger("bespok3d.anycubic")
 
+BYTES_PER_PAGE = 4  # NTAG21x / Ultralight page width, for page-aligned dump readability
+
+def _page_aligned_hex(raw_bytes):
+    """Groups raw_bytes into page-width chunks so a dump lines up with the page numbers
+    anycubic_fields' offsets are documented against, instead of one unbroken hex string."""
+    pages = [raw_bytes[offset:offset + BYTES_PER_PAGE] for offset in range(0, len(raw_bytes), BYTES_PER_PAGE)]
+    return " ".join(page.hex() for page in pages)
 
 class AnycubicParser:
     def to_filament_protocol(self, raw_bytes):
         if not raw_bytes:
             return filament_protocol.FILAMENT_PROTO_ERR, None
+        _log.info("Anycubic: raw dump (%d bytes, %d pages) = %s", len(raw_bytes),
+                  len(raw_bytes) // BYTES_PER_PAGE, _page_aligned_hex(raw_bytes))
         info = build_struct(bytes(raw_bytes), dict(filament_protocol.FILAMENT_INFO_STRUCT))
         if info is None:
+            _log.warning("Anycubic: magic not found, declining")
             return filament_protocol.FILAMENT_PROTO_ERR, None
-        _log.info("Anycubic: vendor=%s type=%s nozzle=%s-%s", info.get("VENDOR"),
+        _log.info("Anycubic: parsed fields = %s", info)
+        _log.info("Anycubic: uid=%s vendor=%s type=%s nozzle=%s-%s", info.get("CARD_UID"), info.get("VENDOR"),
                   info.get("MAIN_TYPE"), info.get("HOTEND_MIN_TEMP"), info.get("HOTEND_MAX_TEMP"))
         return filament_protocol.FILAMENT_PROTO_OK, info
 
