@@ -1,23 +1,26 @@
 # rfid-anycubic
 
-Clean-room decoder for **Anycubic ACE** filament tags - a plaintext (no key) NTAG21x block,
-anchored on the `7B 00 65 00` magic (version `0x65`).
+Clean-room decoder for **Anycubic ACE** filament tags, a plaintext (no key) Mifare Ultralight
+C block, anchored on a `7B 00` magic prefix followed by a one-byte format version (`0x64` or
+`0x65` confirmed so far) and a trailing zero.
 
-- **Status:** experiment, **PARTIAL by design**. No key, no reader change (raw-page payload parser).
-- **Decodes:** brand, material, and nozzle/bed temperatures (little-endian).
-- **BIG GOTCHA - color, diameter, and weight are NOT decoded yet.** The public reverse
-  engineering (DnG-Crafts/ACE-RFID, SimplyPrint) **disagrees** on the SKU field length
-  (12 vs 16), the color byte order (ARGB vs ABGR at page 20), and whether page 31 is weight -
-  and no real tag dump has been published to settle them. Guessing would show a wrong color or
-  a 10x-off weight, so those fields are left at their defaults until a tester captures a real
-  ACE tag. The agreed fields (brand/material/temps) decode now.
-  - **Have an ACE spool?** Tap it on a phone (NFC Tools / NXP TagInfo) and share the raw page
-    dump - that pins the three disputed fields and unlocks the rest.
+- **Status:** experiment. Most fields decode; one is still genuinely open.
+- **Decodes:** SKU, brand, material, color, nozzle/bed temperatures, diameter, length, and
+  weight, confirmed against three independently sourced tags across three product lines
+  (PLA+, PLA Spezial, ASA). Print speed decodes when the tag carries it, seen populated on
+  one of the three so far.
+- **Still open:** the SKU field length (12 vs 16 bytes) has no tag long enough yet to prove
+  it either way; a PLA+ Refill spool (`AHPLP<color>-A108`) is the one that would settle it.
+  Weight, diameter, and length are confirmed in position but only tested against a standard
+  1kg/330m spool so far, a differently sized spool is what would confirm the scale holds
+  generally.
+  - **Have an ACE spool, especially a Refill pack or an unusual size?** Tap it on a phone
+    (NFC Tools / NXP TagInfo) and share the raw page dump, that's what closes out what's left.
 - Requires the RFID Spool Reader (`rfid-ntag`, auto-installed via `require: rfid-service`).
 
-In-app doc: [doc/README.md](doc/README.md) - Changelog: [doc/CHANGELOG.md](doc/CHANGELOG.md)
+In-app doc: [doc/README.md](doc/README.md), Changelog: [doc/CHANGELOG.md](doc/CHANGELOG.md)
 
 ## Support this project
 
 Bespok3d is built and maintained in the open, on stock printer firmware. If it saved you an
-afternoon, you can [buy me a coffee](https://buymeacoffee.com/unlucio).
+afternoon, you can [buy me a coffee](https://ko-fi.com/A623L7G).
