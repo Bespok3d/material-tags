@@ -29,7 +29,7 @@
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-anycubic/doc/README.md",
       "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/495660391",
       "deps": [
-        "rfid-service"
+        "rfid-ntag"
       ]
     },
     {
@@ -68,7 +68,7 @@
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-bambu/doc/README.md",
       "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/495660403",
       "deps": [
-        "rfid-service"
+        "rfid-ntag"
       ]
     },
     {
@@ -116,7 +116,7 @@
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-creality/doc/README.md",
       "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/495660413",
       "deps": [
-        "rfid-service"
+        "rfid-ntag"
       ]
     },
     {
@@ -144,7 +144,7 @@
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-elegoo/doc/README.md",
       "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/495660425",
       "deps": [
-        "rfid-service"
+        "rfid-ntag"
       ]
     },
     {
@@ -172,7 +172,7 @@
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-generic-ndef/doc/README.md",
       "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/495660442",
       "deps": [
-        "rfid-service"
+        "rfid-ntag"
       ]
     },
     {
@@ -200,7 +200,7 @@
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-openprinttag/doc/README.md",
       "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/495660490",
       "deps": [
-        "rfid-service"
+        "rfid-ntag"
       ]
     },
     {
@@ -228,7 +228,7 @@
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-opentag/doc/README.md",
       "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/495660513",
       "deps": [
-        "rfid-service"
+        "rfid-ntag"
       ]
     },
     {
@@ -256,7 +256,7 @@
       "doc_url": "https://github.com/Bespok3d/material-tags/blob/main/rfid-tigertag/doc/README.md",
       "download_url": "https://api.github.com/repos/Bespok3d/material-tags/releases/assets/495660521",
       "deps": [
-        "rfid-service"
+        "rfid-ntag"
       ]
     }
   ],
