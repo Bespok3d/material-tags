@@ -64,6 +64,7 @@ dump. That is what would close out the two open items above.
 
 ## Status
 
-Experiment channel. SKU, brand, material, color, temperatures, diameter, length, and weight
-decode from the confirmed layout (Mifare Ultralight C, little-endian); print speed decodes
-when the tag carries it. Requires the RFID Spool Reader (installed automatically).
+Release candidate channel. SKU, brand, material, color, temperatures (including bed
+minimum), diameter, length, and weight decode from the confirmed layout (Mifare Ultralight C,
+little-endian); print speed decodes when the tag carries it. Requires the RFID Spool Reader
+(installed automatically).
