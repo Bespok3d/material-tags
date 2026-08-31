@@ -32,8 +32,7 @@ class AnycubicParser:
     def to_filament_protocol(self, raw_bytes):
         if not raw_bytes:
             return filament_protocol.FILAMENT_PROTO_ERR, None
-        _log.info("Anycubic: raw dump (%d bytes, %d pages) = %s", len(raw_bytes),
-                  len(raw_bytes) // BYTES_PER_PAGE, _page_aligned_hex(raw_bytes))
+
         info = build_struct(bytes(raw_bytes), dict(filament_protocol.FILAMENT_INFO_STRUCT))
         if info is None:
             _log.warning("Anycubic: magic not found, declining")
