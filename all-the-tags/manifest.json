@@ -4,7 +4,7 @@
   "title": "All the Tags",
   "version": "0.1.4",
   "author": "bespoked",
-  "description": "Installs the whole RFID filament-tag reading stack in one click: the NFC reader and hub, every shipped tag-standard decoder, and Spoolman tracking, so almost any spool you tap is identified and tracked. Includes the open standards (OpenTag3D, OpenPrintTag, generic NDEF JSON, TigerTag) plus full payload decoders for the proprietary tags (Bambu and Creality, with your own keys pasted into their config; without a key they fall back to UID-only tracking). QIDI needs no key at all: its tags sit on the Mifare factory default key, so those spools read out of the box. Anycubic decodes the dispute-free fields today (a tester dump finishes it). The members install together with a single service restart.",
+  "description": "Installs the whole RFID filament-tag reading stack in one click: the NFC reader and hub, every shipped tag-standard decoder, and Spoolman tracking, so almost any spool you tap is identified and tracked. Includes the open standards (OpenTag3D, OpenPrintTag, generic NDEF JSON, TigerTag) plus full payload decoders for the proprietary tags (Bambu and Creality, with your own keys pasted into their config; without a key they fall back to UID-only tracking). QIDI needs no key at all: its tags sit on the Mifare factory default key, so those spools read out of the box. Anycubic decodes SKU, color, diameter, weight and temperatures today, confirmed against real tags across three product lines. The members install together with a single service restart.",
   "tagline": "Every spool, identified: the whole RFID tag-reading stack in one install.",
   "category": "filament",
   "channel": "stable",

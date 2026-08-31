@@ -4,7 +4,7 @@ Clean-room decoder for **Anycubic ACE** filament tags, a plaintext (no key) Mifa
 C block, anchored on a `7B 00` magic prefix followed by a one-byte format version (`0x64` or
 `0x65` confirmed so far) and a trailing zero.
 
-- **Status:** experiment. Most fields decode; one is still genuinely open.
+- **Status:** release candidate. Most fields decode; one is still genuinely open.
 - **Decodes:** SKU, brand, material, color, nozzle/bed temperatures, diameter, length, and
   weight, confirmed against three independently sourced tags across three product lines
   (PLA+, PLA Spezial, ASA). Print speed decodes when the tag carries it, seen populated on

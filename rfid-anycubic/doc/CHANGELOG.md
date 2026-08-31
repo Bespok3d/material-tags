@@ -2,20 +2,33 @@
 
 ## 0.2.0
 
-- Decodes five fields previously left at template defaults: SKU, color, diameter,
-  length, and weight, all confirmed against a real Anycubic PLA+ spool matched to its box
-  and seller listing (SKU "AHPLPBK-108", color #212721, 1.75mm, 330m, 1000g), settling two
-  of the original three disputes along the way: color is alpha/R/G/B in that stored order
-  (no ARGB/ABGR swap), and page 31 is weight in grams, not unused. Diameter and length were
-  new finds past what the original dispute even named. SKU decodes correctly but its field
-  width (12 vs 16 bytes) stays an open question regardless of sample count, since the
-  confirmed tag null pads well short of either boundary. Color, diameter, length, and weight
-  are all pending confirmation on further spools, one tag is not enough to rule out a wrong
-  offset or scale factor that happens to read plausibly on this one; flagged inline in
-  anycubic_fields.py against what a second spool should specifically stress (a fractional
-  weight, a saturated non-gray color). Added raw page dump and parsed-field logging to the
-  registration shell so a failed or partial decode can be diagnosed from the log alone. No
-  key, no reader change, still read-only. Experiment channel.
+- Corrected a wrong foundational assumption: Anycubic ACE tags are a plaintext Mifare
+  Ultralight C card, not generic NTAG21x. Ultralight C has a smaller page count, and the
+  magic scan now tolerates that: it looks for a `7B 00` prefix followed by a one-byte format
+  version (`0x64` or `0x65` confirmed so far, both sharing the same field layout) and a
+  trailing zero, instead of matching one fixed four-byte value.
+- Decodes SKU, brand (correctly falls back to Anycubic when the field is blank, confirmed
+  on a real tag), material, color, diameter, length, weight, nozzle temperature, bed
+  temperature (both minimum and maximum), and print speed when the tag carries it. Previously
+  only brand, material, and nozzle/bed maximum temperature decoded.
+- Corrected the color byte order: it is alpha, then blue, green, red, not alpha, red, green,
+  blue. The first sample tested (black) could not distinguish the two orders, since its red
+  and blue channels are identical, and looked confirmed when it was not. A second,
+  non-symmetric sample (peach pink) broke the tie, independently reinforced by that same tag's
+  own SKU, which names the same color through an unrelated field.
+- Settled two of the three field disputes the original public reverse engineering
+  (DnG-Crafts/ACE-RFID, SimplyPrint) left open: page 31 is the weight in grams, not unused,
+  and the color byte order above. The third, the SKU field's width (12 vs 16 bytes), stays
+  open: every confirmed sample so far null-pads well short of either boundary.
+- Every newly decoded field is confirmed against three independently sourced real tag dumps
+  spanning three product lines (PLA+, PLA Spezial, ASA), not synthetic data alone. Weight,
+  diameter, and length reproduce identically (1000g, 1.75mm, 330m) on all three, which
+  confirms their position but not yet their scale, all three happen to be a standard spool
+  size.
+- Test suite now includes three regression tests that replay those exact real dumps byte for
+  byte, pinning the confirmed output, alongside field-by-field synthetic coverage for every
+  decoded value, the version scan, the decline paths, and the blank-brand and blank-SKU cases.
+- Promoted from the experiment channel to the release candidate channel.
 
 ## 0.1.0
 
