@@ -108,7 +108,7 @@ BED_MAX_OFFSET = 102         # confirmed on two materials with different values
 DIAMETER_OFFSET = 104        # page 30, u16 LE, hundredths of a millimeter, same on all samples
 LENGTH_OFFSET = 106          # page 30 second half, u16 LE, meters, same on all samples
 WEIGHT_OFFSET = 108          # page 31, u16 LE, grams, same on all samples
-BLOCK_LEN = 112               # bytes past the magic this decoder reads (through weight)
+BLOCK_LEN = 112              # bytes past the magic this decoder reads (through weight)
 
 CARD_UID_INDEXES = (0, 1, 2, 4, 5, 6, 7)
 CARD_UID_MIN_BYTES = 8
