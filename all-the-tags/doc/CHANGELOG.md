@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.4 - 2026-08-31
+
+- Anycubic ACE spools decode fully now. The collection requires `rfid-anycubic` 0.2.0 or newer,
+  which reads SKU, brand, material, color, diameter, length, weight, and temperatures (including
+  bed minimum) straight off the tag, confirmed against real tags across three product lines (PLA+,
+  PLA Spezial, ASA). One thing stays open: the SKU's exact byte width, since every tag checked so
+  far is short enough that either width reads the same string.
+- Corrected: Anycubic ACE tags are a plaintext Mifare Ultralight C card, not generic NTAG21x, as an
+  earlier release assumed. The decoder now scans for the tag's format version instead of expecting
+  one fixed value, so it reads tags carrying either format version seen so far.
+
 ## 0.1.3 - 2026-08-15
 
 - All the Tags is on the stable channel. It used to sit on the experiment channel, so anyone who

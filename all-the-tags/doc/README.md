@@ -20,9 +20,9 @@ each on its own. The collection itself is not installed and has nothing to unins
   decoder still works on a tag you write yourself.)
 - **TigerTag (`rfid-tigertag`)** - the TigerTag open NTAG21x layout. Open, no key. Brand and material
   are kept as numeric ids (their public name maps are not bundled).
-- **Anycubic ACE (`rfid-anycubic`)** - plaintext Anycubic NTAG. PARTIAL: the dispute-free fields
-  (brand, material, nozzle and bed temperatures) decode today; color, diameter, and weight wait for
-  one real tester dump.
+- **Anycubic ACE (`rfid-anycubic`)** - plaintext Anycubic tag (Mifare Ultralight C). SKU, brand,
+  material, color, diameter, length, weight, and temperatures decode today, confirmed against real
+  tags across three product lines; only the SKU's exact byte width is still open.
 - **QIDI (`rfid-qidi`)** - full QIDI payload decode, and no key to supply: QIDI leaves its tags on
   the factory default key every blank card ships with. A QIDI tag carries only the material, the
   sub-type, and the colour, so weight, diameter, temperatures, and date keep coming from your slicer
