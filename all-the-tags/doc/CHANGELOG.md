@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.5 - 2026-09-12
+
+- Creality CFS spools decode fully now. The collection requires `rfid-creality` 0.2.0 or newer,
+  which reads material type, filament diameter, hotend temperature range, color, and weight,
+  verified against a real Creality tag (blue Hyper PLA, 1kg). Type, diameter, and temperatures
+  are resolved from the tag's material id using data harvested from Creality's own slicer
+  profiles; the tag itself does not carry them. As before, you paste your two Creality keys into
+  the plugin's config; without them a Creality spool falls back to UID-only tracking.
+- `rfid-creality` 0.2.0 is a release candidate, so two rough edges remain: it has been confirmed
+  against one real tag so far (other material ids are resolved from Creality's profiles but not
+  yet seen on hardware), and on the sample spool the tag's stored color did not match the
+  physical filament (a factory write error), so the reported color may not always be accurate.
+
 ## 0.1.4 - 2026-08-31
 
 - Anycubic ACE spools decode fully now. The collection requires `rfid-anycubic` 0.2.0 or newer,
