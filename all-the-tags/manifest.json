@@ -2,9 +2,9 @@
   "kind": "collection",
   "name": "all-the-tags",
   "title": "All the Tags",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "author": "bespoked",
-  "description": "Installs the whole RFID filament-tag reading stack in one click: the NFC reader and hub, every shipped tag-standard decoder, and Spoolman tracking, so almost any spool you tap is identified and tracked. Includes the open standards (OpenTag3D, OpenPrintTag, generic NDEF JSON, TigerTag) plus full payload decoders for the proprietary tags (Bambu and Creality, with your own keys pasted into their config; without a key they fall back to UID-only tracking). QIDI needs no key at all: its tags sit on the Mifare factory default key, so those spools read out of the box. Anycubic decodes SKU, color, diameter, weight and temperatures today, confirmed against real tags across three product lines. The members install together with a single service restart.",
+  "description": "Installs the whole RFID filament-tag reading stack in one click: the NFC reader and hub, every shipped tag-standard decoder, and Spoolman tracking, so almost any spool you tap is identified and tracked. Includes the open standards (OpenTag3D, OpenPrintTag, generic NDEF JSON, TigerTag) plus full payload decoders for the proprietary tags (Bambu and Creality, with your own keys pasted into their config; without a key they fall back to UID-only tracking). QIDI needs no key at all: its tags sit on the Mifare factory default key, so those spools read out of the box. Anycubic decodes SKU, color, diameter, weight and temperatures, confirmed against real tags across three product lines. Creality now decodes material type, diameter, temperature range, color and weight, verified against a real tag (the Creality decoder is a recent release candidate, so color may not yet match every spool). The members install together with a single service restart.",
   "tagline": "Every spool, identified: the whole RFID tag-reading stack in one install.",
   "category": "filament",
   "channel": "stable",
@@ -12,7 +12,7 @@
   "source": "https://github.com/Bespok3d/material-tags",
   "publisher": "Mauker",
   "published_at": "2026-06-30",
-  "updated_at": "2026-08-31",
+  "updated_at": "2026-09-12",
   "changelog": "doc/CHANGELOG.md",
   "members": [
     {
@@ -49,7 +49,7 @@
     },
     {
       "id": "rfid-creality",
-      "version": ">=0.1.0"
+      "version": ">=0.2.0"
     },
     {
       "id": "rfid-elegoo",

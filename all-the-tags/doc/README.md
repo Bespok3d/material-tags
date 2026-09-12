@@ -30,9 +30,13 @@ each on its own. The collection itself is not installed and has nothing to unins
 - **Bambu (`rfid-bambu`)** - full Bambu payload decode. Needs YOUR Bambu master key pasted into the
   plugin's config; without a key it falls back to UID-only tracking. We ship only the key's checksum,
   never the key.
-- **Creality (`rfid-creality`)** - full Creality CFS payload decode. Needs YOUR two Creality keys in
-  the plugin's config; without them it falls back to UID-only tracking. Keys are validated by
-  checksum, never shipped.
+- **Creality (`rfid-creality`)** - full Creality CFS payload decode: material type, filament
+  diameter, hotend temperature range, color, and weight, verified against a real Creality tag.
+  Type, diameter, and temperatures come from the tag's material id (resolved from Creality's own
+  slicer profiles; the tag does not carry them). Needs YOUR two Creality keys in the plugin's
+  config; without them it falls back to UID-only tracking. Keys are validated by checksum, never
+  shipped. Recent release candidate: confirmed against one real tag so far, and the color read
+  from the tag may not match every spool (see the plugin's own docs).
 - **Elegoo (`rfid-elegoo`)** - the published Elegoo NTAG layout. Note: current factory Elegoo
   (Centauri) spools use an IsoDep chip the printer's reader cannot wake, so those read UID-only; this
   decoder covers the documented NTAG layout.
