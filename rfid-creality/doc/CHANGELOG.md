@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.2.0
+
+- Verified against a real Creality tag (blue Hyper PLA, 1kg). The decoder now fills, from the
+  material id, the fields Creality stores off-tag in its own database: material type, filament
+  diameter, and hotend temperature range. These come from a table (`creality_types.py`)
+  harvested from Creality's own published slicer profiles (CrealityOfficial/CrealityPrint), not
+  from any third-party reader project.
+- Payload framing corrected to the real on-tag format (a hex core terminated by '%', then NUL
+  padding), which is what let the decoder read a real tag at all.
+- Material id is now emitted as its literal id string (for example "01001"), not parsed as an
+  integer, so ids that contain letters are handled and the value matches Creality's id scheme.
+- Weight bucket confirmed against hardware (1000 g).
+- Color is decoded from the tag as RGB. Known rough edge: on the sample spool the tag stored a
+  color that does not match the physical filament (a factory write error on that spool), so the
+  reported color may not always match the real filament. Every independent reader shows the same
+  on-tag value.
+- Test keys scrubbed: the unit tests no longer contain the real community keys. They use
+  throwaway dummy keys and a dummy-encrypted fixture, so the public repository does not
+  distribute the keys (the plugin still ships only their SHA-256 hashes).
+- Promoted to the rc channel. Rough edges: validated against one real tag so far (other material
+  ids are resolved from Creality's profiles but not yet seen on hardware), and the color caveat
+  above.
+
 ## 0.1.0
 
 - First release. Clean-room Creality CFS decoder on the rfid-ntag crypto1 substrate:

@@ -30,6 +30,7 @@ DECODERS=(rfid-generic-ndef rfid-opentag rfid-elegoo rfid-bambu rfid-creality rf
           rfid-openprinttag rfid-anycubic rfid-qidi)
 EXTRAS="files/klipper/klippy/extras"
 OPENPRINTTAG_EX="rfid-openprinttag/$EXTRAS/rfid-tags/openprinttag"
+CREALITY_EX="rfid-creality/$EXTRAS/rfid-tags/creality"
 
 echo ""
 echo "all-the-tags gate"
@@ -60,7 +61,6 @@ run_check "mypy"    mypy_in_dir "$REPO_ROOT" \
     "rfid-bambu/$EXTRAS/rfid-tags/bambu/bambu_fields.py" \
     "rfid-creality/$EXTRAS/rfid-tags/creality/aes_min.py" \
     "rfid-creality/$EXTRAS/rfid-tags/creality/creality_keys.py" \
-    "rfid-creality/$EXTRAS/rfid-tags/creality/creality_fields.py" \
     "rfid-tigertag/$EXTRAS/rfid-tags/tigertag/tigertag_fields.py" \
     "rfid-anycubic/$EXTRAS/rfid-tags/anycubic/anycubic_fields.py" \
     "rfid-qidi/$EXTRAS/rfid-tags/qidi/qidi_fields.py"
@@ -72,6 +72,15 @@ run_check "mypy"    mypy_in_dir "$REPO_ROOT" \
 export MYPYPATH="$REPO_ROOT/rfid-openprinttag/$EXTRAS/rfid-tags"
 run_check "mypy (openprinttag)"  mypy_in_dir "$REPO_ROOT" --explicit-package-bases \
     --namespace-packages "$OPENPRINTTAG_EX/cbor_min.py" "$OPENPRINTTAG_EX/openprinttag_fields.py"
+unset MYPYPATH
+
+# creality_fields.py relatively imports its creality_types sibling (from . import creality_types),
+# the same flat-klippy.extras package pattern as openprinttag, so it needs the package parent on
+# MYPYPATH plus explicit package bases and runs as its own package-aware check. aes_min and
+# creality_keys stay in the plain block above: they import no siblings.
+export MYPYPATH="$REPO_ROOT/rfid-creality/$EXTRAS/rfid-tags"
+run_check "mypy (creality)"  mypy_in_dir "$REPO_ROOT" --explicit-package-bases \
+    --namespace-packages "$CREALITY_EX/creality_types.py" "$CREALITY_EX/creality_fields.py"
 unset MYPYPATH
 
 release_trigger_check "$REPO_ROOT"

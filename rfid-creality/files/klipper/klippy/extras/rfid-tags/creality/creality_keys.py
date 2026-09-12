@@ -20,7 +20,6 @@ from typing import Protocol
 MASTER_KEY_LEN = 16
 SECTOR_KEY_LEN = 6
 UID_BLOCK_LEN = 16
-HEX_DIGITS = "0123456789abcdef"
 
 # SHA-256 of the 16 master-key bytes and the 16 payload-key bytes; the keys themselves are
 # user-supplied, never shipped. (Computed from the published community key material.)
@@ -33,8 +32,17 @@ class BlockEncryptor(Protocol):
 
 
 def parse_key(text: str) -> bytes | None:
-    """Parse a user-pasted 32-hex AES key, or None if it is not 16 valid hex bytes."""
-    cleaned = (text or "").strip().replace(":", "").replace(" ", "")
+    """Parse a user-pasted AES key into 16 raw bytes, or None if it is not 16 valid hex
+    bytes. Tolerates common paste noise: surrounding spaces, ':' or ',' separators, and a
+    leading '0x'."""
+    cleaned = (
+        (text or "")
+        .strip()
+        .replace("0x", "")
+        .replace(":", "")
+        .replace(",", "")
+        .replace(" ", "")
+    )
     try:
         raw = bytes.fromhex(cleaned)
     except ValueError:
@@ -44,7 +52,7 @@ def parse_key(text: str) -> bytes | None:
 
 def key_matches(key: bytes, expected_sha256: str) -> bool:
     """The pasted key is the expected key (checked by hash, not by value)."""
-    return hashlib.sha256(bytes(key)).hexdigest() == expected_sha256
+    return hashlib.sha256(key).hexdigest() == expected_sha256
 
 
 def derive_sector_key(

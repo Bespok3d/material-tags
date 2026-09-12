@@ -1,19 +1,19 @@
 {
   "name": "rfid-creality",
   "title": "Creality Filament Tag",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "bespoked",
-  "description": "Reads Creality CFS filament spool tags (encrypted Mifare Classic) and decodes the filament: color, weight, manufacture date, and material id into the shared rfid_data.json. REQUIRES TWO KEYS YOU SUPPLY: Creality tags are encrypted, so you must paste the public Creality master key and payload key into this plugin's config (see the documentation for where to get them) before a tag can be decoded. Without the keys the spool is still tracked by its tag UID. Creality's tag carries no diameter or temperatures (the printer resolves those from an unpublished material database), and the material id stays a numeric id. Installs the RFID Spool Reader automatically. Read-only: it never writes a tag. Experiment channel until verified on a real tag.",
+  "description": "Reads Creality CFS filament spool tags (encrypted Mifare Classic) and decodes the filament into the shared rfid_data.json: material type, filament diameter, hotend temperature range, color, net weight, and the Creality material id. Type, diameter, and temperatures are resolved from the material id using data harvested from Creality's own slicer profiles (the tag itself does not carry them). REQUIRES TWO KEYS YOU SUPPLY: Creality tags are encrypted, so you must paste the public Creality master key and payload key into this plugin's config (see the documentation for where to get them) before a tag can be decoded. Without the keys the spool is still tracked by its tag UID. Verified against a real Creality tag for material type, diameter, temperature range, and weight. Installs the RFID Spool Reader automatically. Read-only: it never writes a tag.",
   "tagline": "Decode Creality CFS spools on stock firmware (you supply the keys).",
   "category": "filament",
-  "channel": "testing",
+  "channel": "rc",
   "printer_specific": true,
   "source": "https://github.com/Bespok3d/material-tags",
   "homepage": "https://github.com/Bambu-Research-Group/RFID-Tag-Guide",
   "changelog": "doc/CHANGELOG.md",
   "published_at": "2026-06-30",
-  "updated_at": "2026-06-30",
-  "publisher": "PLACEHOLDER",
+  "updated_at": "2026-09-12",
+  "publisher": "Mauker",
   "provides": [],
   "require": [
     {
@@ -76,6 +76,10 @@
       {
         "class": "klipper-extra",
         "src": "files/klipper/klippy/extras/rfid-tags/creality/aes_min.py"
+      },
+      {
+        "class": "klipper-extra",
+        "src": "files/klipper/klippy/extras/rfid-tags/creality/creality_types.py"
       }
     ],
     "restart": [
@@ -84,5 +88,5 @@
   },
   "files": [],
   "license": "https://github.com/Bespok3d/material-tags/blob/dev/rfid-creality/doc/LICENSE",
-  "attributions": "# Attributions - rfid-creality\n\n**Plugin author:** Bespok3d, tag format documented by DnG-Crafts (K2-RFID) and the Bambu Research Group\n\nReads Creality filament tags.\n\n| Upstream project | Author | Licence | Needed at runtime | Code ships in this package |\n| --- | --- | --- | --- | --- |\n| RFID-Tag-Guide and the K2-RFID community schema | DnG-Crafts (K2-RFID) and the Bambu Research Group | MIT | no | no |\n\nThe AES used to derive the sector key and decrypt the payload is a clean-room implementation of the\npublished FIPS-197 standard (`aes_min.py`), tested against the FIPS-197 known-answer vectors. It is\nnot taken from any third-party crypto library.\n"
+  "attributions": "# Attributions - rfid-creality\n\n**Plugin author:** Bespok3d, tag format documented by DnG-Crafts (K2-RFID) and the Bambu Research Group\n\nReads Creality filament tags.\n\n| Upstream project | Author | Licence | Needed at runtime | Code ships in this package |\n| --- | --- | --- | --- | --- |\n| RFID-Tag-Guide and the K2-RFID community schema | DnG-Crafts (K2-RFID) and the Bambu Research Group | MIT | no | no |\n| Filament id to type/diameter/temperature data, harvested from Creality slicer profiles | CrealityOfficial/CrealityPrint | see repo | no | no (data only, regenerated from public profiles) |\n\nThe AES used to derive the sector key and decrypt the payload is a clean-room implementation of the\npublished FIPS-197 standard (`aes_min.py`), tested against the FIPS-197 known-answer vectors. It is\nnot taken from any third-party crypto library.\n\nThe filament id to type/diameter/temperature table (`creality_types.py`) is generated from Creality's own published slicer profiles (CrealityOfficial/CrealityPrint), the authoritative origin for that data. It is not copied from any third-party reader project.\n"
 }

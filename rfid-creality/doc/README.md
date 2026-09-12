@@ -25,21 +25,32 @@ UID** - it just is not decoded into material/color. Bind that UID to a spool in 
 
 ## What it decodes
 
+- Material type (PLA, PETG, ABS, and so on)
+- Filament diameter
+- Hotend temperature range (nominal; the printer may override)
 - Color (RGB)
 - Net weight (Creality stores a bucket: 250 / 500 / 600 / 750 / 1000 g)
-- Manufacture date
-- Material id (a Creality numeric id; its human name lives in Creality's unpublished
-  material database, so it stays a number here)
+- Material id (a Creality numeric id)
 
-Creality's tag does **not** carry filament diameter or nozzle/bed temperatures - the
-printer looks those up from the material id in its own database - so this decoder leaves
-those fields at their defaults.
+The tag itself carries only the material id, color, and weight bucket. The material type,
+diameter, and temperatures are resolved from the material id using a table built from
+Creality's own published slicer profiles, the same way Creality's firmware looks them up from
+its on-device database. Diameter is authoritative; the temperatures are nominal defaults.
+Creality's material-id to human-name map is not published, so the material id itself stays a
+number here.
+
+## A note on color
+
+Color is decoded from the tag as an RGB value. On the spool used to verify this plugin, the
+tag stored a color that did not match the physical filament, a data error written to that
+spool at the factory. So the color the plugin reports comes straight from the tag and may not
+always match what is actually loaded.
 
 ## Status
 
-Experiment channel. The decryption math is verified against the public reverse engineering
-(AES-128-ECB throughout, both the UID->card-key derivation and the payload), with no native
-crypto dependency - a tiny AES is vendored into the plugin. The on-tag field positions
-follow the K2-RFID community schema. Real-spool decoding is verified by testers; if a real
-tag exposes a key-slot or field difference, the plugin degrades to UID-only tracking rather
-than failing. Requires the RFID Spool Reader (installed automatically).
+rc channel. The decryption math is verified against the public reverse engineering
+(AES-128-ECB throughout, both the UID to card-key derivation and the payload), with no native
+crypto dependency: a tiny AES is vendored into the plugin. The decoder has been verified
+against a real Creality tag (blue Hyper PLA, 1kg) for material type, diameter, temperature
+range, and weight. Other material ids are resolved from Creality's slicer profiles but have
+not yet been seen on hardware. Requires the RFID Spool Reader (installed automatically).
