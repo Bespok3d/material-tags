@@ -65,8 +65,16 @@ class CrealityReader:
         if info is None:
             _log.error("Creality: payload did not decode (wrong key?)")
             return filament_protocol.FILAMENT_PROTO_ERR, None
-        _log.info("Creality: weight=%s color=%06X date=%s",
-                  info.get("WEIGHT"), info.get("RGB_1", 0), info.get("MF_DATE"))
+        # Harvest line for confirming fields across more tags: the raw decrypted core (the
+        # ground truth every field is sliced from) plus the UID and the decoded values. A
+        # tester can send this one line to help verify unconfirmed fields (notably color) on
+        # spools other than the one this was validated against. Carries no keys.
+        core = text.split("%", 1)[0]
+        _log.info(
+            "Creality: uid=%s core=%s type=%s dia=%s hotend=%s-%s weight=%s color=%06X",
+            uid, core, info.get("MAIN_TYPE"), info.get("DIAMETER"),
+            info.get("HOTEND_MIN_TEMP"), info.get("HOTEND_MAX_TEMP"),
+            info.get("WEIGHT"), info.get("RGB_1", 0))
         return filament_protocol.FILAMENT_PROTO_OK, info
 
 
