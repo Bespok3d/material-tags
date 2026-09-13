@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1
+
+- Fixed the manifest file publisher field. No functional changes in the plugin.
+
 ## 0.2.0
 
 - Verified against a real Creality tag (blue Hyper PLA, 1kg). The decoder now fills, from the
