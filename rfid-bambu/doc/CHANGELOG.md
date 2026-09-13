@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1
+
+- Fixed the manifest file publisher field. No functional changes in the plugin.
+
 ## 0.2.0
 
 - Second release. This is the first working version of this plugin, verified to be working on a U1 printer.
