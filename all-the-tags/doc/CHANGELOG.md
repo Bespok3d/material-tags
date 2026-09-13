@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.6 - 2026-09-13
+
+- Fixed the manifest file publisher field. No functional changes in the plugin.
+
 ## 0.1.5 - 2026-09-12
 
 - Creality CFS spools decode fully now. The collection requires `rfid-creality` 0.2.0 or newer,

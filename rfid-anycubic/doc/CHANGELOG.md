@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1
+
+- Fixed the manifest file publisher field. No functional changes in the plugin.
+
 ## 0.2.0
 
 - Corrected a wrong foundational assumption: Anycubic ACE tags are a plaintext Mifare
