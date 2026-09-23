@@ -1,7 +1,7 @@
 {
   "name": "rfid-creality",
   "title": "Creality Filament Tag",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "author": "bespoked",
   "description": "Reads Creality CFS filament spool tags (encrypted Mifare Classic) and decodes the filament into the shared rfid_data.json: material type, filament diameter, hotend temperature range, color, net weight, and the Creality material id. Type, diameter, and temperatures are resolved from the material id using data harvested from Creality's own slicer profiles (the tag itself does not carry them). REQUIRES TWO KEYS YOU SUPPLY: Creality tags are encrypted, so you must paste the public Creality master key and payload key into this plugin's config (see the documentation for where to get them) before a tag can be decoded. Without the keys the spool is still tracked by its tag UID. Verified against a real Creality tag for material type, diameter, temperature range, and weight. Installs the RFID Spool Reader automatically. Read-only: it never writes a tag.",
   "tagline": "Decode Creality CFS spools on stock firmware (you supply the keys).",
@@ -9,7 +9,7 @@
   "channel": "rc",
   "printer_specific": true,
   "source": "https://github.com/Bespok3d/material-tags",
-  "homepage": "https://github.com/Bambu-Research-Group/RFID-Tag-Guide",
+  "homepage": "https://github.com/Bambu-Research-Group/RFID-Tag-Guide/blob/main/CrealityRfid.md",
   "changelog": "doc/CHANGELOG.md",
   "published_at": "2026-06-30",
   "updated_at": "2026-09-13",

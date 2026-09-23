@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.2
+
+- Diameter is now reported in hundredths of a millimetre (`175` for 1.75 mm), the unit the shared
+  filament record uses and the other decoders report. This decoder reported `1.75`, so anything
+  reading `rfid_data.json` saw a different unit for Creality spools than for most other brands.
+- The plugin's homepage link now opens the Creality page of the RFID Tag Guide
+  (`CrealityRfid.md`) instead of the guide's front page.
+
 ## 0.2.1
 
 - Fixed the manifest file publisher field. No functional changes in the plugin.

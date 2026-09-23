@@ -1,7 +1,7 @@
 {
   "name": "rfid-qidi",
   "title": "QIDI Filament Tag",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "bespoked",
   "description": "Reads QIDI filament spool tags and decodes the material, the sub-type and the colour into the shared rfid_data.json, so the touchscreen and Spoolman know what spool is loaded. NO KEY NEEDED: QIDI leaves its tags on the Mifare factory default key, so there is nothing for you to paste and nothing for us to ship. A QIDI tag is also very small: the whole payload is a material code, a colour code and a manufacturer code, so there is no weight, diameter, temperature, date or SKU on the card to read, and those keep coming from your slicer profile or Spoolman. The code tables hold only the pairings confirmed on a physical spool; an unrecognised spool still tracks and reports its codes as numbers so the tables can grow from real tags. Installs the RFID Spool Reader automatically. Read-only: it never writes a tag.",
   "tagline": "Decode QIDI spools on stock firmware, no key to supply.",

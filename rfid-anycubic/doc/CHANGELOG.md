@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.2
+
+- Diameter is now reported in hundredths of a millimeter (`175` for 1.75 mm), the unit the shared
+  filament record uses and every other decoder already reports. This decoder alone reported
+  `1.75`, so anything reading `rfid_data.json` saw a different unit for Anycubic spools than for
+  every other brand. The value read off the tag is unchanged.
+
 ## 0.2.1
 
 - Fixed the manifest file publisher field. No functional changes in the plugin.

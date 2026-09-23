@@ -19,11 +19,9 @@ normal and harmless: the reader then hands the card to this decoder, which opens
 The entire QIDI payload is the first data block of sector 1: **three bytes**, then thirteen
 zeros.
 
-| Byte | Meaning |
-| --- | --- |
-| 0 | material code |
-| 1 | colour code |
-| 2 | manufacturer code (`0x01` is QIDI itself) |
+- **Byte 0:** material code
+- **Byte 1:** colour code
+- **Byte 2:** manufacturer code (`0x01` is QIDI itself)
 
 So a QIDI tag identifies the filament and nothing else. It carries **no weight, no diameter,
 no nozzle or bed temperature, no manufacture date and no SKU**. Those fields are left at their

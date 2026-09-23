@@ -1,15 +1,19 @@
-"""Registers the Elegoo reader + decoder with the RFID hub - PLUGIN-ONLY, no rfid-ntag change.
+"""Registers the Elegoo decoder with the RFID hub as a payload parser. PLUGIN-ONLY, no reader.
 
-On ready it looks up the hub (`bespok3d_rfid`) and the reader (`fm175xx_reader`), then uses
-the reader's EXISTING `register_card_type_handler` delegate to claim the SAKs a Feiju Elegoo
-chip can present, and `read_nfc_type2_pages` to read it (via `ElegooReader`). Bytes flow to
-the hub's payload parsers (card_type 0x00, the NTAG path), where `ElegooParser` decodes them.
+A factory Elegoo tag is an NFC Type 2 tag with a cascaded 7-byte UID, so the stock NTAG reader
+(SAK 0x04, rfid-ntag's NtagReader) already activates it and reads its pages. Confirmed on a real
+U1 (2026-09-23): the tag arrived through NtagReader as card_type 0x00 and reached this parser via
+the hub's payload parsers. This plugin therefore registers no hardware handler of its own; it only
+turns those pages into a FILAMENT_INFO_STRUCT.
+
+The read depends on rfid-ntag 0.1.15 or newer: NtagReader asks for 132 pages, a factory Elegoo tag
+has 44, and before 0.1.15's ChunkedType2PageReader the refused chunk past the end discarded the
+whole read. The ready handler warns when that reader is missing.
 """
 import logging
 
 from . import filament_protocol
 from .elegoo_fields import build_struct
-from .elegoo_reader import CANDIDATE_SAKS, ElegooReader
 
 _log = logging.getLogger("bespok3d.elegoo")
 
@@ -20,8 +24,14 @@ class ElegooParser:
             return filament_protocol.FILAMENT_PROTO_ERR, None
         info = build_struct(bytes(raw_bytes), dict(filament_protocol.FILAMENT_INFO_STRUCT))
         if info is None:
+            _log.info("Elegoo: no EEEEEEEE signature in %d bytes, declining", len(raw_bytes))
             return filament_protocol.FILAMENT_PROTO_ERR, None
-        _log.info("Elegoo: type=%s color=%06X", info.get("MAIN_TYPE"), info.get("RGB_1", 0))
+        _log.info(
+            "Elegoo: uid=%s type=%s color=%06X nozzle=%s-%s diameter=%s weight=%s",
+            _uid_as_hex(info.get("CARD_UID")), info.get("MAIN_TYPE"), info.get("RGB_1", 0),
+            info.get("HOTEND_MIN_TEMP"), info.get("HOTEND_MAX_TEMP"),
+            info.get("DIAMETER"), info.get("WEIGHT"),
+        )
         return filament_protocol.FILAMENT_PROTO_OK, info
 
 
@@ -32,16 +42,27 @@ class RfidTagElegoo:
 
     def _handle_ready(self):
         hub = self.printer.lookup_object("bespok3d_rfid", None)
-        fm_reader = self.printer.lookup_object("fm175xx_reader", None)
-        if hub is None or fm_reader is None:
-            _log.warning("bespok3d_rfid or fm175xx_reader missing: Elegoo support inactive")
+        if hub is None:
+            _log.warning("bespok3d_rfid missing: Elegoo support inactive")
             return
-        reader = ElegooReader()
-        for sak in CANDIDATE_SAKS:
-            fm_reader.register_card_type_handler(sak, reader.read_hw_tag)
+        _warn_if_page_reader_too_old()
         hub.register_payload_parser(ElegooParser())
-        _log.info("ready: Elegoo reader+parser registered for SAKs %s",
-                  [hex(sak) for sak in CANDIDATE_SAKS])
+        _log.info("ready: Elegoo payload parser registered")
+
+
+def _uid_as_hex(card_uid):
+    """Colon-separated hex, as phone tag readers print a UID, so the two compare at a glance."""
+    return ":".join(format(uid_byte, "02X") for uid_byte in card_uid or [])
+
+
+def _warn_if_page_reader_too_old():
+    try:
+        from . import ntag_reader
+    except ImportError:
+        _log.warning("elegoo: ntag_reader not found, so no Elegoo tag can be read")
+        return
+    if not hasattr(ntag_reader, "ChunkedType2PageReader"):
+        _log.warning("elegoo: rfid-ntag is older than 0.1.15, so Elegoo tags will fail to read")
 
 
 def load_config(config):

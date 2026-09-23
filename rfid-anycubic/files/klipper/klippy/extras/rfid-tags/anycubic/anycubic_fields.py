@@ -114,7 +114,6 @@ CARD_UID_INDEXES = (0, 1, 2, 4, 5, 6, 7)
 CARD_UID_MIN_BYTES = 8
 PRINTABLE_MIN = 0x20
 PRINTABLE_MAX = 0x7F
-DIAMETER_SCALE = 100  # stored value is millimeters times 100
 
 
 def _u16_le(dump: bytes, offset: int) -> int:
@@ -171,7 +170,9 @@ def _apply_temperatures(dump: bytes, magic: int, info: dict[str, Any]) -> None:
 
 
 def _apply_physical_properties(dump: bytes, magic: int, info: dict[str, Any]) -> None:
-    info["DIAMETER"] = _u16_le(dump, magic + DIAMETER_OFFSET) / DIAMETER_SCALE
+    # Hundredths of a millimeter, as stored on the tag: the unit FILAMENT_INFO_STRUCT uses (175 is
+    # 1.75 mm), the same as every other decoder and rfid-ntag's own OpenSpool mapper.
+    info["DIAMETER"] = _u16_le(dump, magic + DIAMETER_OFFSET)
     info["LENGTH"] = _u16_le(dump, magic + LENGTH_OFFSET)
     info["WEIGHT"] = _u16_le(dump, magic + WEIGHT_OFFSET)
 

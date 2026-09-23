@@ -64,6 +64,8 @@ from typing import Any
 # pattern (same mechanism used for filament_protocol / fm175xx_reader).
 from . import creality_types
 
+HUNDREDTHS_PER_MM = 100
+
 CREALITY_VENDOR = "Creality"
 PAYLOAD_TERMINATOR = "%"
 # The core must be long enough to contain every field we read (through weight at [24:28]).
@@ -132,7 +134,10 @@ def decode(
         # defaults the printer may override. Only set fields the profile provided.
         info["MAIN_TYPE"] = material.type
         if material.diameter is not None:
-            info["DIAMETER"] = material.diameter
+            # The table holds millimetres as Creality's profiles write them (1.75); the shared
+            # struct wants hundredths of a millimetre (175), as every other decoder and
+            # rfid-ntag's own OpenSpool mapper write it.
+            info["DIAMETER"] = round(material.diameter * HUNDREDTHS_PER_MM)
         if material.hotend_min is not None:
             info["HOTEND_MIN_TEMP"] = material.hotend_min
         if material.hotend_max is not None:

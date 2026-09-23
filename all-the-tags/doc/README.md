@@ -37,9 +37,11 @@ each on its own. The collection itself is not installed and has nothing to unins
   config; without them it falls back to UID-only tracking. Keys are validated by checksum, never
   shipped. Recent release candidate: confirmed against one real tag so far, and the color read
   from the tag may not match every spool (see the plugin's own docs).
-- **Elegoo (`rfid-elegoo`)** - the published Elegoo NTAG layout. Note: current factory Elegoo
-  (Centauri) spools use an IsoDep chip the printer's reader cannot wake, so those read UID-only; this
-  decoder covers the documented NTAG layout.
+- **Elegoo (`rfid-elegoo`)** - factory Elegoo (Centauri) spools: material, colour, nozzle
+  temperature range, diameter and weight, verified against a real factory spool and read on a real
+  U1 (one printer so far). The tag is open, with no key. Elegoo's tag is small and sits further out
+  than the U1's reader reaches for such a tag, so when loading, hold the tag against the centre of the spool holder while
+  the filament feeds, then mount the spool (steps on the plugin's own page).
 - **Spoolman (`spoolman`)** - closes the loop: it tracks the identified spool in your Spoolman server,
   by tag UID as well as by SKU, so a tag you have bound to a spool is recognized on every tap.
 

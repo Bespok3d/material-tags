@@ -119,7 +119,7 @@ def test_full_parse_decodes_confirmed_fields():
     assert info["MANUFACTURER"] == "Creality"
     assert info["SKU"] == "01001"          # Creality slicer: filament_id 01001 = Hyper PLA
     assert info["MAIN_TYPE"] == "PLA"      # resolved from id via creality_types table
-    assert info["DIAMETER"] == 1.75        # filled from id (Creality slicer profiles)
+    assert info["DIAMETER"] == 175         # filled from id, hundredths of a mm
     assert info["HOTEND_MIN_TEMP"] == 190
     assert info["HOTEND_MAX_TEMP"] == 240
     assert info["WEIGHT"] == 1000          # physical 1kg spool

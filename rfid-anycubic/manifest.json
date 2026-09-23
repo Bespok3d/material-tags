@@ -1,7 +1,7 @@
 {
   "name": "rfid-anycubic",
   "title": "Anycubic ACE Filament Tag",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "author": "bespoked",
   "description": "Reads Anycubic ACE filament tags (a plaintext Mifare Ultralight C card, no key) and writes the decoded filament into the shared rfid_data.json: SKU, brand, material, color, diameter, length, weight, nozzle and bed temperatures, and print speed when the tag carries it. Confirmed against real tags across three product lines (PLA+, PLA Spezial, ASA). One field stays open: the SKU's exact byte width, since every tag decoded so far is short enough that the two possible widths read identically. Installs the RFID Spool Reader automatically. Read-only.",  
   "tagline": "Anycubic ACE filament tags, decoded: color, weight, diameter and more.",
