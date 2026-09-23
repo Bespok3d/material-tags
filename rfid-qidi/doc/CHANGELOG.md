@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.1
+
+- Documentation only, nothing about how the plugin works has changed. The list of what each byte
+  on a QIDI tag means is now a plain list; the table it used before showed up in the app as raw
+  text.
+
 ## 0.1.0
 
 - First release. Tap a QIDI spool on the reader and the lane knows what is on the reel: the material,

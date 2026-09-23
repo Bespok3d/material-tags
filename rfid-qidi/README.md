@@ -3,8 +3,9 @@
 Clean-room decoder for **QIDI** filament spool tags: a Mifare Classic 1K left on the Mifare
 **factory default key**, with the whole payload in the first data block of sector 1.
 
-- **Status:** experiment. **No key to supply** and none shipped, no reader change (HW claim
-  reader on the factory default key).
+- **Status:** stable, read end to end on a real U1 against physical QIDI spools (PLA Matte, PETG).
+  **No key to supply** and none shipped, no reader change (HW claim reader on the factory default
+  key).
 - **Decodes:** material, sub-type, and colour.
 - **A QIDI tag is tiny.** The card carries three bytes: a material code, a colour code, and a
   manufacturer code. There is no weight, diameter, temperature, date or SKU written on it, so

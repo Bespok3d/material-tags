@@ -80,7 +80,7 @@ The `relay/` dir is build-coordination scratch and is **gitignored**: it never l
 | `rfid-generic-ndef` | Any plain JSON over NDEF (no `protocol` field) | payload parser (NDEF JSON) | experiment |
 | `rfid-opentag` | OpenTag3D (queengooborg), binary over NDEF | payload parser (NDEF binary) | experiment |
 | `rfid-openprinttag` | OpenPrintTag (prusa3d), CBOR over NDEF | payload parser (NDEF binary + vendored CBOR) | experiment |
-| `rfid-elegoo` | Elegoo (Centauri), raw-page binary (NOT NDEF) | payload parser (raw page) | experiment (open tags)* |
+| `rfid-elegoo` | Elegoo (Centauri), raw-page binary (NOT NDEF) | payload parser (raw page) | experiment (reads on a U1 when held near the reader)* |
 | `rfid-tigertag` | TigerTag, raw-page binary (NOT NDEF) | payload parser (raw page) | experiment |
 | `rfid-anycubic` | Anycubic ACE, plaintext raw-page (NOT NDEF) | payload parser (raw page) | experiment (partial)** |
 | `rfid-qidi` | QIDI, Mifare Classic on the factory default key | HW claim reader (no user key) | stable (device-proven)*** |
@@ -105,13 +105,19 @@ the color byte order (ARGB vs ABGR), and whether page 31 is weight, and no real 
 published to settle them. Guessing those would show a wrong color or a 10x-off weight, so they
 wait for one tester dump (which makes them a small mechanical add).
 
-*`rfid-elegoo` decodes Elegoo's **published NTAG EPC-256 layout** (material, sub-type, color,
-diameter, weight). The **factory Centauri spools do not read on the U1** (HIL finding, 2026-06):
-they are **ISO 14443-4 / IsoDep** (Shanghai Feiju Microelectronics) and the U1 reader never
-even RF-wakes them, so the decoder never sees their bytes. Reading factory Elegoo needs a new
-**ISO 14443-4 (APDU) reader track** plus the chip's undocumented auth - tracked as a hardware
-blocker below (A5). The decoder is correct for any open Elegoo NTAG; testers with such a tag
-verify it.
+*`rfid-elegoo` decodes the **factory Elegoo tag layout** (material, color, nozzle temperature
+range, diameter, weight), verified field by field against a real factory spool and its label
+(2026-09-23). The factory tag is an **open NFC Type 2 tag** (Shanghai Feiju, NTAG213-style memory,
+no key), not IsoDep. Its layout is page-aligned and carries a nozzle range, so it does **not** match
+the byte table in ELEGOO's published guide. **A U1 reads a factory spool (2026-09-23), once the tag
+is over the reader**: rfid-ntag's stock `NtagReader` picks the tag up (it is a Type 2 tag with a
+cascaded UID, SAK `0x04` at level 1) and hands the pages to this parser, so the plugin ships no reader
+of its own. It needs rfid-ntag 0.1.15+, whose chunked page reader keeps the tag's pages instead of
+discarding the read. The catch is range: Elegoo embeds a small tag in the cardboard flange about
+35 mm from the centre-hole edge, further out than the U1's reader reaches for a tag that small, so a
+mounted spool is not read (tags that do read mounted sit from 13 mm to 43.5 mm out, the far ones
+being larger Mifare tags). Holding the tag against the holder centre while the filament
+feeds, then mounting the spool, works; see the reader row below.
 
 ***`rfid-qidi` is **read end to end on junior** against physical QIDI spools (PLA Matte, PETG).
 QIDI leaves its tags on the **Mifare factory default key** (`FF FF FF FF FF FF`), so there is no
@@ -231,17 +237,16 @@ mypy-checked; the relative-import shells are linted by ruff only (like
 
 ## Blocked decoders (need real hardware input, not more code)
 
-One tag remains a true hardware blocker; the research-backed facts are recorded so it becomes
-a mechanical follow-on once the blocker clears. (Anycubic was de-blocked: it now ships its
-dispute-free fields above and only its color/diameter/weight wait for a tester dump - that is
-a small add, not a blocked decoder.)
+No decoder is blocked on hardware right now. Elegoo was the last one: a U1 read a factory spool on
+2026-09-23. What is still open about reading it is recorded below so the next step stays mechanical.
+(Anycubic was de-blocked earlier: it now ships its dispute-free fields above and only its
+color/diameter/weight wait for a tester dump - that is a small add, not a blocked decoder.)
 
 | Tag | Blocker | Notes for the follow-on |
 | --- | --- | --- |
-| **Elegoo factory (IsoDep)** | The factory Centauri Feiju chip does not RF-wake to the U1 reader's WUPA, BELOW anticollision. Needs reader-firmware RF iteration on junior, then the chip's undocumented ISO-14443-4 auth. **Hardware/RF work, not an implementation task.** | RELAY-A5: real Centauri spools are ISO 14443-4 / IsoDep (Feiju, UID prefix `0x53`). Public NDEF is only the `elegoo.com` URL; filament data is behind the locked IsoDep layer. STEP 0 = capture the ATS/APDU exchange on junior (`DETECT_SPOOLS`, tag at the antenna). A prior session added a carrier power-cycle retry to the reader patch (rfid-ntag 0.1.4) - it changed the failure from WUPA-err to timer-err but still does not fully wake the chip. Decoding the locked payload stays an explicit non-goal until someone publishes the Feiju auth; UID-only tracking (via B1) is the deliverable for these spools. |
+| **Elegoo factory (reader range)** | Not a decoder fault: a mounted spool's tag is not read. Measured from the centre-hole edge, tags that read mounted sit at 13 mm (Snapmaker), 22.5 mm (NTAG sticker), 27.2 mm (Bambu) and 43.5 mm (Creality); Elegoo's small, cardboard-buried tag sits at 35 mm and never answers, and a plain NTAG sticker taped at 35 mm is found but fails its first page read (`-29`). So 35 mm is at the edge of the reader's range for small NTAG-type tags. Held against the holder centre, the Elegoo tag reads in full on ch0, ch1 and ch3 (ch2 untried). The user-facing fix is procedural (hold the tag there while the filament feeds, then mount; the hub keeps the lane's spool until unload) or a sticker, including a confirmed copy of the Elegoo block, 13 to 20 mm from the hole edge. **Needs more spools and printers, not code.** | RELAY-A5: the tag is an open NFC Type 2 tag (Feiju, UID prefix `0x53`, 7-byte cascaded UID, final SAK `0x00`, ATQA `0x4400` as TagInfo reports it), NTAG213-style memory, no password. A factory spool carries two such tags, one per flange, different UIDs, identical data. Junior's June "never wakes" result most likely had the same cause. Full notes: `rfid-elegoo/rfid-elegoo-notes.md`. |
 
-(**Elegoo open tags** ship as `rfid-elegoo`: the published EPC-256 NTAG layout decodes
-fine; only the factory IsoDep spools are blocked, as above.)
+(`rfid-elegoo` ships the decode, verified against a real factory spool and read on a real U1.)
 
 ## Repos this depends on
 

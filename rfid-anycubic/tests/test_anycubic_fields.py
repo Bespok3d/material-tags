@@ -156,9 +156,11 @@ def test_decodes_color_argb_and_rgb():
 
 
 def test_decodes_diameter_length_weight():
+    # DIAMETER is hundredths of a millimeter (175 = 1.75 mm), the struct's own unit. Before
+    # 0.2.2 this decoder alone reported 1.75, a float in millimeters.
     dump = UID_HEADER + build_block(diameter_mm=1.75, length_m=330, weight_g=1000)
     info = build_struct(dump, dict(TEMPLATE))
-    assert info["DIAMETER"] == 1.75
+    assert info["DIAMETER"] == 175
     assert info["LENGTH"] == 330
     assert info["WEIGHT"] == 1000
 
@@ -239,7 +241,7 @@ def test_regression_first_party_pla_plus_black():
     assert info["ALPHA"] == 0xFF
     assert info["ARGB_COLOR"] == 0xFF212721
     assert info["RGB_1"] == 0x212721
-    assert info["DIAMETER"] == 1.75
+    assert info["DIAMETER"] == 175
     assert info["LENGTH"] == 330
     assert info["WEIGHT"] == 1000
     assert info["HOTEND_MIN_TEMP"] == 190
@@ -272,7 +274,7 @@ def test_regression_third_party_pla_spezial_peach_pink():
     assert info["ALPHA"] == 0xFF
     assert info["ARGB_COLOR"] == 0xFFFEC196
     assert info["RGB_1"] == 0xFEC196
-    assert info["DIAMETER"] == 1.75
+    assert info["DIAMETER"] == 175
     assert info["LENGTH"] == 330
     assert info["WEIGHT"] == 1000
     assert info["HOTEND_MIN_TEMP"] == 200
@@ -305,7 +307,7 @@ def test_regression_third_party_asa_green_flash():
     assert info["ALPHA"] == 0xFF
     assert info["ARGB_COLOR"] == 0xFF008000
     assert info["RGB_1"] == 0x008000
-    assert info["DIAMETER"] == 1.75
+    assert info["DIAMETER"] == 175
     assert info["LENGTH"] == 330
     assert info["WEIGHT"] == 1000
     assert info["HOTEND_MIN_TEMP"] == 240

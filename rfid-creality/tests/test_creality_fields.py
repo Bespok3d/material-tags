@@ -67,8 +67,9 @@ def test_resolves_main_type_from_material_id():
 
 def test_fills_diameter_and_temps_from_material_id():
     # 01001 -> 1.75 mm, hotend 190 to 240 (from Creality slicer profiles via creality_types).
+    # DIAMETER is hundredths of a millimetre, the struct's unit; before 0.2.2 it was 1.75.
     info = decode(EXAMPLE, UID, dict(TEMPLATE))
-    assert info["DIAMETER"] == 1.75
+    assert info["DIAMETER"] == 175
     assert info["HOTEND_MIN_TEMP"] == 190
     assert info["HOTEND_MAX_TEMP"] == 240
 

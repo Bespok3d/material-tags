@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.1.5 - 2026-09-23
+
+- Factory Elegoo spools are identified now. The collection requires `rfid-elegoo` 0.1.5 or newer,
+  which reads material, colour, nozzle temperature range, diameter and weight from factory Elegoo
+  (Centauri) tags. It was verified field by field against a real factory spool and its label, and
+  that spool was read on a real U1 (one printer so far). Earlier versions followed ELEGOO's
+  published byte table, which factory tags do not match, and would have shown a wrong diameter and
+  weight. Loading takes one extra step: Elegoo's tag is small and sits further out than the U1's
+  reader reaches for such a tag, so hold the tag against the centre of the spool holder while the filament feeds, then
+  mount the spool. The Elegoo plugin's own page has the steps.
+- The collection now requires the RFID Spool Reader (`rfid-ntag`) 0.1.15 or newer. Factory Elegoo
+  tags are smaller than the area the reader asks for, and older versions threw the whole read away.
+- Anycubic and Creality spools now report their diameter in the same unit as every other brand.
+  The collection requires `rfid-anycubic` 0.2.2 and `rfid-creality` 0.2.2 or newer, which report
+  `175` for 1.75 mm instead of `1.75`.
+- The collection page lists what it installs as a plain list. The table it used before showed up in
+  the app as raw text.
+
 ## 0.1.4 - 2026-09-13
 
 - Fixed the manifest file publisher field. No functional changes in the plugin.
