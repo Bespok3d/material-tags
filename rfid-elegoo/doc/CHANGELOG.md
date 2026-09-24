@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.6
+
+- Documentation only, nothing about how the plugin works has changed. The docs now describe the
+  factory Elegoo tag as an NTAG-type tag rather than a small one: its size was never measured.
+  What was measured is that a plain NTAG sticker placed where the Elegoo tag sits is found by the
+  reader but cannot be read, so that distance is out of range for this kind of tag.
+
 ## 0.1.5
 
 - Factory Elegoo spools now read on a Snapmaker U1. On a real U1 (2026-09-23) a factory Elegoo

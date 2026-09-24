@@ -1,8 +1,8 @@
 # Elegoo Filament Tag (EXPERIMENTAL)
 
 > **Status: factory Elegoo spools read on a Snapmaker U1, with one extra step when loading.**
-> Elegoo's tag is small, sits inside the cardboard, and sits further out than the U1's reader reaches
-> for a tag that small, so a spool sitting on its holder is not read. Hold the tag over the reader
+> Elegoo's tag is an NTAG-type tag inside the cardboard, further out than the U1's reader reaches
+> for that kind of tag, so a spool sitting on its holder is not read. Hold the tag over the reader
 > while the filament feeds, as described in [Loading an Elegoo spool](#loading-an-elegoo-spool),
 > and it reads. Confirmed on one printer and one spool so far; see the
 > [call to action](#call-to-action).
@@ -42,9 +42,9 @@ mention. This decoder follows the factory tag.
 
 The U1 reads a spool's tag through a reader in the spool holder, and how far out it reaches
 depends on the tag. On the printer tested, Snapmaker, Bambu and Creality tags read from 13 mm to
-43.5 mm out from the edge of the spool's centre hole, but small NTAG-type tags have to be closer: a
+43.5 mm out from the edge of the spool's centre hole, but NTAG-type tags have to be closer: a
 plain NTAG sticker read at 22.5 mm, and at 35 mm it was found but could not be read. A factory
-Elegoo tag is a small one, inside the cardboard side, about 35 mm out (on the sample spool it sat
+Elegoo tag is an NTAG-type tag, inside the cardboard side, about 35 mm out (on the sample spool it sat
 under the printed ELEGOO logo), and a spool sitting on its holder is not read, however it is
 turned. The fix is to hold the tag against the centre of the holder for the moment the printer
 reads it:
@@ -160,7 +160,7 @@ field with its label, then loaded on a U1.
   the edge of the centre hole, the Elegoo tag sits at about 35 mm; tags that do read with the spool
   mounted sat at 13 mm (Snapmaker), 22.5 mm (an NTAG sticker), 27.2 mm (Bambu) and 43.5 mm
   (Creality). A plain NTAG sticker taped at 35 mm was found by the reader but could not be read, so
-  for small NTAG-type tags that distance is the edge of the reader's range; the buried Elegoo tag
+  for NTAG-type tags that distance is the edge of the reader's range; the buried Elegoo tag
   did not answer at all. Held with the tag against the centre of the holder, it read in full on every lane
   tried (three of the four; one needed a second try), including once while the filament fed.
   Every field matched the label each time.
@@ -168,8 +168,8 @@ field with its label, then loaded on a U1.
 ## Findings (2026-06-29, real U1)
 
 > Kept for the record. Its conclusion that the U1 cannot read these tags at all was overturned
-> on 2026-09-23: the U1 reads them once the tag is close to its reader. The tag is small, sits
-> inside the cardboard, and sits further out than the reader reaches for such a tag, which is most
+> on 2026-09-23: the U1 reads them once the tag is close to its reader. The tag is an NTAG-type
+> tag inside the cardboard, further out than the reader reaches for that kind of tag, which is most
 > likely why a spool pressed against the reader here never answered; see the findings above.
 
 A full hardware investigation on a real U1 (printer "junior") settled what is and is not the

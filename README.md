@@ -113,10 +113,10 @@ the byte table in ELEGOO's published guide. **A U1 reads a factory spool (2026-0
 is over the reader**: rfid-ntag's stock `NtagReader` picks the tag up (it is a Type 2 tag with a
 cascaded UID, SAK `0x04` at level 1) and hands the pages to this parser, so the plugin ships no reader
 of its own. It needs rfid-ntag 0.1.15+, whose chunked page reader keeps the tag's pages instead of
-discarding the read. The catch is range: Elegoo embeds a small tag in the cardboard flange about
-35 mm from the centre-hole edge, further out than the U1's reader reaches for a tag that small, so a
-mounted spool is not read (tags that do read mounted sit from 13 mm to 43.5 mm out, the far ones
-being larger Mifare tags). Holding the tag against the holder centre while the filament
+discarding the read. The catch is range: Elegoo embeds an NTAG-type tag in the cardboard flange
+about 35 mm from the centre-hole edge, further out than the U1's reader reaches for NTAG-type tags,
+so a mounted spool is not read (tags that do read mounted sit from 13 mm to 43.5 mm out, the far ones
+being Mifare tags). Holding the tag against the holder centre while the filament
 feeds, then mounting the spool, works; see the reader row below.
 
 ***`rfid-qidi` is **read end to end on junior** against physical QIDI spools (PLA Matte, PETG).
@@ -244,7 +244,7 @@ color/diameter/weight wait for a tester dump - that is a small add, not a blocke
 
 | Tag | Blocker | Notes for the follow-on |
 | --- | --- | --- |
-| **Elegoo factory (reader range)** | Not a decoder fault: a mounted spool's tag is not read. Measured from the centre-hole edge, tags that read mounted sit at 13 mm (Snapmaker), 22.5 mm (NTAG sticker), 27.2 mm (Bambu) and 43.5 mm (Creality); Elegoo's small, cardboard-buried tag sits at 35 mm and never answers, and a plain NTAG sticker taped at 35 mm is found but fails its first page read (`-29`). So 35 mm is at the edge of the reader's range for small NTAG-type tags. Held against the holder centre, the Elegoo tag reads in full on ch0, ch1 and ch3 (ch2 untried). The user-facing fix is procedural (hold the tag there while the filament feeds, then mount; the hub keeps the lane's spool until unload) or a sticker, including a confirmed copy of the Elegoo block, 13 to 20 mm from the hole edge. **Needs more spools and printers, not code.** | RELAY-A5: the tag is an open NFC Type 2 tag (Feiju, UID prefix `0x53`, 7-byte cascaded UID, final SAK `0x00`, ATQA `0x4400` as TagInfo reports it), NTAG213-style memory, no password. A factory spool carries two such tags, one per flange, different UIDs, identical data. Junior's June "never wakes" result most likely had the same cause. Full notes: `rfid-elegoo/rfid-elegoo-notes.md`. |
+| **Elegoo factory (reader range)** | Not a decoder fault: a mounted spool's tag is not read. Measured from the centre-hole edge, tags that read mounted sit at 13 mm (Snapmaker), 22.5 mm (NTAG sticker), 27.2 mm (Bambu) and 43.5 mm (Creality); Elegoo's cardboard-buried NTAG-type tag sits at 35 mm and never answers, and a plain NTAG sticker taped at 35 mm is found but fails its first page read (`-29`). So 35 mm is at the edge of the reader's range for NTAG-type tags. Held against the holder centre, the Elegoo tag reads in full on ch0, ch1 and ch3 (ch2 untried). The user-facing fix is procedural (hold the tag there while the filament feeds, then mount; the hub keeps the lane's spool until unload) or a sticker, including a confirmed copy of the Elegoo block, 13 to 20 mm from the hole edge. **Needs more spools and printers, not code.** | RELAY-A5: the tag is an open NFC Type 2 tag (Feiju, UID prefix `0x53`, 7-byte cascaded UID, final SAK `0x00`, ATQA `0x4400` as TagInfo reports it), NTAG213-style memory, no password. A factory spool carries two such tags, one per flange, different UIDs, identical data. Junior's June "never wakes" result most likely had the same cause. Full notes: `rfid-elegoo/rfid-elegoo-notes.md`. |
 
 (`rfid-elegoo` ships the decode, verified against a real factory spool and read on a real U1.)
 
