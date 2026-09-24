@@ -14,9 +14,9 @@ Elegoo's `36 EE EE EE EE` header and manufacturer marker.
   per byte in decimal-digit form (`00 80 76 65` = PLA). Sub-type and production date are not
   decoded: nothing confirms them yet.
 - **Reads on a U1 only when held near the reader** (2026-09-23, one printer, one spool). Elegoo's
-  tag is small and embedded in the cardboard flange about 35 mm from the centre-hole edge, beyond
-  what the U1's reader reaches for a tag that small (a plain NTAG sticker at 35 mm is found but not
-  read; at 22.5 mm it reads; larger Mifare tags read out to 43.5 mm), so a mounted spool is not
+  NTAG-type tag is embedded in the cardboard flange about 35 mm from the centre-hole edge, beyond
+  what the U1's reader reaches for NTAG-type tags (a plain NTAG sticker at 35 mm is found but not
+  read; at 22.5 mm it reads; Mifare tags read out to 43.5 mm), so a mounted spool is not
   read. Held
   with the tag against the holder centre (while feeding, or with `DETECT_SPOOLS`), it reads in full
   and every field matches the label; the hub then keeps the lane's spool until unload. Permanent

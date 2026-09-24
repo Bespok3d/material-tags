@@ -12,7 +12,7 @@ prints. The full filament-awareness setup in one install.
   into their settings, and without one they track the spool by the tag's own ID; QIDI needs no key.
   The Creality decoder is a recent release candidate, so its colour may not match every spool yet.
   Elegoo reads factory spools, confirmed on one U1 so far, if you hold the tag against the centre of
-  the spool holder while the filament feeds (its tag is small and sits further out than the reader reaches).
+  the spool holder while the filament feeds (its tag sits further out than the reader reaches).
 - **Spoolman Bridge**: keeps the remaining length of the loaded spool up to date.
 - **AFC Lite**: four-lane filament tracking and tool-change macros for the U1.
 - **U1 G-code Preview Colors**: shows each tool in the preview in the colour actually loaded.

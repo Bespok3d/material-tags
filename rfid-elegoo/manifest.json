@@ -1,9 +1,9 @@
 {
   "name": "rfid-elegoo",
   "title": "Elegoo Filament Tag",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "author": "bespoked",
-  "description": "EXPERIMENTAL. Decoder for the filament block on factory Elegoo (Centauri) spool tags: material, color, nozzle temperature range, diameter and weight, verified field by field against a real factory spool and its label, and read on a real Snapmaker U1. The factory tag is an open NFC Type 2 tag (NTAG213-style memory, no key) that the RFID Spool Reader's standard NTAG reader picks up; this plugin decodes the pages it reads. Its layout differs from ELEGOO's published byte table: fields are page-aligned and a nozzle range is present. Elegoo's tag is small and sits further out than the U1's reader reaches for a tag that small, so a spool sitting on its holder is not read: hold the tag against the centre of the holder while the filament feeds, then mount it (steps in the doc). Confirmed on one printer and one spool so far. Needs RFID Spool Reader 0.1.15 or newer. Read-only.",
+  "description": "EXPERIMENTAL. Decoder for the filament block on factory Elegoo (Centauri) spool tags: material, color, nozzle temperature range, diameter and weight, verified field by field against a real factory spool and its label, and read on a real Snapmaker U1. The factory tag is an open NFC Type 2 tag (NTAG213-style memory, no key) that the RFID Spool Reader's standard NTAG reader picks up; this plugin decodes the pages it reads. Its layout differs from ELEGOO's published byte table: fields are page-aligned and a nozzle range is present. Elegoo's NTAG-type tag sits further out than the U1's reader reaches for that kind of tag, so a spool sitting on its holder is not read: hold the tag against the centre of the holder while the filament feeds, then mount it (steps in the doc). Confirmed on one printer and one spool so far. Needs RFID Spool Reader 0.1.15 or newer. Read-only.",
   "tagline": "Reads factory Elegoo spool tags (hold the tag at the reader when loading).",
   "category": "filament",
   "channel": "testing",
