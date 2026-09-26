@@ -1,4 +1,3 @@
-# ruff: noqa: PLR2004  Tests assert on literal field values/offsets by design.
 """Regression tests for the Anycubic ACE raw-page decoder.
 
 Two layers of coverage:
