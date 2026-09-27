@@ -2,8 +2,11 @@
 
 ## 0.1.6 (unreleased)
 
-- Documentation only. The collection page describes the factory Elegoo tag as an NTAG-type tag
-  rather than a small one, matching `rfid-elegoo` 0.1.6, which this collection now requires.
+- Creality spools whose tag data is not followed by a `%` now decode. The collection requires
+  `rfid-creality` 0.2.3 or newer; before it, such spools were rejected as unreadable. Found on a
+  real black PA-CF spool.
+- The collection page describes the factory Elegoo tag as an NTAG-type tag rather than a small
+  one, matching `rfid-elegoo` 0.1.6, which this collection now requires.
 
 ## 0.1.5 - 2026-09-23
 

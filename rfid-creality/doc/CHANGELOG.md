@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.3
+
+- Creality tags whose data is not followed by a `%` now decode. Most tags end their data with a
+  `%` before the padding; some run straight into it, and those were rejected as unreadable. Found
+  on a real black PA-CF 1 kg spool, which now reads as PA-CF, 1.75 mm, 280 to 320 C, 1000 g,
+  confirmed by its owner against the spool.
+- The `Creality: uid=... core=...` log line no longer includes the padding bytes after the data.
+
 ## 0.2.2
 
 - Diameter is now reported in hundredths of a millimetre (`175` for 1.75 mm), the unit the shared

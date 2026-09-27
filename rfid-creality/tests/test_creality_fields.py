@@ -7,12 +7,15 @@ K2-RFID layout and a real tag dump. Only fields the decoder actually emits are a
 material id (as a literal string), MAIN_TYPE (looked up from the id), weight bucket, color,
 vendor, and UID. Date/serial are intentionally not decoded (see creality_fields docstring).
 """
-from creality_fields import decode
+from creality_fields import decode, payload_data_run
 
 # A valid decrypted payload in the real on-tag format: 40 hex chars, then '%' + NUL padding.
 # material [12:17]=01001 (-> PLA), color [18:24]=0000FF, weight [24:28]=0330 (1000 g).
 EXAMPLE = "3C6260276A210100100000FF0330000001000000" + "%" + "\x00" * 7
 UID = [0x40, 0x24, 0xC2, 0x6A]
+# A second real tag (PA-CF, black, 1 kg, confirmed by its owner against the spool): no '%'
+# terminator, the data runs straight into the NUL padding. Before 0.2.3 this did not decode.
+NO_TERMINATOR = "9C6250276A211200200000000330000001000000" + "\x00" * 8
 
 TEMPLATE = {
     "VERSION": 0, "VENDOR": "NONE", "MANUFACTURER": "NONE", "MAIN_TYPE": "NONE",
@@ -89,6 +92,25 @@ def test_unknown_material_id_leaves_type_and_temps_default():
 def test_accepts_core_with_terminator_and_padding():
     # The real framing (hex core, then '%' then NULs) must decode.
     assert decode(EXAMPLE, UID, dict(TEMPLATE)) is not None
+
+
+def test_decodes_a_real_tag_without_terminator():
+    info = decode(NO_TERMINATOR, UID, dict(TEMPLATE))
+    assert info is not None
+    assert info["SKU"] == "12002"
+    assert info["MAIN_TYPE"] == "PA-CF"
+    assert info["DIAMETER"] == 175
+    assert info["HOTEND_MIN_TEMP"] == 280
+    assert info["HOTEND_MAX_TEMP"] == 320
+    assert info["RGB_1"] == 0x000000
+    assert info["WEIGHT"] == 1000
+
+
+def test_data_run_stops_at_terminator_or_padding():
+    assert payload_data_run("ABC%" + "\x00" * 3) == "ABC"
+    assert payload_data_run("ABC" + "\x00" * 3) == "ABC"
+    assert payload_data_run("ABC\x00%") == "ABC"
+    assert payload_data_run("ABC") == "ABC"
 
 
 def test_rejects_too_short_core():

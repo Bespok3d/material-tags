@@ -69,7 +69,7 @@ class CrealityReader:
         # ground truth every field is sliced from) plus the UID and the decoded values. A
         # tester can send this one line to help verify unconfirmed fields (notably color) on
         # spools other than the one this was validated against. Carries no keys.
-        core = text.split("%", 1)[0]
+        core = creality_fields.payload_data_run(text)
         _log.info(
             "Creality: uid=%s core=%s type=%s dia=%s hotend=%s-%s weight=%s color=%06X",
             uid, core, info.get("MAIN_TYPE"), info.get("DIAMETER"),

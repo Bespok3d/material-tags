@@ -2,8 +2,10 @@
 
 Clean-room from the PUBLIC Creality reverse engineering (DnG-Crafts/K2-RFID,
 Bambu-Research-Group CrealityRfid.md). After the shell decrypts blocks 4-6 (AES-128-ECB),
-the plaintext is an ASCII string of hex-ish characters terminated by '%' (0x25) and padded
-with NUL to the 48-byte block. The usable data is the run before the terminator.
+the plaintext is an ASCII string of hex-ish characters, padded with NUL to the 48-byte block.
+Most tags end the data with a '%' (0x25) before the padding; some do not, and the data runs
+straight into the NULs (a real PA-CF spool, confirmed against its owner's label, 2026-09-28).
+The usable data is the run before the '%' or the first NUL, whichever comes first.
 
 Field offsets below are cross-confirmed two ways: against a real tag dump (blue Hyper PLA,
 1kg, UID 40:24:c2:6a) AND against an independent third-party reader implementation that
@@ -68,6 +70,7 @@ HUNDREDTHS_PER_MM = 100
 
 CREALITY_VENDOR = "Creality"
 PAYLOAD_TERMINATOR = "%"
+PADDING_CHAR = "\x00"
 # The core must be long enough to contain every field we read (through weight at [24:28]).
 MIN_CORE_LEN = 28
 CORE_ALPHABET = set("0123456789ABCDEF")
@@ -89,12 +92,17 @@ HEX_BASE = 16
 WEIGHT_GRAMS = {"0082": 250, "0165": 500, "0198": 600, "0247": 750, "0330": 1000}
 
 
+def payload_data_run(payload_text: str) -> str:
+    """The data before the '%' terminator or the NUL padding, whichever comes first."""
+    return payload_text.split(PAYLOAD_TERMINATOR, 1)[0].split(PADDING_CHAR, 1)[0]
+
+
 def _core_text(payload_text: str | None) -> str | None:
-    """Return the leading data run of the payload (before the '%' terminator), uppercased,
-    or None if the payload is missing, too short, or not the expected hex-ish charset."""
+    """Return the leading data run of the payload, uppercased, or None if the payload is
+    missing, too short, or not the expected hex-ish charset."""
     if payload_text is None:
         return None
-    head = payload_text.split(PAYLOAD_TERMINATOR, 1)[0].upper()
+    head = payload_data_run(payload_text).upper()
     if len(head) < MIN_CORE_LEN or not set(head) <= CORE_ALPHABET:
         return None
     return head

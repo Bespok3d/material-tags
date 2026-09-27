@@ -13,6 +13,8 @@ filament fields (type id, weight, color) read off a spool. Only the two AES keys
 and they are absent here. The sector-key derivation test uses a dummy master key (0x10..0x1f);
 it proves the tiling + AES wiring, not any real key value.
 """
+import logging
+
 from creality import aes_min, creality_keys, filament_protocol
 from creality import fm175xx_reader as fm_mod
 from creality.rfid_tag_creality import CrealityReader
@@ -134,6 +136,20 @@ def test_color_is_present_and_opaque():
     assert info["COLOR_NUMS"] == 1
     assert info["ALPHA"] == 0xFF
     assert info["ARGB_COLOR"] >> 24 == 0xFF
+
+
+def test_parse_decodes_a_tag_without_terminator_and_logs_a_clean_core(caplog):
+    plain = b"9C6250276A211200200000000330000001000000" + bytes(8)
+    engine = aes_min.AesEcb(DUMMY_PAYLOAD_KEY)
+    cipher = b"".join(engine.encrypt_block(plain[offset:offset + 16]) for offset in (0, 16, 32))
+    reader = _reader_with_keys()
+    _card_type, payload, _err = reader.read_hw_tag(FakeReader(cipher=cipher))
+    with caplog.at_level(logging.INFO, logger="bespok3d.creality"):
+        status, info = reader.parse(payload)
+    assert status == filament_protocol.FILAMENT_PROTO_OK
+    assert info["MAIN_TYPE"] == "PA-CF"
+    assert "core=9C6250276A211200200000000330000001000000 " in caplog.text
+    assert "\x00" not in caplog.text
 
 
 def test_parse_with_wrong_payload_key_fails_cleanly():
