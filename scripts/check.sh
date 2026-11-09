@@ -45,6 +45,7 @@ b3d_python_tools
 for decoder in "${DECODERS[@]}"; do
     run_check "pytest ($decoder)"  pytest_in_dir "$REPO_ROOT/$decoder" tests
 done
+run_check "pytest (collections)"  pytest_in_dir "$REPO_ROOT" tests
 
 # One ruff pass from the repo root: the shared config's per-file-ignores match on paths relative to
 # the working directory, and every decoder's tree is relative to here.
@@ -53,7 +54,7 @@ run_check "ruff"    ruff_in_dir "$REPO_ROOT" \
     rfid-elegoo/files rfid-elegoo/tests rfid-bambu/files rfid-bambu/tests \
     rfid-creality/files rfid-creality/tests rfid-tigertag/files rfid-tigertag/tests \
     rfid-openprinttag/files rfid-openprinttag/tests rfid-anycubic/files rfid-anycubic/tests \
-    rfid-qidi/files rfid-qidi/tests tests_support
+    rfid-qidi/files rfid-qidi/tests tests_support tests
 
 run_check "mypy"    mypy_in_dir "$REPO_ROOT" \
     "rfid-generic-ndef/$EXTRAS/rfid-tags/generic-ndef/generic_ndef_fields.py" \

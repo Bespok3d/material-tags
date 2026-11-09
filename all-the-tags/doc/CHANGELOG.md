@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.8 - 2026-11-09
+
+- A Bambu spool stays one spool in Spoolman whichever side of it the reader sees. The collection
+  requires `rfid-bambu` 0.2.2 or newer for this.
+- The collection requires `spoolman` 0.1.39 or newer. A second roll of a filament is no longer
+  tracked on the first roll's spool, a tag already tied to one spool is never put on another one,
+  and tying a tag to an archived spool keeps that spool's other details.
+
 ## 0.1.7 - 2026-09-23
 
 - Factory Elegoo spools are identified now. The collection requires `rfid-elegoo` 0.1.5 or newer,
