@@ -39,7 +39,9 @@ b3d_python_tools
 
 # Each decoder runs pytest in its own process: every decoder ships a tests/conftest.py that inserts
 # its own extras dir on sys.path, and pytest's prepend import mode dedupes same-named conftests, so
-# a single combined run would only honor the first decoder's path insert.
+# a single combined run would only honor the first decoder's path insert. The decoders also stub
+# the same printer-provided module names (filament_protocol, fm175xx_reader) with different values,
+# so they cannot share one process.
 for decoder in "${DECODERS[@]}"; do
     run_check "pytest ($decoder)"  pytest_in_dir "$REPO_ROOT/$decoder" tests
 done
@@ -51,7 +53,7 @@ run_check "ruff"    ruff_in_dir "$REPO_ROOT" \
     rfid-elegoo/files rfid-elegoo/tests rfid-bambu/files rfid-bambu/tests \
     rfid-creality/files rfid-creality/tests rfid-tigertag/files rfid-tigertag/tests \
     rfid-openprinttag/files rfid-openprinttag/tests rfid-anycubic/files rfid-anycubic/tests \
-    rfid-qidi/files rfid-qidi/tests
+    rfid-qidi/files rfid-qidi/tests tests_support
 
 run_check "mypy"    mypy_in_dir "$REPO_ROOT" \
     "rfid-generic-ndef/$EXTRAS/rfid-tags/generic-ndef/generic_ndef_fields.py" \
@@ -63,7 +65,8 @@ run_check "mypy"    mypy_in_dir "$REPO_ROOT" \
     "rfid-creality/$EXTRAS/rfid-tags/creality/creality_keys.py" \
     "rfid-tigertag/$EXTRAS/rfid-tags/tigertag/tigertag_fields.py" \
     "rfid-anycubic/$EXTRAS/rfid-tags/anycubic/anycubic_fields.py" \
-    "rfid-qidi/$EXTRAS/rfid-tags/qidi/qidi_fields.py"
+    "rfid-qidi/$EXTRAS/rfid-tags/qidi/qidi_fields.py" \
+    tests_support/decoder_package.py
 
 # openprinttag_fields.py relatively imports its cbor_min sibling (from . import cbor_min), which
 # resolves at runtime as a flat klippy.extras package member; mypy needs the package parent (the

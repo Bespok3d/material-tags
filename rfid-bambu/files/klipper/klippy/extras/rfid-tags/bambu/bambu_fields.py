@@ -9,20 +9,28 @@ little-endian; the diameter is an IEEE-754 float32.
 The struct fields and their units mirror the stock Snapmaker M1 parser (diameter in
 hundredths of a millimetre, weight in grams, temperatures in Celsius), so the touchscreen
 and Spoolman treat a Bambu spool exactly like a Snapmaker one.
+
+A Bambu spool carries a tag on each side, each with its own chip UID. Block 9 holds the tray
+UID, which both tags of one spool share; it is handed on as ``SPOOL_UID`` so the spool keeps
+one identity whichever way round it is loaded. A read that stops before block 9, or a blank
+tray UID, hands on no ``SPOOL_UID``.
 """
 import struct
 from typing import Any
 
 VENDOR = "Bambu Lab"
-MIN_BUFFER_LEN = 7 * 16  # through block 6 (temperatures)
+BLOCK_BYTES = 16
+MIN_BUFFER_LEN = 7 * BLOCK_BYTES  # through block 6 (temperatures)
 
 BLOCK_UID = 0
 BLOCK_FILAMENT_TYPE = 2
 BLOCK_DETAILED_TYPE = 4
 BLOCK_COLOR = 5
 BLOCK_TEMPS = 6
+BLOCK_TRAY_UID = 9
 
 UID_LEN = 4
+TRAY_UID_LEN = 16
 DIAMETER_SCALE = 100  # mm float -> hundredths of a mm (1.75 -> 175)
 
 
@@ -39,7 +47,7 @@ def _ascii(buf: list[int], offset: int, length: int) -> str:
 
 
 def _block(block: int, offset: int = 0) -> int:
-    return block * 16 + offset
+    return block * BLOCK_BYTES + offset
 
 
 def _apply_identity(buf: list[int], info: dict[str, Any]) -> None:
@@ -80,6 +88,13 @@ def _apply_temperatures(buf: list[int], info: dict[str, Any]) -> None:
     info["OTHER_LAYER_TEMP"] = info["HOTEND_MIN_TEMP"]
 
 
+def _spool_identity(buf: list[int]) -> dict[str, Any]:
+    tray_uid = buf[_block(BLOCK_TRAY_UID):_block(BLOCK_TRAY_UID) + TRAY_UID_LEN]
+    if len(tray_uid) < TRAY_UID_LEN or not any(tray_uid):
+        return {}
+    return {"SPOOL_UID": list(tray_uid)}
+
+
 def decode(card_data: list[int] | None, template: dict[str, Any]) -> dict[str, Any] | None:
     """Decode a Bambu block buffer into a filament struct, or None if it is too short."""
     if card_data is None or len(card_data) < MIN_BUFFER_LEN:
@@ -92,5 +107,6 @@ def decode(card_data: list[int] | None, template: dict[str, Any]) -> dict[str, A
     _apply_dimensions(card_data, info)
     _apply_temperatures(card_data, info)
     info["CARD_UID"] = list(card_data[_block(BLOCK_UID):_block(BLOCK_UID) + UID_LEN])
+    info.update(_spool_identity(card_data))
     info["OFFICIAL"] = True
     return info

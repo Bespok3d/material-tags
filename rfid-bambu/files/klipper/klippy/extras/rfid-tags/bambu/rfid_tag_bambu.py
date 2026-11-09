@@ -22,10 +22,12 @@ _log = logging.getLogger("bespok3d.bambu")
 
 M1_SAK = 0x08
 BAMBU_CARD_TYPE = 0xBA  # distinct card type so the dedicated Bambu parser owns its data
-BAMBU_SECTORS = (0, 1)  # blocks 0-2 (uid/variant/type) + 4-6 (detail/color/temps)
+FILAMENT_SECTORS = (0, 1)  # blocks 0-2 (uid/variant/type) + 4-6 (detail/color/temps)
 BLOCKS_PER_SECTOR = 4
 DATA_BLOCKS_PER_SECTOR = 3
-BLOCK_BYTES = 16
+BLOCK_BYTES = bambu_fields.BLOCK_BYTES
+TRAY_UID_SECTOR = bambu_fields.BLOCK_TRAY_UID // BLOCKS_PER_SECTOR
+BUFFER_LEN = (bambu_fields.BLOCK_TRAY_UID + 1) * BLOCK_BYTES
 
 
 class BambuReader:
@@ -45,26 +47,33 @@ class BambuReader:
     def read_hw_tag(self, reader):
         uid = list(reader.selected_card_uid()[0:4])
         keys = bambu_keys.derive_sector_keys(bytes(uid), self._master_key)
-        _log.info("Spool UID: %s",uid)
+        _log.info("Bambu: tag UID %s", uid)
         if reader.reactivate_card() != fm_mod.FM175XX_OK:
             _log.error("Bambu: could not re-select card after stock read")
             return BAMBU_CARD_TYPE, None, fm_mod.FM175XX_CARD_READ_ERR
-        buffer = [0] * (len(BAMBU_SECTORS) * BLOCKS_PER_SECTOR * BLOCK_BYTES)
-        for sector in BAMBU_SECTORS:
-            err = self._read_sector(reader, sector, keys[sector], uid, buffer)
+        buffer = [0] * BUFFER_LEN
+        for sector in FILAMENT_SECTORS:
+            err = self._read_blocks(reader, _data_blocks(sector), keys[sector], uid, buffer)
             if err != fm_mod.FM175XX_OK:
-                _log.warning("Err: %s", err)
+                _log.warning("Bambu: sector %d auth/read failed (err=%d)", sector, err)
                 return BAMBU_CARD_TYPE, None, err
+        self._read_tray_uid(reader, keys[TRAY_UID_SECTOR], uid, buffer)
         return BAMBU_CARD_TYPE, buffer, fm_mod.FM175XX_OK
 
-    def _read_sector(self, reader, sector, key, uid, buffer):
-        blocks = [sector * BLOCKS_PER_SECTOR + n for n in range(DATA_BLOCKS_PER_SECTOR)]
-        err, data = \
-            reader.read_mifare_classic(fm_mod.FM175XX_M1_CARD_AUTH_MODE_A, sector, key, uid, blocks)
+    def _read_tray_uid(self, reader, key, uid, buffer):
+        # The filament is known without the tray UID; a failed read leaves block 9 blank, so
+        # the spool is only found by its chip UID instead of losing the whole read.
+        err = self._read_blocks(reader, [bambu_fields.BLOCK_TRAY_UID], key, uid, buffer)
         if err != fm_mod.FM175XX_OK:
-            _log.warning("Bambu: sector %d auth/read failed (err=%d)", sector, err)
+            _log.warning("Bambu: tray UID unreadable, this spool is known by its tag UID only")
+
+    def _read_blocks(self, reader, sector_blocks, key, uid, buffer):
+        sector = sector_blocks[0] // BLOCKS_PER_SECTOR
+        err, data = reader.read_mifare_classic(
+            fm_mod.FM175XX_M1_CARD_AUTH_MODE_A, sector, key, uid, sector_blocks)
+        if err != fm_mod.FM175XX_OK:
             return err
-        for index, block in enumerate(blocks):
+        for index, block in enumerate(sector_blocks):
             start = block * BLOCK_BYTES
             buffer[start:start + BLOCK_BYTES] = data[index * BLOCK_BYTES:(index + 1) * BLOCK_BYTES]
         return fm_mod.FM175XX_OK
@@ -76,6 +85,10 @@ class BambuReader:
         _log.info("Bambu: vendor=%s type=%s sub=%s", info.get("VENDOR"),
                   info.get("MAIN_TYPE"), info.get("SUB_TYPE"))
         return filament_protocol.FILAMENT_PROTO_OK, info
+
+
+def _data_blocks(sector):
+    return [sector * BLOCKS_PER_SECTOR + n for n in range(DATA_BLOCKS_PER_SECTOR)]
 
 
 class RfidTagBambu:

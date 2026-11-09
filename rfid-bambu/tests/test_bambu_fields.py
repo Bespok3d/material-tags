@@ -7,7 +7,7 @@ temperatures, plus the too-short / empty guards.
 """
 import struct
 
-from bambu_fields import decode
+from bambu_fields import BLOCK_BYTES, BLOCK_TRAY_UID, MIN_BUFFER_LEN, TRAY_UID_LEN, decode
 
 # Mirrors klippy/extras/filament_protocol.FILAMENT_INFO_STRUCT (the downstream contract).
 TEMPLATE = {
@@ -21,6 +21,8 @@ TEMPLATE = {
 }
 
 UID = [0x04, 0xA1, 0xB2, 0xC3]
+TRAY_UID = list(range(0x60, 0x70))
+TRAY_UID_START = BLOCK_TRAY_UID * BLOCK_BYTES
 
 
 def _put_text(buf: list[int], block: int, value: str) -> None:
@@ -34,7 +36,7 @@ def _put_u16_le(buf: list[int], block: int, offset: int, value: int) -> None:
 
 
 def build_buffer() -> list[int]:
-    buf = [0] * 128  # 2 sectors x 4 blocks x 16 bytes
+    buf = [0] * (BLOCK_TRAY_UID + 1) * BLOCK_BYTES  # every block through the tray UID
     buf[0:4] = UID                                  # block 0: UID
     _put_text(buf, 2, "PLA")                        # block 2: filament type
     _put_text(buf, 4, "PLA Basic")                  # block 4: detailed type
@@ -47,6 +49,7 @@ def build_buffer() -> list[int]:
     _put_u16_le(buf, 6, 6, 60)                      # block 6+6: bed temp
     _put_u16_le(buf, 6, 8, 230)                     # block 6+8: max hotend
     _put_u16_le(buf, 6, 10, 190)                    # block 6+10: min hotend
+    buf[TRAY_UID_START:TRAY_UID_START + TRAY_UID_LEN] = TRAY_UID  # block 9: tray UID
     return buf
 
 
@@ -59,6 +62,30 @@ def test_decode_full_tag():
     assert info["SUB_TYPE"] == "Basic"
     assert info["OFFICIAL"] is True
     assert info["CARD_UID"] == UID
+
+
+def test_both_tags_of_one_spool_carry_the_same_spool_uid():
+    first_tag_info = decode(build_buffer(), dict(TEMPLATE))
+    opposite_tag_buffer = build_buffer()
+    opposite_tag_buffer[0:4] = [0x04, 0x99, 0x88, 0x77]
+    opposite_tag_info = decode(opposite_tag_buffer, dict(TEMPLATE))
+    assert first_tag_info["SPOOL_UID"] == opposite_tag_info["SPOOL_UID"] == TRAY_UID
+    assert first_tag_info["CARD_UID"] != opposite_tag_info["CARD_UID"]
+
+
+def test_a_read_that_stops_before_the_tray_uid_keeps_the_filament_without_a_spool_uid():
+    info = decode(build_buffer()[:MIN_BUFFER_LEN], dict(TEMPLATE))
+    assert info["MAIN_TYPE"] == "PLA"
+    assert info["HOTEND_MIN_TEMP"] == 190
+    assert "SPOOL_UID" not in info
+
+
+def test_a_blank_tray_uid_gives_no_spool_uid():
+    buf = build_buffer()
+    buf[TRAY_UID_START:TRAY_UID_START + TRAY_UID_LEN] = [0] * TRAY_UID_LEN
+    info = decode(buf, dict(TEMPLATE))
+    assert info["MAIN_TYPE"] == "PLA"
+    assert "SPOOL_UID" not in info
 
 
 def test_decode_color():
@@ -99,6 +126,7 @@ def test_subtype_is_detailed_type_when_no_main_prefix():
 def test_decode_rejects_short_or_missing_buffer():
     assert decode(None, dict(TEMPLATE)) is None
     assert decode([0] * 16, dict(TEMPLATE)) is None  # only one block: too short
+    assert decode(build_buffer()[:MIN_BUFFER_LEN - 1], dict(TEMPLATE)) is None
 
 
 def test_decode_does_not_mutate_template():

@@ -35,6 +35,10 @@ them to a Spoolman spool by UID); they just are not decoded into material/colour
 - The plugin authenticates and reads the data blocks through the reader's
   `read_mifare_classic` primitive, then decodes the plaintext blocks into the filament
   fields. The encrypted RSA signature blocks are ignored (we only read).
+- A Bambu spool has a tag on each side, and each tag has its own UID. Both tags carry the
+  same spool ID (block 9), which the plugin also reads and hands on, so Spoolman Bridge
+  (0.1.39 or newer) knows both sides are one spool. If that block cannot be read, the
+  filament is still decoded and the spool is known by its tag UID only.
 
 ## What it does not do
 

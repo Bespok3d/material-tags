@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.2
+
+- A Bambu spool has a tag on each side. Both sides now report the same spool, so Spoolman
+  Bridge knows it is one spool whichever way round you load it. This needs Spoolman Bridge
+  0.1.39 or newer.
+
 ## 0.2.1
 
 - Fixed the manifest file publisher field. No functional changes in the plugin.
