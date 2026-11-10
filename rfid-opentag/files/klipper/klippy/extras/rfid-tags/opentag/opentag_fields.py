@@ -46,11 +46,9 @@ V1_MAX_PRINT_TEMP_OFFSET = 0xB5
 V1_MAX_BED_TEMP_OFFSET = 0xB7
 # Shortest payload that still carries every core field this decoder reads (through bed temp).
 V1_CORE_MIN_LENGTH = V1_BED_TEMP_OFFSET + 1
-# Shortest payload that carries the extended min/max temperatures (through max bed temp).
-V1_EXTENDED_TEMP_MIN_LENGTH = V1_MAX_BED_TEMP_OFFSET + 1
-# Zero-fill came with spec v2.001; a v1 tag tells core-only from extended temperatures by its
-# length, so it is kept as written.
-V1_ZERO_FILLED_LENGTH = 0
+# A v1 tag without the extended block (NTAG213) has not set its min/max temperatures, the same
+# as one that leaves them at 0, so the missing bytes read as 0 up to the last one decoded.
+V1_ZERO_FILLED_LENGTH = V1_MAX_BED_TEMP_OFFSET + 1
 
 # Spec v2 layout (v2.000 moved every field after the material modifiers).
 V2_MANUFACTURER_OFFSET = 0x0C
@@ -103,15 +101,12 @@ def _temperature(payload: bytes, offset: int) -> int:
 
 
 def _apply_v1_temperatures(payload: bytes, info: FilamentInfo) -> None:
-    if len(payload) >= V1_EXTENDED_TEMP_MIN_LENGTH:
-        info["HOTEND_MIN_TEMP"] = _temperature(payload, V1_MIN_PRINT_TEMP_OFFSET)
-        info["HOTEND_MAX_TEMP"] = _temperature(payload, V1_MAX_PRINT_TEMP_OFFSET)
-        info["BED_TEMP"] = _temperature(payload, V1_MAX_BED_TEMP_OFFSET)
-    else:
-        print_temp = _temperature(payload, V1_PRINT_TEMP_OFFSET)
-        info["HOTEND_MIN_TEMP"] = print_temp
-        info["HOTEND_MAX_TEMP"] = print_temp
-        info["BED_TEMP"] = _temperature(payload, V1_BED_TEMP_OFFSET)
+    print_temp = _temperature(payload, V1_PRINT_TEMP_OFFSET)
+    bed_temp = _temperature(payload, V1_BED_TEMP_OFFSET)
+    # The extended temperatures are optional and read 0 when unset.
+    info["HOTEND_MIN_TEMP"] = _temperature(payload, V1_MIN_PRINT_TEMP_OFFSET) or print_temp
+    info["HOTEND_MAX_TEMP"] = _temperature(payload, V1_MAX_PRINT_TEMP_OFFSET) or print_temp
+    info["BED_TEMP"] = _temperature(payload, V1_MAX_BED_TEMP_OFFSET) or bed_temp
     info["FIRST_LAYER_TEMP"] = info["HOTEND_MIN_TEMP"]
     info["OTHER_LAYER_TEMP"] = info["HOTEND_MIN_TEMP"]
 
@@ -162,11 +157,14 @@ def _decodable(payload: bytes) -> tuple[bytes, TagLayout] | None:
     return payload.ljust(layout.zero_filled_length, b"\x00"), layout
 
 
+def _is_opentag_record(record: Record) -> bool:
+    # RFC 2045: MIME types compare case-insensitively.
+    return str(record.get("mime_type", "")).lower() == OPENTAG_MIME_TYPE
+
+
 def decodable_opentag_payload(records: list[Record]) -> tuple[bytes, TagLayout] | None:
     # The spec has the reader load only the first OpenTag3D record; it holds all the tag data.
-    first_record = next(
-        (record for record in records if record.get("mime_type") == OPENTAG_MIME_TYPE), None,
-    )
+    first_record = next((record for record in records if _is_opentag_record(record)), None)
     if first_record is None:
         return None
     return _decodable(bytes(first_record.get("payload") or b""))

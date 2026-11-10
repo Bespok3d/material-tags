@@ -2,8 +2,8 @@
 """Regression tests for the OpenTag3D decoder.
 
 These build OpenTag3D payloads at the spec's verified byte offsets and pin the
-produced FILAMENT_INFO_STRUCT fields, including the v1 core-only vs extended
-temperature paths, the v2 layout, the version gate and the MIME-type gating.
+produced FILAMENT_INFO_STRUCT fields, including the v1 core temperatures and the
+optional extended ones that override them, the v2 layout, the version gate and the MIME-type gating.
 """
 from opentag_fields import build_struct
 
@@ -93,6 +93,28 @@ def test_core_only_payload_uses_single_print_temp() -> None:
     assert info["BED_TEMP"] == 60
 
 
+def test_extended_temperatures_left_at_zero_fall_back_to_the_core_ones() -> None:
+    # Spec reader: an optional int left at 0 is not set.
+    fields = {**DEFAULT_FIELDS, "ext_min_c": 0, "ext_max_c": 0, "ext_bed_c": 0}
+    record = opentag_record(build_payload(EXTENDED_LENGTH, fields))
+    info = build_struct([record], CARD_UID, dict(TEMPLATE))
+    assert info is not None
+    assert info["HOTEND_MIN_TEMP"] == 210
+    assert info["HOTEND_MAX_TEMP"] == 210
+    assert info["FIRST_LAYER_TEMP"] == 210
+    assert info["OTHER_LAYER_TEMP"] == 210
+    assert info["BED_TEMP"] == 60
+
+
+def test_each_extended_temperature_falls_back_on_its_own() -> None:
+    fields = {**DEFAULT_FIELDS, "ext_max_c": 0}
+    record = opentag_record(build_payload(EXTENDED_LENGTH, fields))
+    info = build_struct([record], CARD_UID, dict(TEMPLATE))
+    assert info is not None
+    assert info["HOTEND_MIN_TEMP"] == 200
+    assert info["HOTEND_MAX_TEMP"] == 210
+
+
 def test_pre_1000_tag_version_keeps_v1_reading() -> None:
     fields = {**DEFAULT_FIELDS, "tag_version": 20}
     record = opentag_record(build_payload(CORE_ONLY_LENGTH, fields))
@@ -112,6 +134,15 @@ def test_color_channels_are_distinct() -> None:
     assert info["RGB_1"] == 0xABCDEF
     assert info["ALPHA"] == 0x80
     assert info["ARGB_COLOR"] == 0x80ABCDEF
+
+
+def test_matches_the_opentag_mime_type_in_any_case() -> None:
+    # RFC 2045: MIME types compare case-insensitively.
+    record = opentag_record(build_payload(EXTENDED_LENGTH, DEFAULT_FIELDS))
+    record["mime_type"] = "Application/OpenTag3D"
+    info = build_struct([record], CARD_UID, dict(TEMPLATE))
+    assert info is not None
+    assert info["VENDOR"] == "Polymaker"
 
 
 def test_ignores_non_opentag_mime() -> None:
