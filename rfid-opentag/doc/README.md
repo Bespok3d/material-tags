@@ -19,7 +19,8 @@ unpacks the documented field offsets, and maps them into the filament record:
 - **Brand / manufacturer** from Filament Manufacturer (16 bytes)
 - **Material type** from Base Material Name (PLA, PETG...)
 - **Sub-type** from Material Modifiers (CF, Silk...)
-- **Color** from Color 1 (RGBA)
+- **Color** from Color 1 (RGBA), plus Colors 2 to 4 on multi-color spools (an unused slot,
+  transparent black, is skipped)
 - **Diameter** from Target Diameter (micrometres, stored as centi-mm)
 - **Weight** from Target Weight (grams)
 - **Nozzle min / max** from Extended Min/Max Print Temp, or the core Print Temp
@@ -32,8 +33,6 @@ min/max nozzle and bed temperatures, which are preferred when present.
 ## What it does not do
 
 - It does **not** write tags. Read-only.
-- It does **not** decode multi-color slots beyond the primary color yet (the
-  primary color is mapped; additional color slots are a future enhancement).
 - OpenSpool (JSON) tags are read by the **RFID Spool Reader** directly, not here.
 
 ## Programming tags

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.1
+
+- A spool with several colors now shows all of them, up to four, instead of only the first.
+
 ## 0.1.0
 
 - First release. Clean-room OpenTag3D decoder: unpacks the big-endian binary

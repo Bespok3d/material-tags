@@ -17,7 +17,8 @@ Record = dict[str, Any]
 
 OPENTAG_MIME_TYPE = "application/opentag3d"
 
-# Payload-relative byte offsets, big-endian, per the public OpenTag3D spec.
+# Payload-relative byte offsets, big-endian, per the public OpenTag3D spec v1.
+TAG_VERSION_OFFSET = 0x00
 BASE_MATERIAL_OFFSET = 0x02
 BASE_MATERIAL_LEN = 5
 MATERIAL_MODIFIERS_OFFSET = 0x07
@@ -25,6 +26,10 @@ MATERIAL_MODIFIERS_LEN = 5
 MANUFACTURER_OFFSET = 0x1B
 MANUFACTURER_LEN = 16
 COLOR_1_OFFSET = 0x4B
+# Colours 2..4 of a multi-colour spool; a single-colour spool leaves them transparent black.
+SECONDARY_COLOR_OFFSETS = (0x50, 0x54, 0x58)
+# Spec v2.000 moved every field; on a v2 tag the v1 colour 2..4 bytes hold its serial number.
+FIRST_V2_TAG_VERSION = 2000
 DIAMETER_OFFSET = 0x5C
 WEIGHT_OFFSET = 0x5E
 PRINT_TEMP_OFFSET = 0x60
@@ -44,6 +49,9 @@ RGB_MASK = 0xFFFFFF
 ALPHA_SHIFT = 24
 RED_SHIFT = 16
 GREEN_SHIFT = 8
+RGBA_BYTES = 4
+ALPHA_INDEX = 3
+TRANSPARENT_BLACK = bytes(RGBA_BYTES)
 
 
 def _text(payload: bytes, offset: int, length: int) -> str:
@@ -75,16 +83,33 @@ def _apply_identity(payload: bytes, info: dict[str, Any]) -> None:
     info["SUB_TYPE"] = sub_type or info["SUB_TYPE"]
 
 
+def _rgba(payload: bytes, offset: int) -> bytes:
+    return payload[offset:offset + RGBA_BYTES]
+
+
+def _rgb(rgba: bytes) -> int:
+    return (rgba[0] << RED_SHIFT) | (rgba[1] << GREEN_SHIFT) | rgba[2]
+
+
+def _secondary_colors(payload: bytes) -> list[bytes]:
+    if _u16_be(payload, TAG_VERSION_OFFSET) >= FIRST_V2_TAG_VERSION:
+        return []
+    secondaries = [_rgba(payload, offset) for offset in SECONDARY_COLOR_OFFSETS]
+    return [rgba for rgba in secondaries if rgba != TRANSPARENT_BLACK]
+
+
+def _spool_colors(payload: bytes) -> list[bytes]:
+    return [_rgba(payload, COLOR_1_OFFSET), *_secondary_colors(payload)]
+
+
 def _apply_color(payload: bytes, info: dict[str, Any]) -> None:
-    red = payload[COLOR_1_OFFSET]
-    green = payload[COLOR_1_OFFSET + 1]
-    blue = payload[COLOR_1_OFFSET + 2]
-    alpha = payload[COLOR_1_OFFSET + 3]
-    rgb = (red << RED_SHIFT) | (green << GREEN_SHIFT) | blue
-    info["RGB_1"] = rgb
+    colors = _spool_colors(payload)
+    first_color = colors[0]
+    alpha = first_color[ALPHA_INDEX]
+    info.update({f"RGB_{slot}": _rgb(color) for slot, color in enumerate(colors, start=1)})
     info["ALPHA"] = alpha
-    info["COLOR_NUMS"] = 1
-    info["ARGB_COLOR"] = alpha << ALPHA_SHIFT | rgb
+    info["COLOR_NUMS"] = len(colors)
+    info["ARGB_COLOR"] = alpha << ALPHA_SHIFT | _rgb(first_color)
 
 
 def _apply_dimensions(payload: bytes, info: dict[str, Any]) -> None:

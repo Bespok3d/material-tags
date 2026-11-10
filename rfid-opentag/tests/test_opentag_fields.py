@@ -41,10 +41,13 @@ def _put_u16_be(buf: bytearray, offset: int, value: int) -> None:
 
 def build_payload(size: int, fields: dict[str, object]) -> bytes:
     buf = bytearray(size)
+    _put_u16_be(buf, 0x00, int(fields.get("tag_version", 1000)))
     _put_text(buf, 0x02, str(fields["material"]), 5)
     _put_text(buf, 0x07, str(fields["modifiers"]), 5)
     _put_text(buf, 0x1B, str(fields["manufacturer"]), 16)
     buf[0x4B:0x4F] = bytes(fields["rgba"])
+    for offset, rgba in zip((0x50, 0x54, 0x58), fields.get("secondary_rgba", ())):
+        buf[offset:offset + 4] = bytes(rgba)
     _put_u16_be(buf, 0x5C, int(fields["diameter_um"]))
     _put_u16_be(buf, 0x5E, int(fields["weight_g"]))
     buf[0x60] = int(fields["print_temp_c"]) // 5
@@ -108,3 +111,35 @@ def test_ignores_non_opentag_mime() -> None:
 def test_ignores_payload_shorter_than_core() -> None:
     record = opentag_record(bytes(0x40))
     assert build_struct([record], CARD_UID, dict(TEMPLATE)) is None
+
+
+def test_decodes_secondary_colors() -> None:
+    # Spec v1.000: color_2..color_4 are RGBA at 0x50, 0x54, 0x58; an unused one is 00000000.
+    secondaries = ((0x40, 0x50, 0x60, 0xFF), (0, 0, 0, 0), (0x70, 0x80, 0x90, 0xFF))
+    fields = {**DEFAULT_FIELDS, "secondary_rgba": secondaries}
+    record = opentag_record(build_payload(CORE_ONLY_LENGTH, fields))
+    info = build_struct([record], CARD_UID, dict(TEMPLATE))
+    assert info is not None
+    assert info["COLOR_NUMS"] == 3
+    assert [info["RGB_1"], info["RGB_2"], info["RGB_3"]] == [0x102030, 0x405060, 0x708090]
+    assert info["RGB_4"] == 0xFFFFFF
+    assert info["ARGB_COLOR"] == 0xFF102030
+
+
+def test_single_color_spool_keeps_one_color() -> None:
+    record = opentag_record(build_payload(EXTENDED_LENGTH, DEFAULT_FIELDS))
+    info = build_struct([record], CARD_UID, dict(TEMPLATE))
+    assert info is not None
+    assert info["COLOR_NUMS"] == 1
+    assert info["RGB_2"] == 0xFFFFFF
+
+
+def test_v2_tag_does_not_read_its_serial_number_as_colors() -> None:
+    # Spec v2.000+: 0x4C..0x6B is the serial number text, where v1 kept colours 2..4.
+    fields = {**DEFAULT_FIELDS, "tag_version": 2004}
+    payload = bytearray(build_payload(EXTENDED_LENGTH, fields))
+    _put_text(payload, 0x4C, "SN-2026-000042-ROLL-0007", 32)
+    info = build_struct([opentag_record(bytes(payload))], CARD_UID, dict(TEMPLATE))
+    assert info is not None
+    assert info["COLOR_NUMS"] == 1
+    assert info["RGB_2"] == 0xFFFFFF
