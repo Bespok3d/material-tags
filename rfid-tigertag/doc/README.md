@@ -12,7 +12,8 @@ block by its magic header and reads the documented fields.
 
 ## What it decodes
 
-- Color (RGBA)
+- Color (RGBA), plus color 2 when the aspect says bicolor, or colors 2 and 3 when it says
+  tricolor or rainbow
 - Filament diameter (from TigerTag's diameter code: 1.75 mm or 2.85 mm)
 - Nozzle temperature (min and max)
 - Bed temperature

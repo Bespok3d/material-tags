@@ -47,6 +47,23 @@ def build_block(magic: bytes, diameter_code: int = 0x38) -> bytes:
     return bytes(block)
 
 
+# Aspect ids from TigerTag's database/id_aspect.json.
+ASPECT_SILK = 92
+ASPECT_BASIC = 104
+ASPECT_BICOLOR = 252
+ASPECT_TRICOLOR = 24
+ASPECT_RAINBOW = 145
+
+
+def build_multicolor_block(aspect_1: int, aspect_2: int) -> bytes:
+    block = bytearray(build_block(MAGIC_STANDARD))
+    block[10:12] = bytes((aspect_1, aspect_2))   # +10 aspect 1/2
+    block += bytes((0x2F, 0x7A, 0x0A, 0x5C))     # +32 twin tag id & timestamp
+    block += bytes((0x11, 0x22, 0x33, 0x00))     # +36 color 2 RGB, +39 tag index
+    block += bytes((0x44, 0x55, 0x66, 0x00))     # +40 color 3 RGB, +43 reserved
+    return bytes(block)
+
+
 def test_decodes_standard_tag():
     dump = UID_HEADER + build_block(MAGIC_STANDARD)
     info = build_struct(dump, dict(TEMPLATE))
@@ -117,3 +134,60 @@ def test_does_not_mutate_template():
     build_struct(UID_HEADER + build_block(MAGIC_STANDARD), TEMPLATE)
     assert TEMPLATE["VENDOR"] == "NONE"
     assert TEMPLATE["OFFICIAL"] is False
+
+
+def test_bicolor_in_aspect_2_decodes_two_colors():
+    dump = UID_HEADER + build_multicolor_block(ASPECT_SILK, ASPECT_BICOLOR)
+    info = build_struct(dump, dict(TEMPLATE))
+    assert info["COLOR_NUMS"] == 2
+    assert [info["RGB_1"], info["RGB_2"]] == [0xFF8000, 0x112233]
+    assert info["RGB_3"] == 0xFFFFFF
+    assert info["ALPHA"] == 0xC0
+    assert info["ARGB_COLOR"] == 0xC0FF8000
+
+
+def test_tricolor_in_aspect_1_decodes_three_colors():
+    dump = UID_HEADER + build_multicolor_block(ASPECT_TRICOLOR, 0x00)
+    info = build_struct(dump, dict(TEMPLATE))
+    assert info["COLOR_NUMS"] == 3
+    assert [info["RGB_1"], info["RGB_2"], info["RGB_3"]] == [0xFF8000, 0x112233, 0x445566]
+
+
+def test_aspect_2_wins_when_both_aspects_are_multicolor():
+    dump = UID_HEADER + build_multicolor_block(ASPECT_TRICOLOR, ASPECT_BICOLOR)
+    info = build_struct(dump, dict(TEMPLATE))
+    assert info["COLOR_NUMS"] == 2
+    assert info["RGB_3"] == 0xFFFFFF
+
+
+def test_rainbow_decodes_three_colors():
+    dump = UID_HEADER + build_multicolor_block(ASPECT_BASIC, ASPECT_RAINBOW)
+    info = build_struct(dump, dict(TEMPLATE))
+    assert info["COLOR_NUMS"] == 3
+
+
+def test_single_color_aspect_keeps_one_color():
+    dump = UID_HEADER + build_multicolor_block(ASPECT_BASIC, 0x00)
+    info = build_struct(dump, dict(TEMPLATE))
+    assert info["COLOR_NUMS"] == 1
+    assert info["RGB_2"] == 0xFFFFFF
+
+
+def test_bicolor_dump_ending_after_color_2_keeps_two_colors():
+    dump = UID_HEADER + build_multicolor_block(ASPECT_SILK, ASPECT_BICOLOR)[:-5]
+    info = build_struct(dump, dict(TEMPLATE))
+    assert info["COLOR_NUMS"] == 2
+    assert info["RGB_2"] == 0x112233
+
+
+def test_tricolor_dump_ending_before_color_3_keeps_two_colors():
+    dump = UID_HEADER + build_multicolor_block(ASPECT_TRICOLOR, 0x00)[:-2]
+    info = build_struct(dump, dict(TEMPLATE))
+    assert info["COLOR_NUMS"] == 2
+    assert info["RGB_3"] == 0xFFFFFF
+
+
+def test_dump_ending_before_color_2_keeps_one_color():
+    dump = UID_HEADER + build_multicolor_block(ASPECT_TRICOLOR, 0x00)[:-7]
+    info = build_struct(dump, dict(TEMPLATE))
+    assert info["COLOR_NUMS"] == 1

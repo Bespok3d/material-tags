@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.1
+
+- A two-color, three-color or rainbow spool now shows all its colors instead of only the first.
+
 ## 0.1.0
 
 - First release. Clean-room TigerTag decoder for the open NTAG21x raw-page layout: finds
