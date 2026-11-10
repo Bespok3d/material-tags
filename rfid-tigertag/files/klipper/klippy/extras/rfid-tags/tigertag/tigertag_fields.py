@@ -9,7 +9,7 @@ TigerTag-RFID-Guide spec:
     +0  u32  magic         0x5BF59264 standard / 0xBC0FCB97 plus (0x6C41A2E1 = blank)
     +4  u32  id_product
     +8  u16  id_material   (numeric id; name map is TigerTag's GPLv3 table - not shipped)
-    +10 u8   id_aspect1 / +11 u8 id_aspect2   Bicolor, Tricolor, Rainbow set the colour count
+    +10 u8   id_aspect1 / +11 u8 id_aspect2   Bicolor, Tricolor, Rainbow set the color count
     +13 u8   id_diameter   enum: 0x38 -> 1.75 mm, 0xDD -> 2.85 mm
     +14 u16  id_brand      (numeric id; name map not shipped)
     +16 4    color1        RGBA, byte order R, G, B, A
@@ -46,7 +46,8 @@ NOZZLE_MAX_OFFSET = 26      # u16
 DRY_TEMP_OFFSET = 28        # u8
 DRY_TIME_OFFSET = 29        # u8
 BED_MAX_OFFSET = 31         # u8
-BLOCK_LEN = 32              # bytes past the magic this decoder reads (through bed temp)
+BLOCK_LEN = 32              # bytes past the magic a tag must hold (through bed temp)
+# Colors 2 and 3 sit past BLOCK_LEN, so each is read only when the dump holds it.
 COLOR_2_OFFSET = 36         # 3 bytes R, G, B
 COLOR_3_OFFSET = 40         # 3 bytes R, G, B
 RGB_BYTES = 3
@@ -57,7 +58,7 @@ COLOR_OFFSETS = (COLOR_OFFSET, COLOR_2_OFFSET, COLOR_3_OFFSET)
 DIAMETER_CODES = {0x38: 175, 0xDD: 285}
 
 # The aspect ids whose color_count is above one in TigerTag's id_aspect.json (CC0). Every
-# other aspect means a single colour.
+# other aspect means a single color.
 ASPECT_BICOLOR = 252
 ASPECT_TRICOLOR = 24
 ASPECT_RAINBOW = 145
@@ -98,7 +99,7 @@ def find_block_start(dump: bytes) -> int | None:
 
 
 def _aspect_color_count(dump: bytes, magic: int) -> int:
-    # The spec says to check Aspect 2 first for the multi-colour mode, then Aspect 1.
+    # The spec says to check Aspect 2 first for the multi-color mode, then Aspect 1.
     aspect_2 = ASPECT_COLOR_COUNTS.get(dump[magic + ASPECT_2_OFFSET])
     return aspect_2 or ASPECT_COLOR_COUNTS.get(dump[magic + ASPECT_1_OFFSET], SINGLE_COLOR)
 

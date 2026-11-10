@@ -1,16 +1,19 @@
 # Changelog
 
-## 0.1.6 - 2026-11-10
+## 0.2.0 - 2026-11-10
 
 - The collection requires `rfid-creality` 0.2.3 or newer, so Fiberon spools no longer show as PLA.
 - A Bambu spool stays one spool in Spoolman whichever side of it the reader sees. The collection
-  requires `rfid-bambu` 0.2.2 or newer for this.
+  requires `rfid-bambu` 0.3.0 or newer for this.
 - The collection requires `spoolman` 0.1.39 or newer. A second roll of a filament is no longer
   tracked on the first roll's spool, a tag already tied to one spool is never put on another one,
   and tying a tag to an archived spool keeps that spool's other details.
 - Spools with several colours show all of them, from Bambu, OpenPrintTag, OpenTag3D, TigerTag
-  and plain NFC tags. The collection requires `rfid-openprinttag` 0.1.2, `rfid-opentag` 0.1.1,
-  `rfid-tigertag` 0.1.1 and `rfid-generic-ndef` 0.1.1 or newer for this.
+  and plain JSON NFC tags. Besides the `rfid-bambu` 0.3.0 above, the collection requires
+  `rfid-openprinttag`, `rfid-opentag`, `rfid-tigertag` and `rfid-generic-ndef` 0.2.0 or newer
+  for this.
+- OpenTag3D tags in the current format (version 2) show the right brand, colours, diameter,
+  weight and temperatures.
 
 ## 0.1.5 - 2026-09-23
 

@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.2
+## 0.3.0
 
 - A Bambu spool has a tag on each side. Both sides now report the same spool, so Spoolman
   Bridge knows it is one spool whichever way round you load it. This needs Spoolman Bridge

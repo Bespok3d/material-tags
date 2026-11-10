@@ -4,7 +4,8 @@
 The primary fixture is a REAL OpenPrintTag payload (Prusament PLA Galaxy Black, captured in
 prusa3d/OpenPrintTag tests/encode_decode/01_info.yaml), so the decode is pinned against
 ground truth. A synthetic payload covers the fields that one happens not to carry (filament
-diameter, material abbreviation, an alpha color channel, drying).
+diameter, material abbreviation, an alpha color channel, drying). Small hand-built main maps
+cover the multi-color keys 20-24 (secondary_color_0..4).
 """
 from openprinttag.openprinttag_fields import OPENPRINTTAG_MIME_TYPE, build_struct
 
@@ -33,7 +34,7 @@ SYNTHETIC_PAYLOAD = bytes.fromhex(
     "183a" "18f0"               # 58 drying_time = 240
 )
 
-# Multi-colour main maps, per main_fields.yaml: keys 20-24 are secondary_color_0..4, each in the
+# Multi-color main maps, per main_fields.yaml: keys 20-24 are secondary_color_0..4, each in the
 # primary_color format (a 3 or 4 byte R,G,B[,A] bstr).
 MULTICOLOR_PAYLOAD = bytes.fromhex(
     "a0" "a3"
@@ -41,11 +42,11 @@ MULTICOLOR_PAYLOAD = bytes.fromhex(
     "14" "43" "445566"          # 20 secondary_color_0
     "15" "44" "77889940"        # 21 secondary_color_1, its alpha is not the spool's
 )
-# Rainbow spools omit primary_color; a 2 byte bstr is not a colour and is skipped.
+# Rainbow spools omit primary_color; a 2 byte bstr is not a color and is skipped.
 NO_PRIMARY_PAYLOAD = bytes.fromhex(
     "a0" "a3"
     "14" "44" "aabbcc80"        # 20 secondary_color_0 = RAA GBB BCC A80
-    "15" "42" "0102"            # 21 too short to be a colour
+    "15" "42" "0102"            # 21 too short to be a color
     "16" "43" "ddeeff"          # 22 secondary_color_2
 )
 SIX_COLOR_PAYLOAD = bytes.fromhex(
@@ -156,8 +157,8 @@ def test_first_secondary_leads_when_primary_is_absent():
 def test_keeps_at_most_five_colors():
     info = build_struct(_records(SIX_COLOR_PAYLOAD), UID, dict(TEMPLATE))
     assert info["COLOR_NUMS"] == 5
-    assert info["RGB_1"] == 0x010101
-    assert info["RGB_5"] == 0x050505
+    slots = [info[f"RGB_{slot}"] for slot in range(1, 6)]
+    assert slots == [0x010101, 0x020202, 0x030303, 0x040404, 0x050505]
 
 
 def test_single_color_spool_keeps_one_color():

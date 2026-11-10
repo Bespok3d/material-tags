@@ -13,17 +13,19 @@ COLLECTIONS = ("all-the-tags", "materials-tracker-plus")
 FLOOR_PREFIX = ">="
 
 FLOORS_FIXES_NEED = {
-    # Both sides of a Bambu spool name one shared spool identity, so it stays one spool.
-    "rfid-bambu": (0, 2, 2),
+    # Both sides of a Bambu spool name one shared spool identity, so it stays one spool, and a
+    # two-color spool shows both its colors.
+    "rfid-bambu": (0, 3, 0),
     # Ties both sides of a Bambu spool to one spool and never ties one tag to two spools.
     "spoolman": (0, 1, 39),
     # Fiberon spools show their own material, not PLA.
     "rfid-creality": (0, 2, 3),
-    # Spools with several colours show all of them, not only the first.
-    "rfid-openprinttag": (0, 1, 2),
-    "rfid-opentag": (0, 1, 1),
-    "rfid-tigertag": (0, 1, 1),
-    "rfid-generic-ndef": (0, 1, 1),
+    # Spools with several colors show all of them, not only the first.
+    "rfid-openprinttag": (0, 2, 0),
+    "rfid-tigertag": (0, 2, 0),
+    "rfid-generic-ndef": (0, 2, 0),
+    # Spools with several colors, and OpenTag3D v2 tags, show the details the tag holds.
+    "rfid-opentag": (0, 2, 0),
 }
 
 

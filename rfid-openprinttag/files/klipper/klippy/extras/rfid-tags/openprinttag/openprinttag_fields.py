@@ -51,7 +51,7 @@ RED_SHIFT = 16
 GREEN_SHIFT = 8
 RGB_BYTES = 3
 RGBA_BYTES = 4
-MAX_COLORS = 5   # the printer shows at most five colours per spool
+MAX_COLORS = 5   # the printer shows at most five colors per spool
 
 Record = dict[str, Any]
 
@@ -112,7 +112,7 @@ def _spool_colors(main: dict[Any, Any]) -> list[bytes]:
 
 
 def _apply_color(main: dict[Any, Any], info: dict[str, Any]) -> None:
-    # The spec omits primary_color on rainbow and coextruded spools, so the first colour present
+    # The spec omits primary_color on rainbow and coextruded spools, so the first color present
     # leads, whichever key holds it.
     colors = _spool_colors(main)
     if not colors:

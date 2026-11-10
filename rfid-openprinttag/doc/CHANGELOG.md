@@ -1,9 +1,9 @@
 # Changelog
 
-## 0.1.2
+## 0.2.0
 
 - A spool with several colors now shows all of them, up to five, instead of only the first.
-- A spool tagged with secondary colors only now shows them too.
+- A spool whose tag has no main color but lists other colors now shows them too.
 
 ## 0.1.1
 

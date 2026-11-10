@@ -1,8 +1,9 @@
 # Changelog
 
-## 0.1.1
+## 0.2.0
 
-- A two-color, three-color or rainbow spool now shows all its colors instead of only the first.
+- A two-color, three-color or rainbow spool now shows every color its tag holds instead of only
+  the first.
 
 ## 0.1.0
 
