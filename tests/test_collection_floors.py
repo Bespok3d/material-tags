@@ -29,19 +29,55 @@ FLOORS_FIXES_NEED = {
 }
 
 
-def member_floors(collection):
+def member_floors(collection: str) -> dict[str, str]:
     manifest = json.loads((REPO_ROOT / collection / "manifest.json").read_text())
     return {member["id"]: member["version"] for member in manifest["members"]}
 
 
-def version_numbers(floor):
+def version_parts(version: str) -> tuple[int, ...]:
+    return tuple(int(part) for part in version.split("."))
+
+
+def version_numbers(floor: str) -> tuple[int, ...]:
     assert floor.startswith(FLOOR_PREFIX), f"{floor} is not a minimum version"
-    return tuple(int(part) for part in floor.removeprefix(FLOOR_PREFIX).split("."))
+    return version_parts(floor.removeprefix(FLOOR_PREFIX))
 
 
 @pytest.mark.parametrize("collection", COLLECTIONS)
 @pytest.mark.parametrize(("member", "needed"), FLOORS_FIXES_NEED.items())
-def test_the_collection_requires_the_member_version_with_the_fix(collection, member, needed):
+def test_the_collection_requires_the_member_version_with_the_fix(
+    collection: str, member: str, needed: tuple[int, ...],
+) -> None:
     floors = member_floors(collection)
     assert member in floors, f"{collection} no longer lists {member}"
     assert version_numbers(floors[member]) >= needed
+
+
+def versions_in_this_repo() -> dict[str, str]:
+    manifests = (json.loads(path.read_text()) for path in REPO_ROOT.glob("*/manifest.json"))
+    return {manifest["name"]: manifest["version"] for manifest in manifests}
+
+
+def floors_on_members_in_this_repo() -> list[tuple[str, str, str, str]]:
+    versions = versions_in_this_repo()
+    return [
+        (collection, member, floor, versions[member])
+        for collection in COLLECTIONS
+        for member, floor in member_floors(collection).items()
+        if member in versions
+    ]
+
+
+def test_the_collections_list_members_from_this_repo() -> None:
+    # An empty list would make pytest skip the floor check below instead of failing it.
+    assert floors_on_members_in_this_repo()
+
+
+@pytest.mark.parametrize(
+    ("collection", "member", "floor", "version"), floors_on_members_in_this_repo(),
+)
+def test_the_member_in_this_repo_reaches_the_collection_floor(
+    collection: str, member: str, floor: str, version: str,
+) -> None:
+    shortfall = f"{collection} needs {member} {floor}, this repo has {version}"
+    assert version_parts(version) >= version_numbers(floor), shortfall
