@@ -8,6 +8,7 @@ FILAMENT_INFO_STRUCT. The keys and units below are verified against the public s
 
     9  material_type (enum)   10 material_name (str)    11 brand_name (str)
     14 manufactured_date (s)  16 nominal weight (g)     19 primary_color (R,G,B[,A] bstr)
+    20-24 secondary_color_0..4 (same format as primary_color)
     30 filament_diameter (mm) 34/35 nozzle min/max (C)  37/38 bed min/max (C)
     52 material_abbreviation  57 drying_temp (C)         58 drying_time (min)
 
@@ -21,7 +22,7 @@ package); the tests reach it through the same ``openprinttag`` package.
 """
 import copy
 import datetime
-from typing import Any
+from typing import Any, TypeGuard
 
 from . import cbor_min
 
@@ -34,6 +35,7 @@ KEY_BRAND_NAME = 11
 KEY_MANUFACTURED_DATE = 14
 KEY_NETTO_WEIGHT = 16
 KEY_PRIMARY_COLOR = 19
+KEY_SECONDARY_COLORS = (20, 21, 22, 23, 24)
 KEY_DIAMETER = 30
 KEY_MIN_PRINT_TEMP = 34
 KEY_MAX_PRINT_TEMP = 35
@@ -49,6 +51,7 @@ RED_SHIFT = 16
 GREEN_SHIFT = 8
 RGB_BYTES = 3
 RGBA_BYTES = 4
+MAX_COLORS = 5   # the printer shows at most five colours per spool
 
 Record = dict[str, Any]
 
@@ -94,15 +97,32 @@ def _apply_identity(main: dict[Any, Any], info: dict[str, Any]) -> None:
         info["MAIN_TYPE"] = main_type
 
 
-def _apply_color(color: Any, info: dict[str, Any]) -> None:
-    if not isinstance(color, (bytes, bytearray)) or len(color) < RGB_BYTES:
+def _is_color(value: Any) -> TypeGuard[bytes | bytearray]:
+    return isinstance(value, (bytes, bytearray)) and len(value) >= RGB_BYTES
+
+
+def _rgb(color: bytes) -> int:
+    return (color[0] << RED_SHIFT) | (color[1] << GREEN_SHIFT) | color[2]
+
+
+def _spool_colors(main: dict[Any, Any]) -> list[bytes]:
+    color_keys = (KEY_PRIMARY_COLOR, *KEY_SECONDARY_COLORS)
+    colors = [main.get(key) for key in color_keys]
+    return [bytes(color) for color in colors if _is_color(color)][:MAX_COLORS]
+
+
+def _apply_color(main: dict[Any, Any], info: dict[str, Any]) -> None:
+    # The spec omits primary_color on rainbow and coextruded spools, so the first colour present
+    # leads, whichever key holds it.
+    colors = _spool_colors(main)
+    if not colors:
         return
-    alpha = color[3] if len(color) >= RGBA_BYTES else OPAQUE_ALPHA
-    rgb = (color[0] << RED_SHIFT) | (color[1] << GREEN_SHIFT) | color[2]
-    info["RGB_1"] = rgb
+    first_color = colors[0]
+    alpha = first_color[3] if len(first_color) >= RGBA_BYTES else OPAQUE_ALPHA
+    info.update({f"RGB_{slot}": _rgb(color) for slot, color in enumerate(colors, start=1)})
     info["ALPHA"] = alpha
-    info["COLOR_NUMS"] = 1
-    info["ARGB_COLOR"] = alpha << ALPHA_SHIFT | rgb
+    info["COLOR_NUMS"] = len(colors)
+    info["ARGB_COLOR"] = alpha << ALPHA_SHIFT | _rgb(first_color)
 
 
 def _apply_int(main: dict[Any, Any], key: int, info: dict[str, Any], field: str) -> None:
@@ -150,7 +170,7 @@ def build_struct(
         return None
     info = copy.deepcopy(template)
     _apply_identity(main, info)
-    _apply_color(main.get(KEY_PRIMARY_COLOR), info)
+    _apply_color(main, info)
     _apply_dimensions(main, info)
     _apply_temperatures(main, info)
     _apply_date(main, info)

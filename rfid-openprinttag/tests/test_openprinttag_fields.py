@@ -33,6 +33,27 @@ SYNTHETIC_PAYLOAD = bytes.fromhex(
     "183a" "18f0"               # 58 drying_time = 240
 )
 
+# Multi-colour main maps, per main_fields.yaml: keys 20-24 are secondary_color_0..4, each in the
+# primary_color format (a 3 or 4 byte R,G,B[,A] bstr).
+MULTICOLOR_PAYLOAD = bytes.fromhex(
+    "a0" "a3"
+    "13" "43" "112233"          # 19 primary_color = R11 G22 B33 (no alpha)
+    "14" "43" "445566"          # 20 secondary_color_0
+    "15" "44" "77889940"        # 21 secondary_color_1, its alpha is not the spool's
+)
+# Rainbow spools omit primary_color; a 2 byte bstr is not a colour and is skipped.
+NO_PRIMARY_PAYLOAD = bytes.fromhex(
+    "a0" "a3"
+    "14" "44" "aabbcc80"        # 20 secondary_color_0 = RAA GBB BCC A80
+    "15" "42" "0102"            # 21 too short to be a colour
+    "16" "43" "ddeeff"          # 22 secondary_color_2
+)
+SIX_COLOR_PAYLOAD = bytes.fromhex(
+    "a0" "a6"
+    "13" "43" "010101" "14" "43" "020202" "15" "43" "030303"
+    "16" "43" "040404" "17" "43" "050505" "1818" "43" "060606"
+)
+
 UID = [0x04, 0x11, 0x22, 0x44, 0x55, 0x66, 0x77]
 
 TEMPLATE = {
@@ -113,3 +134,33 @@ def test_does_not_mutate_template():
     build_struct(_records(PRUSAMENT_PAYLOAD), UID, TEMPLATE)
     assert TEMPLATE["VENDOR"] == "NONE"
     assert TEMPLATE["OFFICIAL"] is False
+
+
+def test_decodes_primary_and_secondary_colors():
+    info = build_struct(_records(MULTICOLOR_PAYLOAD), UID, dict(TEMPLATE))
+    assert info["COLOR_NUMS"] == 3
+    assert [info["RGB_1"], info["RGB_2"], info["RGB_3"]] == [0x112233, 0x445566, 0x778899]
+    assert info["RGB_4"] == 0xFFFFFF
+    assert info["ALPHA"] == 0xFF
+    assert info["ARGB_COLOR"] == 0xFF112233
+
+
+def test_first_secondary_leads_when_primary_is_absent():
+    info = build_struct(_records(NO_PRIMARY_PAYLOAD), UID, dict(TEMPLATE))
+    assert info["COLOR_NUMS"] == 2
+    assert [info["RGB_1"], info["RGB_2"]] == [0xAABBCC, 0xDDEEFF]
+    assert info["ALPHA"] == 0x80
+    assert info["ARGB_COLOR"] == 0x80AABBCC
+
+
+def test_keeps_at_most_five_colors():
+    info = build_struct(_records(SIX_COLOR_PAYLOAD), UID, dict(TEMPLATE))
+    assert info["COLOR_NUMS"] == 5
+    assert info["RGB_1"] == 0x010101
+    assert info["RGB_5"] == 0x050505
+
+
+def test_single_color_spool_keeps_one_color():
+    info = build_struct(_records(PRUSAMENT_PAYLOAD), UID, dict(TEMPLATE))
+    assert info["COLOR_NUMS"] == 1
+    assert info["RGB_2"] == 0xFFFFFF

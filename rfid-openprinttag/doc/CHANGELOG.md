@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.2
+
+- A spool with several colors now shows all of them, up to five, instead of only the first.
+- A spool tagged with secondary colors only now shows them too.
+
 ## 0.1.1
 
 - Fix a Klipper load failure that auto-deactivated the plugin on install ("the Python import

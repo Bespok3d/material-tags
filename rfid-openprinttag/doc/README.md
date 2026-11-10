@@ -18,7 +18,8 @@ plugin is for anyone who wants to use the OpenPrintTag data model on NTAG tags.
 ## What it decodes
 
 - Material and brand (the human-readable names from the payload)
-- Color (RGB or RGBA)
+- Color (RGB or RGBA), plus the secondary colors of a multi-color spool (up to five in all; with
+  no primary color, the first secondary color leads)
 - Filament diameter
 - Net weight
 - Nozzle temperature (min and max) and bed temperature
