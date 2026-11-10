@@ -7,6 +7,7 @@ OpenSpool or claiming unrelated JSON.
 """
 import json
 
+import pytest
 from generic_ndef_fields import build_struct, select_filament_json
 
 # Mirrors klippy/extras/filament_protocol.FILAMENT_INFO_STRUCT (the downstream contract).
@@ -20,6 +21,10 @@ TEMPLATE = {
     "SKU": 0, "MF_DATE": "19700101", "RSA_KEY_VERSION": 0, "OFFICIAL": False, "CARD_UID": 0,
 }
 CARD_UID = [0x04, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66]
+NOT_A_HEX_COLOR = [
+    "", None, "zz", "F00", "+12345", "-12345", " 112233", "0x1122", "##112233", "1122334",
+    "112233ZZ", 112233,
+]
 
 
 def json_record(payload: dict[str, object]) -> dict[str, object]:
@@ -68,6 +73,14 @@ def test_declines_json_without_any_known_field() -> None:
     assert build_struct([json_record(unrelated)], CARD_UID, dict(TEMPLATE)) is None
 
 
+def test_matches_the_json_mime_type_in_any_case() -> None:
+    # RFC 2045: MIME types compare case-insensitively.
+    record = json_record({"type": "PLA"}) | {"mime_type": "Application/JSON"}
+    info = build_struct([record], CARD_UID, dict(TEMPLATE))
+    assert info is not None
+    assert info["MAIN_TYPE"] == "PLA"
+
+
 def test_ignores_non_json_records() -> None:
     text_record = {"mime_type": "text/plain", "payload": b"PLA"}
     assert build_struct([text_record], CARD_UID, dict(TEMPLATE)) is None
@@ -83,7 +96,7 @@ def test_falls_back_to_defaults_for_missing_numbers() -> None:
 
 
 def test_decodes_additional_colors() -> None:
-    # Same field and format as OpenSpool: up to 4 extra hex strings after color_hex.
+    # Same field and format as OpenSpool: extra hex strings after color_hex.
     tag = {"type": "PLA", "color_hex": "AFAFAF", "additional_color_hexes": ["EEFFEE", "#FF00FF"]}
     info = build_struct([json_record(tag)], CARD_UID, dict(TEMPLATE))
     assert info is not None
@@ -93,7 +106,7 @@ def test_decodes_additional_colors() -> None:
     assert info["ARGB_COLOR"] == 0xFFAFAFAF
 
 
-def test_keeps_at_most_four_additional_colors() -> None:
+def test_keeps_at_most_five_colors_in_all() -> None:
     extra_hexes = ["010101", "020202", "030303", "040404", "050505"]
     tag = {"type": "PLA", "color_hex": "000000", "additional_color_hexes": extra_hexes}
     info = build_struct([json_record(tag)], CARD_UID, dict(TEMPLATE))
@@ -111,9 +124,60 @@ def test_ignores_additional_colors_that_are_not_a_list() -> None:
 
 
 def test_skips_additional_colors_that_are_not_hex() -> None:
-    extra_hexes = ["", None, "zz", "EEFFEE"]
+    extra_hexes = [*NOT_A_HEX_COLOR, "EEFFEE"]
     tag = {"type": "PLA", "color_hex": "AFAFAF", "additional_color_hexes": extra_hexes}
     info = build_struct([json_record(tag)], CARD_UID, dict(TEMPLATE))
     assert info is not None
     assert info["COLOR_NUMS"] == 2
     assert info["RGB_2"] == 0xEEFFEE
+
+
+@pytest.mark.parametrize("color_value", NOT_A_HEX_COLOR)
+def test_main_color_that_is_not_a_hex_color_reads_as_white(color_value: object) -> None:
+    tag = {"type": "PLA", "color_hex": color_value}
+    info = build_struct([json_record(tag)], CARD_UID, dict(TEMPLATE))
+    assert info is not None
+    assert info["COLOR_NUMS"] == 1
+    assert info["RGB_1"] == 0xFFFFFF
+    assert info["ARGB_COLOR"] == 0xFFFFFFFF
+
+
+def test_reads_an_rrggbbaa_color_as_its_rgb() -> None:
+    tag = {"type": "PLA", "color_hex": "#11223344", "additional_color_hexes": ["55667788"]}
+    info = build_struct([json_record(tag)], CARD_UID, dict(TEMPLATE))
+    assert info is not None
+    assert [info["RGB_1"], info["RGB_2"]] == [0x112233, 0x556677]
+    assert info["ARGB_COLOR"] == 0xFF112233
+
+
+def test_first_additional_color_stands_in_for_a_missing_main_color() -> None:
+    tag = {"type": "PLA", "additional_color_hexes": ["112233", "445566"]}
+    info = build_struct([json_record(tag)], CARD_UID, dict(TEMPLATE))
+    assert info is not None
+    assert info["COLOR_NUMS"] == 2
+    assert [info["RGB_1"], info["RGB_2"]] == [0x112233, 0x445566]
+    assert info["ARGB_COLOR"] == 0xFF112233
+
+
+def test_five_additional_colors_fill_every_slot_when_the_main_color_is_missing() -> None:
+    extra_hexes = ["010101", "020202", "030303", "040404", "050505", "060606"]
+    tag = {"type": "PLA", "additional_color_hexes": extra_hexes}
+    info = build_struct([json_record(tag)], CARD_UID, dict(TEMPLATE))
+    assert info is not None
+    assert info["COLOR_NUMS"] == 5
+    assert [info["RGB_1"], info["RGB_5"]] == [0x010101, 0x050505]
+
+
+def test_main_color_comes_from_the_first_alias_with_a_valid_color() -> None:
+    tag = {"type": "PLA", "color_hex": "F00", "color": "FF0000"}
+    info = build_struct([json_record(tag)], CARD_UID, dict(TEMPLATE))
+    assert info is not None
+    assert info["RGB_1"] == 0xFF0000
+
+
+def test_first_additional_color_stands_in_for_an_invalid_main_color() -> None:
+    tag = {"type": "PLA", "color_hex": "zz", "additional_color_hexes": ["112233"]}
+    info = build_struct([json_record(tag)], CARD_UID, dict(TEMPLATE))
+    assert info is not None
+    assert info["COLOR_NUMS"] == 1
+    assert info["RGB_1"] == 0x112233

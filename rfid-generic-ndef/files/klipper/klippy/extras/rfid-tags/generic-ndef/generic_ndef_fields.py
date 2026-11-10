@@ -12,6 +12,7 @@ FILAMENT_INFO_STRUCT template and the OK/ERR sentinels at runtime.
 """
 import copy
 import json
+import string
 from typing import Any
 
 Record = dict[str, Any]
@@ -26,6 +27,9 @@ OPAQUE_ALPHA = 0xFF
 ALPHA_SHIFT = 24
 HEX_RADIX = 16
 RGB_HEX_DIGITS = 6
+# RRGGBBAA: the trailing alpha pair is read past.
+RGBA_HEX_DIGITS = 8
+HEX_COLOR_PREFIX = "#"
 CENTI_MM_PER_MM = 100
 
 # Destination struct key -> ordered source aliases. First present, non-empty alias wins.
@@ -45,7 +49,7 @@ DIAMETER_ALIASES = ("diameter", "diameter_mm")
 COLOR_ALIASES = ("color_hex", "color", "colour", "hex")
 # The OpenSpool name for a multi-color spool's extra colors: a list of hex strings.
 EXTRA_COLORS_FIELD = "additional_color_hexes"
-MAX_EXTRA_COLORS = 4   # the printer shows at most five colors per spool
+MAX_COLORS = 5   # the printer shows at most five colors per spool
 BED_ALIASES = ("bed_temp", "bed_max_temp", "bed_min_temp", "bed")
 KNOWN_FIELDS = (
     "brand", "vendor", "type", "material", "color_hex", "color", "min_temp", "max_temp",
@@ -71,25 +75,36 @@ def _diameter_centi_mm(value: Any) -> int:
         return DEFAULT_DIAMETER_CENTI_MM
 
 
+def _is_hex_color(digits: str) -> bool:
+    has_color_length = len(digits) in (RGB_HEX_DIGITS, RGBA_HEX_DIGITS)
+    return has_color_length and all(digit in string.hexdigits for digit in digits)
+
+
 def _hex_rgb(value: Any) -> int | None:
-    cleaned = str(value).lstrip("#")[:RGB_HEX_DIGITS]
-    try:
-        return int(cleaned, HEX_RADIX) & WHITE_RGB
-    except (TypeError, ValueError):
+    if not isinstance(value, str):
         return None
+    digits = value.removeprefix(HEX_COLOR_PREFIX)
+    if not _is_hex_color(digits):
+        return None
+    return int(digits[:RGB_HEX_DIGITS], HEX_RADIX)
 
 
-def _parse_hex_color(value: Any) -> int:
-    rgb = _hex_rgb(value)
-    return WHITE_RGB if rgb is None else rgb
+def _first_hex_color(data: Json, aliases: tuple[str, ...]) -> int | None:
+    parsed_colors = (_hex_rgb(data.get(alias)) for alias in aliases)
+    return next((rgb for rgb in parsed_colors if rgb is not None), None)
 
 
 def _has_known_field(data: Json) -> bool:
     return any(field in data for field in KNOWN_FIELDS)
 
 
+def _is_json_record(record: Record) -> bool:
+    # RFC 2045: MIME types compare case-insensitively.
+    return str(record.get("mime_type", "")).lower() == JSON_MIME_TYPE
+
+
 def _decode_untagged_json(record: Record) -> Json | None:
-    if record.get("mime_type") != JSON_MIME_TYPE:
+    if not _is_json_record(record):
         return None
     try:
         parsed = json.loads(record.get("payload") or b"")
@@ -131,17 +146,21 @@ def _extra_colors(data: Json) -> list[int]:
     if not isinstance(extra_hexes, list):
         return []
     parsed_colors = (_hex_rgb(extra_hex) for extra_hex in extra_hexes)
-    valid_colors = [rgb for rgb in parsed_colors if rgb is not None]
-    return valid_colors[:MAX_EXTRA_COLORS]
+    return [rgb for rgb in parsed_colors if rgb is not None]
+
+
+def _spool_colors(data: Json) -> list[int]:
+    listed_colors = (_first_hex_color(data, COLOR_ALIASES), *_extra_colors(data))
+    valid_colors = [rgb for rgb in listed_colors if rgb is not None]
+    return valid_colors[:MAX_COLORS] or [WHITE_RGB]
 
 
 def _apply_color(data: Json, info: dict[str, Any]) -> None:
-    rgb = _parse_hex_color(_first_alias(data, COLOR_ALIASES))
-    colors = [rgb, *_extra_colors(data)]
+    colors = _spool_colors(data)
     info.update({f"RGB_{slot}": color for slot, color in enumerate(colors, start=1)})
     info["COLOR_NUMS"] = len(colors)
     info["ALPHA"] = OPAQUE_ALPHA
-    info["ARGB_COLOR"] = OPAQUE_ALPHA << ALPHA_SHIFT | rgb
+    info["ARGB_COLOR"] = OPAQUE_ALPHA << ALPHA_SHIFT | colors[0]
 
 
 def build_struct(
