@@ -10,7 +10,7 @@
   "channel": "stable",
   "printer_specific": true,
   "source": "https://github.com/Bespok3d/material-tags",
-  "updated_at": "2026-09-13",
+  "updated_at": "2026-11-10",
   "publisher": "PLACEHOLDER",
   "published_at": "2026-06-30",
   "changelog": "doc/CHANGELOG.md",
@@ -49,7 +49,7 @@
     },
     {
       "id": "rfid-creality",
-      "version": ">=0.2.2"
+      "version": ">=0.2.3"
     },
     {
       "id": "rfid-elegoo",

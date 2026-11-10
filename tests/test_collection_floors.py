@@ -17,6 +17,8 @@ FLOORS_FIXES_NEED = {
     "rfid-bambu": (0, 2, 2),
     # Ties both sides of a Bambu spool to one spool and never ties one tag to two spools.
     "spoolman": (0, 1, 39),
+    # Fiberon spools show their own material, not PLA.
+    "rfid-creality": (0, 2, 3),
 }
 
 
