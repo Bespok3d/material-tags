@@ -27,12 +27,12 @@ plugin is for anyone who wants to use the OpenPrintTag data model on NTAG tags.
 - Manufacture date
 
 It declines any tag that is not an OpenPrintTag record (it keys off the
-`application/vnd.openprinttag` NDEF record type), so it never shadows OpenSpool, OpenTag3D,
-or the generic JSON decoder.
+`application/vnd.openprinttag` NDEF record type, in any letter case), so it never shadows
+OpenSpool, OpenTag3D, or the generic JSON decoder.
 
 ## Status
 
-Experiment channel. The CBOR reader is a minimal, vendored, pure-python decoder (no native
+Testing channel. The CBOR reader is a minimal, vendored, pure-python decoder (no native
 dependency) covering exactly the subset OpenPrintTag uses, and the field map is verified
 against the public spec (specs.openprinttag.org / prusa3d/OpenPrintTag) and a real captured
 Prusament payload. Verified end-to-end by testers (write an OpenPrintTag payload to an

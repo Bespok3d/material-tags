@@ -3,9 +3,10 @@
 Clean-room decoder for **TigerTag** filament tags - an open NTAG21x raw-page block (no key),
 anchored on TigerTag's magic header.
 
-- **Status:** experiment. No key, no reader change (raw-page payload parser).
-- **Decodes:** color (RGBA), diameter (from the diameter code), nozzle min/max + bed +
-  drying temperatures, weight, and the product id (surfaced as SKU).
+- **Status:** testing. No key, no reader change (raw-page payload parser).
+- **Decodes:** color (RGBA, plus the second and third colors of a two-color, three-color or
+  rainbow spool as RGB), diameter (from the diameter code), nozzle min/max + bed + drying
+  temperatures, weight, and the product id (surfaced as SKU).
 - **Gotchas:**
   - Both magic variants are handled: standard `0x5BF59264` and Plus `0xBC0FCB97`; the
     blank/init marker `0x6C41A2E1` is declined.

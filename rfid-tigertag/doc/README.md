@@ -32,7 +32,7 @@ online name-resolution step could use it without bundling any GPL data.)
 
 ## Status
 
-Experiment channel. Both the standard (`0x5BF59264`) and Plus (`0xBC0FCB97`) magic are
+Testing channel. Both the standard (`0x5BF59264`) and Plus (`0xBC0FCB97`) magic are
 decoded; a blank/init tag is declined. Field offsets follow the official TigerTag-RFID-Guide
 spec (NTAG213, pages 0x04-0x27, big-endian). Verified by testers on real tags. Requires the
 RFID Spool Reader (installed automatically).

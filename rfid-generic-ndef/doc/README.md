@@ -12,14 +12,18 @@ the touchscreen) just knows what spool is loaded.
 
 ## What it reads
 
-Any NDEF `application/json` record **without** a `protocol` field. It maps common
+Any NDEF `application/json` record (the type matched in any letter case) **without** a
+`protocol` field. It maps common
 field names (first match wins, case-sensitive) into the filament record:
 
 - **Brand / vendor** from `brand`, `vendor`, `manufacturer`, or `make`
 - **Material type** from `type`, `material`, or `material_type`
 - **Sub-type** from `subtype`, `sub_type`, or `variant`
-- **Color** from `color_hex`, `color`, `colour`, or `hex` (`#RRGGBB` or `RRGGBB`), plus up to four more from
-  `additional_color_hexes`
+- **Color** from `color_hex`, `color`, `colour`, or `hex` (`RRGGBB` or `RRGGBBAA`, with or without
+  `#`; the alpha of `RRGGBBAA` is not used; the first of these that holds a valid color wins;
+  anything else is not a color), plus more
+  from `additional_color_hexes`, up to five colors in all. With no main color, the first extra
+  color is the main one; with no color at all, the spool shows white
 - **Nozzle min / max** from `min_temp` / `max_temp` (also `nozzle_*`, `hotend_*`, `temp_*`)
 - **Bed temp** from `bed_temp`, `bed_max_temp`, `bed_min_temp`, or `bed`
 - **Diameter** from `diameter` or `diameter_mm` (mm)
@@ -37,5 +41,4 @@ decoder, so OpenSpool is never shadowed.
 
 ## Status
 
-Experiment channel until verified against a real tag on a printer. The decode is
-unit-tested against representative payloads.
+Stable channel. The decode is unit-tested against representative payloads.

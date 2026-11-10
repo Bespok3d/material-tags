@@ -4,6 +4,8 @@
 
 - A two-color, three-color or rainbow spool now shows every color its tag holds instead of only
   the first.
+- Text only: the description and doc now say testing, the channel this plugin is already on,
+  instead of experiment.
 
 ## 0.1.0
 

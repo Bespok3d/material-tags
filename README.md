@@ -77,15 +77,15 @@ The `relay/` dir is build-coordination scratch and is **gitignored**: it never l
 
 | Plugin | Tag standard | Seam | Status |
 | --- | --- | --- | --- |
-| `rfid-generic-ndef` | Any plain JSON over NDEF (no `protocol` field) | payload parser (NDEF JSON) | experiment |
-| `rfid-opentag` | OpenTag3D (queengooborg), binary over NDEF | payload parser (NDEF binary) | experiment |
-| `rfid-openprinttag` | OpenPrintTag (prusa3d), CBOR over NDEF | payload parser (NDEF binary + vendored CBOR) | experiment |
-| `rfid-elegoo` | Elegoo (Centauri), raw-page binary (NOT NDEF) | payload parser (raw page) | experiment (reads on a U1 when held near the reader)* |
-| `rfid-tigertag` | TigerTag, raw-page binary (NOT NDEF) | payload parser (raw page) | experiment |
-| `rfid-anycubic` | Anycubic ACE, plaintext raw-page (NOT NDEF) | payload parser (raw page) | experiment (partial)** |
+| `rfid-generic-ndef` | Any plain JSON over NDEF (no `protocol` field) | payload parser (NDEF JSON) | stable |
+| `rfid-opentag` | OpenTag3D (queengooborg), binary over NDEF | payload parser (NDEF binary) | testing |
+| `rfid-openprinttag` | OpenPrintTag (prusa3d), CBOR over NDEF | payload parser (NDEF binary + vendored CBOR) | testing |
+| `rfid-elegoo` | Elegoo (Centauri), raw-page binary (NOT NDEF) | payload parser (raw page) | testing (reads on a U1 when held near the reader)* |
+| `rfid-tigertag` | TigerTag, raw-page binary (NOT NDEF) | payload parser (raw page) | testing |
+| `rfid-anycubic` | Anycubic ACE, plaintext raw-page (NOT NDEF) | payload parser (raw page) | rc** |
 | `rfid-qidi` | QIDI, Mifare Classic on the factory default key | HW claim reader (no user key) | stable (device-proven)*** |
 | `rfid-bambu` | Bambu Lab, encrypted Mifare Classic | HW claim reader + crypto1 (user key) | stable |
-| `rfid-creality` | Creality CFS, encrypted Mifare Classic | HW claim reader + crypto1 + AES (user keys) | experiment |
+| `rfid-creality` | Creality CFS, encrypted Mifare Classic | HW claim reader + crypto1 + AES (user keys) | rc |
 
 The decoders cover every payload shape a decoder can take, so each is a worked template:
 NDEF JSON (`rfid-generic-ndef`), NDEF binary (`rfid-opentag`), NDEF CBOR (`rfid-openprinttag`),
@@ -93,17 +93,17 @@ raw-page binary (`rfid-elegoo`, `rfid-tigertag`), Mifare-Classic on the factory 
 (`rfid-qidi`), and encrypted Mifare-Classic with user-supplied keys (`rfid-bambu`,
 `rfid-creality`).
 
-All are on the **experiment** channel until verified against a real tag on a printer
-(junior `u1jr` is the bench; testers verify the spool kinds we do not own). The **"All the
-Tags" collection** (`all-the-tags/`, shipped) bundles the reader + all decoders + Spoolman
-into a one-click "Install all" and is the device-trial vehicle; see `relay/RELAY-D1.md`.
+Each decoder's channel is the one in its manifest; a decoder moves up a channel as it is
+verified against real tags on a printer (junior `u1jr` is the bench; testers verify the spool
+kinds we do not own). The **"All the Tags" collection** (`all-the-tags/`, shipped) bundles the
+reader + all decoders + Spoolman into a one-click "Install all" and is the device-trial vehicle;
+see `relay/RELAY-D1.md`.
 
-**`rfid-anycubic` is **partial by design**. The tag is plaintext NTAG (no key) and the public
-RE agrees on the magic, version, ASCII brand/material, and nozzle/bed temps - which it decodes.
-It does **not** decode color, diameter, or weight: the sources disagree on the SKU field length,
-the color byte order (ARGB vs ABGR), and whether page 31 is weight, and no real tag dump has been
-published to settle them. Guessing those would show a wrong color or a 10x-off weight, so they
-wait for one tester dump (which makes them a small mechanical add).
+**`rfid-anycubic` decodes SKU, brand, material, color, diameter, length, weight, nozzle and
+bed temperatures, and print speed when the tag carries it, confirmed against real tags across
+three product lines (PLA+, PLA Spezial, ASA). Still open: the SKU's exact byte width, since every
+tag decoded so far reads the same at both possible widths; the weight, diameter and length
+scales, tested only on a standard 1 kg, 330 m spool; and one fixed byte not yet identified.
 
 *`rfid-elegoo` decodes the **factory Elegoo tag layout** (material, color, nozzle temperature
 range, diameter, weight), verified field by field against a real factory spool and its label
@@ -221,9 +221,10 @@ so GFM pipe tables show as raw text. Use bullet lists, not tables. (The repo-lev
 
 Parsers are tried first-OK-wins, so each must decline payloads it does not own:
 
-- `rfid-generic-ndef` decodes only `application/json` records **without** a
-  `protocol` field, so it never shadows OpenSpool or a protocol mapper.
-- `rfid-opentag` decodes only `application/opentag3d` records.
+- `rfid-generic-ndef` decodes only `application/json` records (in any letter case)
+  **without** a `protocol` field, so it never shadows OpenSpool or a protocol mapper.
+- `rfid-opentag` decodes only `application/opentag3d` records (in any letter case).
+- `rfid-openprinttag` decodes only `application/vnd.openprinttag` records (in any letter case).
 
 ### Tests + checks
 
@@ -239,8 +240,8 @@ mypy-checked; the relative-import shells are linted by ruff only (like
 
 No decoder is blocked on hardware right now. Elegoo was the last one: a U1 read a factory spool on
 2026-09-23. What is still open about reading it is recorded below so the next step stays mechanical.
-(Anycubic was de-blocked earlier: it now ships its dispute-free fields above and only its
-color/diameter/weight wait for a tester dump - that is a small add, not a blocked decoder.)
+(Anycubic was de-blocked earlier: it now decodes the fields listed above, confirmed on real tags;
+what stays open is noted there.)
 
 | Tag | Blocker | Notes for the follow-on |
 | --- | --- | --- |

@@ -2,8 +2,11 @@
 
 ## 0.2.0
 
+- A tag whose data type name mixes capital and small letters is now read too.
 - A spool with several colors now shows all of them, up to five, instead of only the first.
 - A spool whose tag has no main color but lists other colors now shows them too.
+- Text only: the description and doc now say testing, the channel this plugin is already on,
+  instead of experiment.
 
 ## 0.1.1
 

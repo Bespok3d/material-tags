@@ -3,7 +3,7 @@
 Best-effort decoder for **plain JSON over NDEF** filament tags that carry no `protocol`
 field. Maps recognizable JSON keys into the shared `rfid_data.json`.
 
-- **Status:** experiment. No key, no reader change (NDEF JSON payload parser).
+- **Status:** stable. No key, no reader change (NDEF JSON payload parser).
 - **Decodes:** whatever the tag's JSON exposes (material, color, temps, ...).
 - **Gotcha:** it deliberately **declines JSON that has a `protocol` field**, so it never
   shadows OpenSpool or a protocol-specific mapper - those win first. It is the lowest-priority

@@ -12,9 +12,9 @@ know what spool is loaded.
 
 ## How it works
 
-OpenTag3D stores its payload inside an **NDEF record of MIME type
-`application/opentag3d`** as big-endian binary. This decoder reads the first such
-record (the spec puts all the tag data in it), reads the tag version, unpacks the
+OpenTag3D stores its payload as big-endian binary inside an **NDEF record of MIME
+type `application/opentag3d`**, matched in any letter case. This decoder reads the
+first such record (the spec puts all the tag data in it), reads the tag version, unpacks the
 documented field offsets of that version, and maps them into the filament record:
 
 - **Brand / manufacturer** from Filament Manufacturer (16 bytes)
@@ -35,8 +35,9 @@ bytes as zero, as the spec says, but it must reach at least the weight field.
 
 Version 1 tags, and older ones below version 1.000, keep the v1 layout. Core-only v1
 tags (NTAG213) carry a single print temperature; the decoder uses it for both the min
-and max. Tags with the extended block (NTAG215/216) carry explicit min/max nozzle and
-bed temperatures, which are preferred when present.
+and max. Tags with the extended block (NTAG215/216) carry explicit min/max nozzle
+temperatures and a max bed temperature, which are preferred when set; one left at 0 is
+unset, so the single print or bed temperature is used instead.
 
 A tag of a newer major version (3 or later) is not read, so it is never shown with
 wrong data.
@@ -54,5 +55,5 @@ NTAG213 only fits the version 1 format.
 
 ## Status
 
-Experiment channel until verified against a real OpenTag3D tag on a printer. The
+Testing channel until verified against a real OpenTag3D tag on a printer. The
 decode is unit-tested against spec-constructed payloads at the documented offsets.
