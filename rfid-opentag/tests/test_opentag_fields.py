@@ -2,8 +2,8 @@
 """Regression tests for the OpenTag3D decoder.
 
 These build OpenTag3D payloads at the spec's verified byte offsets and pin the
-produced FILAMENT_INFO_STRUCT fields, including the core-only vs extended
-temperature paths and the MIME-type gating.
+produced FILAMENT_INFO_STRUCT fields, including the v1 core-only vs extended
+temperature paths, the v2 layout, the version gate and the MIME-type gating.
 """
 from opentag_fields import build_struct
 
@@ -93,6 +93,17 @@ def test_core_only_payload_uses_single_print_temp() -> None:
     assert info["BED_TEMP"] == 60
 
 
+def test_pre_1000_tag_version_keeps_v1_reading() -> None:
+    fields = {**DEFAULT_FIELDS, "tag_version": 20}
+    record = opentag_record(build_payload(CORE_ONLY_LENGTH, fields))
+    info = build_struct([record], CARD_UID, dict(TEMPLATE))
+    assert info is not None
+    assert info["MAIN_TYPE"] == "PLA"
+    assert info["HOTEND_MIN_TEMP"] == 210
+    assert info["HOTEND_MAX_TEMP"] == 210
+    assert info["BED_TEMP"] == 60
+
+
 def test_color_channels_are_distinct() -> None:
     fields = {**DEFAULT_FIELDS, "rgba": (0xAB, 0xCD, 0xEF, 0x80)}
     record = opentag_record(build_payload(EXTENDED_LENGTH, fields))
@@ -134,12 +145,109 @@ def test_single_color_spool_keeps_one_color() -> None:
     assert info["RGB_2"] == 0xFFFFFF
 
 
-def test_v2_tag_does_not_read_its_serial_number_as_colors() -> None:
-    # Spec v2.000+: 0x4C..0x6B is the serial number text, where v1 kept colours 2..4.
-    fields = {**DEFAULT_FIELDS, "tag_version": 2004}
-    payload = bytearray(build_payload(EXTENDED_LENGTH, fields))
-    _put_text(payload, 0x4C, "SN-2026-000042-ROLL-0007", 32)
-    info = build_struct([opentag_record(bytes(payload))], CARD_UID, dict(TEMPLATE))
+V2_FULL_LENGTH = 0xE0  # spec v2.004 address range 0x00..0xDF
+V2_FIELDS = {
+    "tag_version": 2004, "material": "PETG", "modifiers": "HF", "manufacturer": "Example Brand",
+    "color_rgba": ((0xFF, 0xA6, 0x4D, 0xFF), (0x11, 0x22, 0x33, 0xFF)),
+    "serial": "SN-2026-000042-ROLL-0007", "diameter_um": 1750, "weight_g": 750,
+    "print_temp_c": 240, "min_print_temp_c": 230, "max_print_temp_c": 250,
+    "bed_temp_c": 80, "min_bed_temp_c": 70, "max_bed_temp_c": 90,
+}
+
+
+def _put_temperature(buf: bytearray, offset: int, fields: dict[str, object], key: str) -> None:
+    buf[offset] = int(fields.get(key, 0)) // 5
+
+
+def build_v2_payload(size: int, fields: dict[str, object]) -> bytes:
+    # Spec v2.004 memory map (_data/spec.json); bytes past `size` are cut, as a short tag would.
+    buf = bytearray(V2_FULL_LENGTH)
+    _put_u16_be(buf, 0x00, int(fields["tag_version"]))
+    _put_text(buf, 0x02, str(fields["material"]), 5)
+    _put_text(buf, 0x07, str(fields["modifiers"]), 5)
+    _put_text(buf, 0x0C, str(fields["manufacturer"]), 16)
+    for offset, rgba in zip((0x3C, 0x40, 0x44, 0x48), fields["color_rgba"]):
+        buf[offset:offset + 4] = bytes(rgba)
+    _put_text(buf, 0x4C, str(fields.get("serial", "")), 32)
+    _put_u16_be(buf, 0x8C, int(fields["diameter_um"]))
+    for offset, key in ((0x90, "print_temp_c"), (0x91, "min_print_temp_c"),
+                        (0x92, "max_print_temp_c"), (0x94, "bed_temp_c"),
+                        (0x95, "min_bed_temp_c"), (0x96, "max_bed_temp_c")):
+        _put_temperature(buf, offset, fields, key)
+    _put_u16_be(buf, 0x9E, int(fields["weight_g"]))
+    return bytes(buf[:size])
+
+
+def test_decodes_v2_tag_from_its_own_layout() -> None:
+    record = opentag_record(build_v2_payload(V2_FULL_LENGTH, V2_FIELDS))
+    info = build_struct([record], CARD_UID, dict(TEMPLATE))
     assert info is not None
-    assert info["COLOR_NUMS"] == 1
-    assert info["RGB_2"] == 0xFFFFFF
+    assert info["MANUFACTURER"] == "Example Brand"
+    assert info["VENDOR"] == "Example Brand"
+    assert info["MAIN_TYPE"] == "PETG"
+    assert info["SUB_TYPE"] == "HF"
+    assert info["COLOR_NUMS"] == 2
+    assert [info["RGB_1"], info["RGB_2"]] == [0xFFA64D, 0x112233]
+    assert info["RGB_3"] == 0xFFFFFF
+    assert info["ARGB_COLOR"] == 0xFFFFA64D
+    assert info["DIAMETER"] == 175
+    assert info["WEIGHT"] == 750
+    assert info["HOTEND_MIN_TEMP"] == 230
+    assert info["HOTEND_MAX_TEMP"] == 250
+    assert info["FIRST_LAYER_TEMP"] == 240
+    assert info["OTHER_LAYER_TEMP"] == 240
+    assert info["BED_TEMP"] == 80
+    assert info["OFFICIAL"] is True
+
+
+def test_v2_tag_without_min_max_print_temps_uses_the_target() -> None:
+    fields = {**V2_FIELDS, "min_print_temp_c": 0, "max_print_temp_c": 0}
+    record = opentag_record(build_v2_payload(V2_FULL_LENGTH, fields))
+    info = build_struct([record], CARD_UID, dict(TEMPLATE))
+    assert info is not None
+    assert info["HOTEND_MIN_TEMP"] == 240
+    assert info["HOTEND_MAX_TEMP"] == 240
+    assert info["BED_TEMP"] == 80
+
+
+def test_v2_payload_ending_right_after_its_weight_decodes() -> None:
+    record = opentag_record(build_v2_payload(0xA0, V2_FIELDS))
+    info = build_struct([record], CARD_UID, dict(TEMPLATE))
+    assert info is not None
+    assert info["MANUFACTURER"] == "Example Brand"
+    assert info["WEIGHT"] == 750
+    assert info["HOTEND_MAX_TEMP"] == 250
+
+
+def test_v2_payload_ending_inside_its_weight_reads_the_low_byte_as_zero() -> None:
+    fields = {**V2_FIELDS, "weight_g": 512}
+    record = opentag_record(build_v2_payload(0x9F, fields))
+    info = build_struct([record], CARD_UID, dict(TEMPLATE))
+    assert info is not None
+    assert info["WEIGHT"] == 512
+
+
+def test_declines_v2_payload_that_ends_before_its_weight() -> None:
+    record = opentag_record(build_v2_payload(0x9E, V2_FIELDS))
+    assert build_struct([record], CARD_UID, dict(TEMPLATE)) is None
+
+
+def test_declines_tag_of_a_newer_major_version() -> None:
+    fields = {**V2_FIELDS, "tag_version": 3000}
+    record = opentag_record(build_v2_payload(V2_FULL_LENGTH, fields))
+    assert build_struct([record], CARD_UID, dict(TEMPLATE)) is None
+
+
+def test_newer_v2_minor_version_still_decodes() -> None:
+    fields = {**V2_FIELDS, "tag_version": 2999}
+    record = opentag_record(build_v2_payload(V2_FULL_LENGTH, fields))
+    info = build_struct([record], CARD_UID, dict(TEMPLATE))
+    assert info is not None
+    assert info["MANUFACTURER"] == "Example Brand"
+
+
+def test_only_the_first_opentag_record_is_read() -> None:
+    newer_major_fields = {**V2_FIELDS, "tag_version": 3000}
+    newer_major = opentag_record(build_v2_payload(V2_FULL_LENGTH, newer_major_fields))
+    supported = opentag_record(build_v2_payload(V2_FULL_LENGTH, V2_FIELDS))
+    assert build_struct([newer_major, supported], CARD_UID, dict(TEMPLATE)) is None

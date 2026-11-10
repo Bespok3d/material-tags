@@ -1,8 +1,12 @@
 # Changelog
 
-## 0.1.1
+## 0.2.0
 
 - A spool with several colors now shows all of them, up to four, instead of only the first.
+- Tags in the current OpenTag3D format (version 2) now show the right brand, colors,
+  diameter, weight and temperatures, instead of wrong values.
+- Tags in a future format this decoder does not know yet are no longer read with wrong values.
+- Only the first OpenTag3D record on a tag is read, as the OpenTag3D spec says.
 
 ## 0.1.0
 
