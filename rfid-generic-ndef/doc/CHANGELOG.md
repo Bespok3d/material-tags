@@ -1,8 +1,9 @@
 # Changelog
 
-## 0.1.1
+## 0.2.0
 
-- A tag that lists extra colors now shows all of them, up to five in total, instead of only the first.
+- A tag that lists extra colors now shows all of them, up to five in total, instead of only
+  the first.
 
 ## 0.1.0
 

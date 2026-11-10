@@ -43,9 +43,9 @@ TEMPERATURE_ALIASES: dict[str, tuple[str, ...]] = {
 WEIGHT_ALIASES = ("weight", "weight_g", "net_weight")
 DIAMETER_ALIASES = ("diameter", "diameter_mm")
 COLOR_ALIASES = ("color_hex", "color", "colour", "hex")
-# The OpenSpool name for a multi-colour spool's extra colours: a list of hex strings.
+# The OpenSpool name for a multi-color spool's extra colors: a list of hex strings.
 EXTRA_COLORS_FIELD = "additional_color_hexes"
-MAX_EXTRA_COLORS = 4   # the printer shows at most five colours per spool
+MAX_EXTRA_COLORS = 4   # the printer shows at most five colors per spool
 BED_ALIASES = ("bed_temp", "bed_max_temp", "bed_min_temp", "bed")
 KNOWN_FIELDS = (
     "brand", "vendor", "type", "material", "color_hex", "color", "min_temp", "max_temp",
@@ -71,12 +71,17 @@ def _diameter_centi_mm(value: Any) -> int:
         return DEFAULT_DIAMETER_CENTI_MM
 
 
-def _parse_hex_color(value: Any) -> int:
+def _hex_rgb(value: Any) -> int | None:
     cleaned = str(value).lstrip("#")[:RGB_HEX_DIGITS]
     try:
         return int(cleaned, HEX_RADIX) & WHITE_RGB
     except (TypeError, ValueError):
-        return WHITE_RGB
+        return None
+
+
+def _parse_hex_color(value: Any) -> int:
+    rgb = _hex_rgb(value)
+    return WHITE_RGB if rgb is None else rgb
 
 
 def _has_known_field(data: Json) -> bool:
@@ -125,7 +130,9 @@ def _extra_colors(data: Json) -> list[int]:
     extra_hexes = data.get(EXTRA_COLORS_FIELD)
     if not isinstance(extra_hexes, list):
         return []
-    return [_parse_hex_color(extra_hex) for extra_hex in extra_hexes[:MAX_EXTRA_COLORS]]
+    parsed_colors = (_hex_rgb(extra_hex) for extra_hex in extra_hexes)
+    valid_colors = [rgb for rgb in parsed_colors if rgb is not None]
+    return valid_colors[:MAX_EXTRA_COLORS]
 
 
 def _apply_color(data: Json, info: dict[str, Any]) -> None:

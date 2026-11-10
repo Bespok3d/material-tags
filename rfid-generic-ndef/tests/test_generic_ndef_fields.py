@@ -108,3 +108,12 @@ def test_ignores_additional_colors_that_are_not_a_list() -> None:
     assert info is not None
     assert info["COLOR_NUMS"] == 1
     assert info["RGB_2"] == 0xFFFFFF
+
+
+def test_skips_additional_colors_that_are_not_hex() -> None:
+    extra_hexes = ["", None, "zz", "EEFFEE"]
+    tag = {"type": "PLA", "color_hex": "AFAFAF", "additional_color_hexes": extra_hexes}
+    info = build_struct([json_record(tag)], CARD_UID, dict(TEMPLATE))
+    assert info is not None
+    assert info["COLOR_NUMS"] == 2
+    assert info["RGB_2"] == 0xEEFFEE
