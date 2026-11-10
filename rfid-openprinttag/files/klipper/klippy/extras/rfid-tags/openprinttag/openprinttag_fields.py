@@ -62,11 +62,16 @@ def _as_number(value: Any) -> float | None:
     return value
 
 
+def _is_openprinttag_record(record: Record) -> bool:
+    # RFC 2045: MIME types compare case-insensitively.
+    return str(record.get("mime_type", "")).lower() == OPENPRINTTAG_MIME_TYPE
+
+
 def select_openprinttag_payload(records: list[Record]) -> bytes | None:
     matches = (
         bytes(record.get("payload") or b"")
         for record in records
-        if record.get("mime_type") == OPENPRINTTAG_MIME_TYPE
+        if _is_openprinttag_record(record)
     )
     return next((payload for payload in matches if payload), None)
 

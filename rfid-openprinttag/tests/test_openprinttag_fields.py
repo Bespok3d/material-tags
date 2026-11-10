@@ -116,6 +116,14 @@ def test_synthetic_diameter_abbrev_alpha_drying():
     assert info["DRYING_TIME"] == 240
 
 
+def test_matches_the_openprinttag_mime_type_in_any_case():
+    # RFC 2045: MIME types compare case-insensitively.
+    records = _records(PRUSAMENT_PAYLOAD, mime="Application/Vnd.OpenPrintTag")
+    info = build_struct(records, UID, dict(TEMPLATE))
+    assert info is not None
+    assert info["VENDOR"] == "Prusament"
+
+
 def test_declines_non_openprinttag_mime():
     records = _records(PRUSAMENT_PAYLOAD, mime="application/json")
     assert build_struct(records, UID, dict(TEMPLATE)) is None
