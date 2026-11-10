@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.3
+
+- Five Fiberon spools showed as PLA: PETG-ESD (P2001), PA6-GF25 (P7001), PA612-ESD (P7005),
+  PET-CF17 (P8001) and PPS-CF10 (P9001). They now show the
+  material Creality gives them: PETG-CF, PA-GF, PA-CF, PET-CF and PPS-CF.
+
 ## 0.2.2
 
 - Diameter is now reported in hundredths of a millimetre (`175` for 1.75 mm), the unit the shared

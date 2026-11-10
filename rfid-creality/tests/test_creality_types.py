@@ -2,7 +2,8 @@
 """Tests for the Creality filament-id material table (creality_types).
 
 The table is harvested from Creality's own slicer profiles. These pin the one id confirmed
-against a real tag (01001 = Hyper PLA) and the accessor behavior for known and unknown ids.
+against a real tag (01001 = Hyper PLA), the Fiberon ids once mapped as PLA, and the accessor
+behavior for known and unknown ids.
 """
 from creality_types import material_for_id, type_for_id
 
@@ -35,3 +36,12 @@ def test_diameter_is_175_where_present():
 def test_every_entry_has_a_type():
     from creality_types import CREALITY_ID_TO_MATERIAL
     assert all(m.type for m in CREALITY_ID_TO_MATERIAL.values())
+
+
+def test_fiberon_ids_carry_the_type_creality_declares():
+    # Creality's K2 Plus Fiberon profiles name these materials; they are not PLA.
+    assert type_for_id("P2001") == "PETG-CF"
+    assert type_for_id("P7001") == "PA-GF"
+    assert type_for_id("P7005") == "PA-CF"
+    assert type_for_id("P8001") == "PET-CF"
+    assert type_for_id("P9001") == "PPS-CF"

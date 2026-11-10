@@ -1,7 +1,8 @@
 # Changelog
 
-## 0.1.8 - 2026-11-09
+## 0.1.8 - 2026-11-10
 
+- The collection requires `rfid-creality` 0.2.3 or newer, so Fiberon spools no longer show as PLA.
 - A Bambu spool stays one spool in Spoolman whichever side of it the reader sees. The collection
   requires `rfid-bambu` 0.2.2 or newer for this.
 - The collection requires `spoolman` 0.1.39 or newer. A second roll of a filament is no longer
