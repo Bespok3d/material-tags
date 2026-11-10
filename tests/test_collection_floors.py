@@ -19,6 +19,11 @@ FLOORS_FIXES_NEED = {
     "spoolman": (0, 1, 39),
     # Fiberon spools show their own material, not PLA.
     "rfid-creality": (0, 2, 3),
+    # Spools with several colours show all of them, not only the first.
+    "rfid-openprinttag": (0, 1, 2),
+    "rfid-opentag": (0, 1, 1),
+    "rfid-tigertag": (0, 1, 1),
+    "rfid-generic-ndef": (0, 1, 1),
 }
 
 

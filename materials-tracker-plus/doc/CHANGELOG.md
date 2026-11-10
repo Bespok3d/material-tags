@@ -8,6 +8,9 @@
 - The collection requires `spoolman` 0.1.39 or newer. A second roll of a filament is no longer
   tracked on the first roll's spool, a tag already tied to one spool is never put on another one,
   and tying a tag to an archived spool keeps that spool's other details.
+- Spools with several colours show all of them, from Bambu, OpenPrintTag, OpenTag3D, TigerTag
+  and plain NFC tags. The collection requires `rfid-openprinttag` 0.1.2, `rfid-opentag` 0.1.1,
+  `rfid-tigertag` 0.1.1 and `rfid-generic-ndef` 0.1.1 or newer for this.
 
 ## 0.1.5 - 2026-09-23
 

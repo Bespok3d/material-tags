@@ -21,19 +21,19 @@
     },
     {
       "id": "rfid-generic-ndef",
-      "version": ">=0.1.0"
+      "version": ">=0.1.1"
     },
     {
       "id": "rfid-opentag",
-      "version": ">=0.1.0"
+      "version": ">=0.1.1"
     },
     {
       "id": "rfid-openprinttag",
-      "version": ">=0.1.0"
+      "version": ">=0.1.2"
     },
     {
       "id": "rfid-tigertag",
-      "version": ">=0.1.0"
+      "version": ">=0.1.1"
     },
     {
       "id": "rfid-anycubic",
