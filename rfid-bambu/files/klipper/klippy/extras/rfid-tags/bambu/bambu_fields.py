@@ -14,6 +14,10 @@ A Bambu spool carries a tag on each side, each with its own chip UID. Block 9 ho
 UID, which both tags of one spool share; it is handed on as ``SPOOL_UID`` so the spool keeps
 one identity whichever way round it is loaded. A read that stops before block 9, or a blank
 tray UID, hands on no ``SPOOL_UID``.
+
+A two-colour spool marks block 16 with format 0x0002 and a colour count, and stores its second
+colour there in reverse byte order (A, B, G, R). A read that stops before block 16, or any other
+format, leaves the spool at its one colour from block 5.
 """
 import struct
 from typing import Any
@@ -28,6 +32,14 @@ BLOCK_DETAILED_TYPE = 4
 BLOCK_COLOR = 5
 BLOCK_TEMPS = 6
 BLOCK_TRAY_UID = 9
+BLOCK_EXTRA_COLOR = 16
+
+EXTRA_COLOR_FORMAT = 0x0002
+EXTRA_COLOR_COUNT_OFFSET = 2
+EXTRA_COLOR_ABGR_OFFSET = 4
+ABGR_BYTES = 4
+TWO_COLORS = 2
+EXTRA_COLOR_BUFFER_LEN = (BLOCK_EXTRA_COLOR + 1) * BLOCK_BYTES
 
 UID_LEN = 4
 TRAY_UID_LEN = 16
@@ -70,6 +82,23 @@ def _apply_color(buf: list[int], info: dict[str, Any]) -> None:
     info["ALPHA"] = alpha
     info["COLOR_NUMS"] = 1
     info["ARGB_COLOR"] = (alpha << 24) | info["RGB_1"]
+    second_color = _second_color(buf)
+    if second_color is None:
+        return
+    info["RGB_2"] = second_color
+    info["COLOR_NUMS"] = TWO_COLORS
+
+
+def _second_color(buf: list[int]) -> int | None:
+    if len(buf) < EXTRA_COLOR_BUFFER_LEN:
+        return None
+    if _u16_le(buf, _block(BLOCK_EXTRA_COLOR)) != EXTRA_COLOR_FORMAT:
+        return None
+    if _u16_le(buf, _block(BLOCK_EXTRA_COLOR, EXTRA_COLOR_COUNT_OFFSET)) < TWO_COLORS:
+        return None
+    abgr_start = _block(BLOCK_EXTRA_COLOR, EXTRA_COLOR_ABGR_OFFSET)
+    _alpha, blue, green, red = buf[abgr_start:abgr_start + ABGR_BYTES]
+    return (red << 16) | (green << 8) | blue
 
 
 def _apply_dimensions(buf: list[int], info: dict[str, Any]) -> None:

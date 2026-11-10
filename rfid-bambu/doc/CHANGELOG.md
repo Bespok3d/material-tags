@@ -5,6 +5,7 @@
 - A Bambu spool has a tag on each side. Both sides now report the same spool, so Spoolman
   Bridge knows it is one spool whichever way round you load it. This needs Spoolman Bridge
   0.1.39 or newer.
+- A two-colour spool now shows both its colours instead of only the first.
 
 ## 0.2.1
 

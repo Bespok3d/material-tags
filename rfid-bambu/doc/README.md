@@ -39,6 +39,9 @@ them to a Spoolman spool by UID); they just are not decoded into material/colour
   same spool ID (block 9), which the plugin also reads and hands on, so Spoolman Bridge
   (0.1.39 or newer) knows both sides are one spool. If that block cannot be read, the
   filament is still decoded and the spool is known by its tag UID only.
+- A two-colour spool (for example the dual-colour silk lines) also carries its second colour
+  (block 16), which the plugin reads too. If that block cannot be read, the spool shows its
+  first colour only.
 
 ## What it does not do
 
@@ -50,4 +53,5 @@ them to a Spoolman spool by UID); they just are not decoded into material/colour
 
 Stable channel. The key derivation is verified against the RFC 5869 HKDF test vector and
 the decode is unit-tested against blocks built to the public Bambu memory map. End-to-end
-reading of a real Bambu spool is already device verified on a U1 printer.
+reading of a real Bambu spool is already device verified on a U1 printer. The second colour
+of a two-colour spool is not yet tried on a real spool.

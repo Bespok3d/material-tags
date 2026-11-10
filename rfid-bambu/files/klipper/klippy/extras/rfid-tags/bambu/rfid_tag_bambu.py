@@ -27,7 +27,8 @@ BLOCKS_PER_SECTOR = 4
 DATA_BLOCKS_PER_SECTOR = 3
 BLOCK_BYTES = bambu_fields.BLOCK_BYTES
 TRAY_UID_SECTOR = bambu_fields.BLOCK_TRAY_UID // BLOCKS_PER_SECTOR
-BUFFER_LEN = (bambu_fields.BLOCK_TRAY_UID + 1) * BLOCK_BYTES
+EXTRA_COLOR_SECTOR = bambu_fields.BLOCK_EXTRA_COLOR // BLOCKS_PER_SECTOR
+BUFFER_LEN = bambu_fields.EXTRA_COLOR_BUFFER_LEN
 
 
 class BambuReader:
@@ -57,15 +58,32 @@ class BambuReader:
             if err != fm_mod.FM175XX_OK:
                 _log.warning("Bambu: sector %d auth/read failed (err=%d)", sector, err)
                 return BAMBU_CARD_TYPE, None, err
-        self._read_tray_uid(reader, keys[TRAY_UID_SECTOR], uid, buffer)
+        tray_uid_read = self._read_tray_uid(reader, keys[TRAY_UID_SECTOR], uid, buffer)
+        if tray_uid_read or self._reselect_after_failed_read(reader):
+            self._read_extra_color(reader, keys[EXTRA_COLOR_SECTOR], uid, buffer)
         return BAMBU_CARD_TYPE, buffer, fm_mod.FM175XX_OK
 
     def _read_tray_uid(self, reader, key, uid, buffer):
         # The filament is known without the tray UID; a failed read leaves block 9 blank, so
         # the spool is only found by its chip UID instead of losing the whole read.
-        err = self._read_blocks(reader, [bambu_fields.BLOCK_TRAY_UID], key, uid, buffer)
-        if err != fm_mod.FM175XX_OK:
-            _log.warning("Bambu: tray UID unreadable, this spool is known by its tag UID only")
+        read_result = self._read_blocks(reader, [bambu_fields.BLOCK_TRAY_UID], key, uid, buffer)
+        if read_result == fm_mod.FM175XX_OK:
+            return True
+        _log.warning("Bambu: tray UID unreadable, this spool is known by its tag UID only")
+        return False
+
+    def _read_extra_color(self, reader, key, uid, buffer):
+        # A failed read leaves block 16 blank, so the spool keeps its one colour from block 5.
+        read_result = self._read_blocks(reader, [bambu_fields.BLOCK_EXTRA_COLOR], key, uid, buffer)
+        if read_result != fm_mod.FM175XX_OK:
+            _log.warning("Bambu: second colour unreadable, this spool shows its first colour only")
+
+    def _reselect_after_failed_read(self, reader):
+        # A failed Mifare auth leaves the card idle and deaf to the next read until re-selected.
+        if reader.reactivate_card() == fm_mod.FM175XX_OK:
+            return True
+        _log.warning("Bambu: card lost after the tray UID read failed, second colour skipped")
+        return False
 
     def _read_blocks(self, reader, sector_blocks, key, uid, buffer):
         sector = sector_blocks[0] // BLOCKS_PER_SECTOR
