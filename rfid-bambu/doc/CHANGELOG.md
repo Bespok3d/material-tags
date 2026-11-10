@@ -3,7 +3,7 @@
 ## 0.3.0
 
 - A Bambu spool has a tag on each side. With the key set, both sides now carry the same spool
-  id. Spoolman Bridge is optional; version 0.1.39 or newer uses that id to keep both sides as
+  id. Spoolman Bridge is optional; version 0.1.40 or newer uses that id to keep both sides as
   one spool.
 - A two-colour spool now shows both its colours instead of only the first.
 

@@ -21,14 +21,15 @@ block by its magic header and reads the documented fields.
 - Weight (TigerTag's net-quantity field)
 - Product id (surfaced as the SKU)
 
-## Brand and material stay as ids
+## Brand and material are not read
 
 A TigerTag stores the brand and material as **numeric ids**. The tables that turn those ids
 into human names ("PLA", "Polymaker", ...) are published by TigerTag under **GPLv3**, so
 vendoring them into this plugin would force the plugin to GPL. To keep the plugin's license
-clean, this decoder **keeps brand and material as numeric ids** and decodes only the
-physical fields above. (TigerTag also runs a free public lookup API; a future, optional
-online name-resolution step could use it without bundling any GPL data.)
+clean, this decoder **does not read the brand and material ids**; the brand shows as
+TigerTag and the material as NONE. It decodes only the physical fields above.
+(TigerTag also runs a free public lookup API; a future, optional online name-resolution step
+could use it without bundling any GPL data.)
 
 ## Status
 

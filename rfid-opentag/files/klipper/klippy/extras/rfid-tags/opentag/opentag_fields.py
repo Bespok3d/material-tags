@@ -14,7 +14,6 @@ isolation. The registration shell (``rfid_tag_opentag.py``) supplies the
 FILAMENT_INFO_STRUCT template at runtime.
 """
 import copy
-from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
 
@@ -43,12 +42,11 @@ V1_PRINT_TEMP_OFFSET = 0x60
 V1_BED_TEMP_OFFSET = 0x61
 V1_MIN_PRINT_TEMP_OFFSET = 0xB4
 V1_MAX_PRINT_TEMP_OFFSET = 0xB5
-V1_MAX_BED_TEMP_OFFSET = 0xB7
 # Shortest payload that still carries every core field this decoder reads (through bed temp).
 V1_CORE_MIN_LENGTH = V1_BED_TEMP_OFFSET + 1
 # A v1 tag without the extended block (NTAG213) has not set its min/max temperatures, the same
 # as one that leaves them at 0, so the missing bytes read as 0 up to the last one decoded.
-V1_ZERO_FILLED_LENGTH = V1_MAX_BED_TEMP_OFFSET + 1
+V1_ZERO_FILLED_LENGTH = V1_MAX_PRINT_TEMP_OFFSET + 1
 
 # Spec v2 layout (v2.000 moved every field after the material modifiers).
 V2_MANUFACTURER_OFFSET = 0x0C
@@ -84,7 +82,10 @@ class TagLayout:
     weight_offset: int
     min_length: int
     zero_filled_length: int
-    apply_temperatures: Callable[[bytes, FilamentInfo], None]
+    print_temp_offset: int
+    min_print_temp_offset: int
+    max_print_temp_offset: int
+    bed_temp_offset: int
 
 
 def _text(payload: bytes, offset: int, length: int) -> str:
@@ -100,27 +101,6 @@ def _temperature(payload: bytes, offset: int) -> int:
     return payload[offset] * TEMP_SCALE
 
 
-def _apply_v1_temperatures(payload: bytes, info: FilamentInfo) -> None:
-    print_temp = _temperature(payload, V1_PRINT_TEMP_OFFSET)
-    bed_temp = _temperature(payload, V1_BED_TEMP_OFFSET)
-    # The extended temperatures are optional and read 0 when unset.
-    info["HOTEND_MIN_TEMP"] = _temperature(payload, V1_MIN_PRINT_TEMP_OFFSET) or print_temp
-    info["HOTEND_MAX_TEMP"] = _temperature(payload, V1_MAX_PRINT_TEMP_OFFSET) or print_temp
-    info["BED_TEMP"] = _temperature(payload, V1_MAX_BED_TEMP_OFFSET) or bed_temp
-    info["FIRST_LAYER_TEMP"] = info["HOTEND_MIN_TEMP"]
-    info["OTHER_LAYER_TEMP"] = info["HOTEND_MIN_TEMP"]
-
-
-def _apply_v2_temperatures(payload: bytes, info: FilamentInfo) -> None:
-    print_temp = _temperature(payload, V2_PRINT_TEMP_OFFSET)
-    # The min and max print temperatures are optional and read 0 when unset.
-    info["HOTEND_MIN_TEMP"] = _temperature(payload, V2_MIN_PRINT_TEMP_OFFSET) or print_temp
-    info["HOTEND_MAX_TEMP"] = _temperature(payload, V2_MAX_PRINT_TEMP_OFFSET) or print_temp
-    info["BED_TEMP"] = _temperature(payload, V2_BED_TEMP_OFFSET)
-    info["FIRST_LAYER_TEMP"] = print_temp
-    info["OTHER_LAYER_TEMP"] = print_temp
-
-
 V1_LAYOUT = TagLayout(
     manufacturer_offset=V1_MANUFACTURER_OFFSET,
     color_offsets=V1_COLOR_OFFSETS,
@@ -128,7 +108,10 @@ V1_LAYOUT = TagLayout(
     weight_offset=V1_WEIGHT_OFFSET,
     min_length=V1_CORE_MIN_LENGTH,
     zero_filled_length=V1_ZERO_FILLED_LENGTH,
-    apply_temperatures=_apply_v1_temperatures,
+    print_temp_offset=V1_PRINT_TEMP_OFFSET,
+    min_print_temp_offset=V1_MIN_PRINT_TEMP_OFFSET,
+    max_print_temp_offset=V1_MAX_PRINT_TEMP_OFFSET,
+    bed_temp_offset=V1_BED_TEMP_OFFSET,
 )
 V2_LAYOUT = TagLayout(
     manufacturer_offset=V2_MANUFACTURER_OFFSET,
@@ -137,7 +120,10 @@ V2_LAYOUT = TagLayout(
     weight_offset=V2_WEIGHT_OFFSET,
     min_length=V2_MIN_LENGTH,
     zero_filled_length=V2_ZERO_FILLED_LENGTH,
-    apply_temperatures=_apply_v2_temperatures,
+    print_temp_offset=V2_PRINT_TEMP_OFFSET,
+    min_print_temp_offset=V2_MIN_PRINT_TEMP_OFFSET,
+    max_print_temp_offset=V2_MAX_PRINT_TEMP_OFFSET,
+    bed_temp_offset=V2_BED_TEMP_OFFSET,
 )
 # Versions below 1.000 were read as v1 before this decoder checked the version; they keep that.
 LAYOUT_BY_MAJOR_VERSION = {0: V1_LAYOUT, 1: V1_LAYOUT, 2: V2_LAYOUT}
@@ -211,6 +197,16 @@ def _apply_dimensions(payload: bytes, layout: TagLayout, info: FilamentInfo) -> 
     info["WEIGHT"] = _u16_be(payload, layout.weight_offset)
 
 
+def _apply_temperatures(payload: bytes, layout: TagLayout, info: FilamentInfo) -> None:
+    print_temp = _temperature(payload, layout.print_temp_offset)
+    # The min and max print temperatures are optional and read 0 when unset.
+    info["HOTEND_MIN_TEMP"] = _temperature(payload, layout.min_print_temp_offset) or print_temp
+    info["HOTEND_MAX_TEMP"] = _temperature(payload, layout.max_print_temp_offset) or print_temp
+    info["BED_TEMP"] = _temperature(payload, layout.bed_temp_offset)
+    info["FIRST_LAYER_TEMP"] = print_temp
+    info["OTHER_LAYER_TEMP"] = print_temp
+
+
 def build_struct(
     records: list[Record], card_uid: list[int], template: FilamentInfo,
 ) -> FilamentInfo | None:
@@ -222,7 +218,7 @@ def build_struct(
     _apply_identity(payload, layout, info)
     _apply_color(payload, layout, info)
     _apply_dimensions(payload, layout, info)
-    layout.apply_temperatures(payload, info)
+    _apply_temperatures(payload, layout, info)
     info["CARD_UID"] = card_uid
     info["OFFICIAL"] = True
     return info

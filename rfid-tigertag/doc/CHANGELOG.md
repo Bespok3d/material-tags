@@ -4,6 +4,8 @@
 
 - A two-color, three-color or rainbow spool now shows every color its tag holds instead of only
   the first.
+- Text only: the description and doc no longer say the brand and material ids are kept; the
+  plugin never read them. The brand shows as TigerTag.
 - Text only: the description and doc now say testing, the channel this plugin is already on,
   instead of experiment.
 

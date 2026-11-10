@@ -19,7 +19,7 @@ each on its own. The collection itself is not installed and has nothing to unins
   no key. (Prusa's own factory spools use an ISO-15693 tag the printer cannot read; the payload
   decoder still works on a tag you write yourself.)
 - **TigerTag (`rfid-tigertag`)** - the TigerTag open NTAG21x layout. Open, no key. Brand and material
-  are kept as numeric ids (their public name maps are not bundled).
+  are not read from the tag (their name maps are GPLv3, not bundled); the brand shows as TigerTag.
 - **Anycubic ACE (`rfid-anycubic`)** - plaintext Anycubic tag (Mifare Ultralight C). SKU, brand,
   material, color, diameter, length, weight, and temperatures decode today, confirmed against real
   tags across three product lines; only the SKU's exact byte width is still open.

@@ -37,7 +37,7 @@ them to a Spoolman spool by UID); they just are not decoded into material/colour
   fields. The encrypted RSA signature blocks are ignored (we only read).
 - A Bambu spool has a tag on each side, and each tag has its own UID. Both tags carry the
   same spool ID (block 9), which the plugin also reads and hands on, so Spoolman Bridge
-  (0.1.39 or newer) knows both sides are one spool. If that block cannot be read, the
+  (0.1.40 or newer) knows both sides are one spool. If that block cannot be read, the
   filament is still decoded and the spool is known by its tag UID only.
 - A two-colour spool (for example the dual-colour silk lines) also carries its second colour
   (block 16), which the plugin reads too. If that block cannot be read, the spool shows its

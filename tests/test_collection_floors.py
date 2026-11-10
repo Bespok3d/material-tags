@@ -17,7 +17,8 @@ FLOORS_FIXES_NEED = {
     # two-color spool shows both its colors.
     "rfid-bambu": (0, 3, 0),
     # Ties both sides of a Bambu spool to one spool and never ties one tag to two spools.
-    "spoolman": (0, 1, 39),
+    # 0.1.37 to 0.1.39 were never published; 0.1.40 is the first release that carries this.
+    "spoolman": (0, 1, 40),
     # Fiberon spools show their own material, not PLA.
     "rfid-creality": (0, 2, 3),
     # Spools with several colors show all of them, not only the first.

@@ -15,7 +15,13 @@
   "updated_at": "2026-11-10",
   "publisher": "PLACEHOLDER",
   "provides": [],
-  "require": [],
+  "require": [
+    {
+      "service": "rfid-service",
+      "cardinality": "one",
+      "version": ">=0.1.15"
+    }
+  ],
   "conflicts": [],
   "requires": {
     "capabilities": [

@@ -33,11 +33,12 @@ Temperature, or the target Print Temperature when the tag leaves them unset; the
 temp is the target Bed Temperature. A tag that stops early is read with the missing
 bytes as zero, as the spec says, but it must reach at least the weight field.
 
-Version 1 tags, and older ones below version 1.000, keep the v1 layout. Core-only v1
-tags (NTAG213) carry a single print temperature; the decoder uses it for both the min
-and max. Tags with the extended block (NTAG215/216) carry explicit min/max nozzle
-temperatures and a max bed temperature, which are preferred when set; one left at 0 is
-unset, so the single print or bed temperature is used instead.
+Version 1 tags, and older ones below version 1.000, keep the v1 layout. The print
+temperature is the target Print Temperature and the bed temp is the target Bed
+Temperature, as in v2. Core-only v1 tags (NTAG213) carry no min/max nozzle
+temperatures, so the decoder uses the print temperature for both. Tags with the
+extended block (NTAG215/216) carry explicit min/max nozzle temperatures, which are
+preferred when set; one left at 0 is unset, so the print temperature is used instead.
 
 A tag of a newer major version (3 or later) is not read, so it is never shown with
 wrong data.

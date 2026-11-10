@@ -57,7 +57,7 @@
     },
     {
       "id": "spoolman",
-      "version": ">=0.1.39"
+      "version": ">=0.1.40"
     }
   ],
   "license": "https://github.com/Bespok3d/material-tags/blob/dev/all-the-tags/doc/LICENSE",

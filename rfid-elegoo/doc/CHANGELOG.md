@@ -2,6 +2,9 @@
 
 ## 0.1.6
 
+- Installing the plugin installs the RFID Spool Reader for you again. It needs version 0.1.15 or
+  newer; update the reader if yours is older. 0.1.5 had dropped that by mistake, so the plugin
+  could be installed alone and read nothing.
 - Text only: the description no longer says experimental; the plugin is already on the testing
   channel, and the doc now says so.
 

@@ -10,10 +10,11 @@ anchored on TigerTag's magic header.
 - **Gotchas:**
   - Both magic variants are handled: standard `0x5BF59264` and Plus `0xBC0FCB97`; the
     blank/init marker `0x6C41A2E1` is declined.
-  - **Brand and material stay as numeric ids.** TigerTag's id->name tables are **GPLv3**, so
-    vendoring them would force this plugin to GPL; it keeps the ids numeric instead. (TigerTag
-    also runs a free public lookup API - a future optional online name-resolution could use it
-    without bundling any GPL data.)
+  - **Brand and material are not read.** TigerTag's id->name tables are **GPLv3**, so
+    vendoring them would force this plugin to GPL. The plugin does not read them; the brand
+    shows as TigerTag and the material as NONE. (TigerTag also runs a free public lookup
+    API - a future optional online name-resolution could use it without bundling any GPL
+    data.)
   - Offsets follow the official TigerTag-RFID-Guide spec (NTAG213, big-endian).
 - Requires the RFID Spool Reader (`rfid-ntag`, auto-installed via `require: rfid-service`).
 

@@ -20,9 +20,9 @@ TigerTag-RFID-Guide spec:
     +36 3    color2        RGB / +40 3 color3 RGB
 
 TigerTag stores brand and material as numeric ids whose human-name maps are GPLv3, so
-this decoder ships the numeric/physical fields (color, diameter, temperatures, weight)
-and leaves the brand/material name strings at the struct template default rather than
-vendoring a GPL table. id_product is surfaced as the struct SKU.
+this decoder does not read those ids, rather than vendoring a GPL table: the brand is set
+to TigerTag and the material is left at the struct template default. id_product is
+surfaced as the struct SKU.
 
 Pure helper: stdlib only, no relative imports, unit-testable. The registration shell
 supplies the FILAMENT_INFO_STRUCT template.

@@ -7,8 +7,11 @@
   diameter, weight and temperatures, instead of wrong values.
 - Tags in a future format this decoder does not know yet are no longer read with wrong values.
 - Only the first OpenTag3D record on a tag is read, as the OpenTag3D spec says.
-- A version 1 tag that leaves its min or max nozzle temperature or its max bed temperature at 0
-  now shows its print or bed temperature for that one, instead of 0.
+- A version 1 tag that leaves its min or max nozzle temperature at 0 now shows its print
+  temperature for that one, instead of 0.
+- Version 1 tags now show the tag's print temperature for every layer and the tag's bed
+  temperature for the bed. Before, a tag that also stored nozzle and bed ranges showed its lowest
+  nozzle temperature and its highest bed temperature.
 - A tag whose data type name mixes capital and small letters is now read too.
 - Text only: the description and doc now say testing, the channel this plugin is already on,
   instead of experiment.

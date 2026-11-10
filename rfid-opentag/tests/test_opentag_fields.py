@@ -3,7 +3,7 @@
 
 These build OpenTag3D payloads at the spec's verified byte offsets and pin the
 produced FILAMENT_INFO_STRUCT fields, including the v1 core temperatures and the
-optional extended ones that override them, the v2 layout, the version gate and the MIME-type gating.
+optional extended nozzle min and max, the v2 layout, the version gate and the MIME-type gating.
 """
 from opentag_fields import build_struct
 
@@ -26,7 +26,7 @@ TEMPLATE = {
 DEFAULT_FIELDS = {
     "material": "PLA", "modifiers": "CF", "manufacturer": "Polymaker",
     "rgba": (0x10, 0x20, 0x30, 0xFF), "diameter_um": 1750, "weight_g": 1000,
-    "print_temp_c": 210, "bed_temp_c": 60, "ext_min_c": 200, "ext_max_c": 220, "ext_bed_c": 60,
+    "print_temp_c": 210, "bed_temp_c": 60, "ext_min_c": 200, "ext_max_c": 220, "ext_max_bed_c": 70,
 }
 
 
@@ -55,7 +55,7 @@ def build_payload(size: int, fields: dict[str, object]) -> bytes:
     if size > 0xB7:
         buf[0xB4] = int(fields["ext_min_c"]) // 5
         buf[0xB5] = int(fields["ext_max_c"]) // 5
-        buf[0xB7] = int(fields["ext_bed_c"]) // 5
+        buf[0xB7] = int(fields["ext_max_bed_c"]) // 5
     return bytes(buf)
 
 
@@ -64,6 +64,8 @@ def opentag_record(payload: bytes) -> dict[str, object]:
 
 
 def test_decodes_extended_payload() -> None:
+    # Spec v1: Print Temperature (0x60) and Bed Temperature (0x61) are the recommended targets;
+    # the extended block only bounds the nozzle, and its max bed is a limit, not a target.
     record = opentag_record(build_payload(EXTENDED_LENGTH, DEFAULT_FIELDS))
     info = build_struct([record], CARD_UID, dict(TEMPLATE))
     assert info is not None
@@ -78,7 +80,8 @@ def test_decodes_extended_payload() -> None:
     assert info["WEIGHT"] == 1000
     assert info["HOTEND_MIN_TEMP"] == 200
     assert info["HOTEND_MAX_TEMP"] == 220
-    assert info["FIRST_LAYER_TEMP"] == 200
+    assert info["FIRST_LAYER_TEMP"] == 210
+    assert info["OTHER_LAYER_TEMP"] == 210
     assert info["BED_TEMP"] == 60
     assert info["CARD_UID"] == CARD_UID
     assert info["OFFICIAL"] is True
@@ -93,9 +96,9 @@ def test_core_only_payload_uses_single_print_temp() -> None:
     assert info["BED_TEMP"] == 60
 
 
-def test_extended_temperatures_left_at_zero_fall_back_to_the_core_ones() -> None:
+def test_extended_nozzle_temperatures_left_at_zero_fall_back_to_the_print_temp() -> None:
     # Spec reader: an optional int left at 0 is not set.
-    fields = {**DEFAULT_FIELDS, "ext_min_c": 0, "ext_max_c": 0, "ext_bed_c": 0}
+    fields = {**DEFAULT_FIELDS, "ext_min_c": 0, "ext_max_c": 0}
     record = opentag_record(build_payload(EXTENDED_LENGTH, fields))
     info = build_struct([record], CARD_UID, dict(TEMPLATE))
     assert info is not None
