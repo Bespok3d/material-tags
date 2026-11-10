@@ -18,7 +18,8 @@ field names (first match wins, case-sensitive) into the filament record:
 - **Brand / vendor** from `brand`, `vendor`, `manufacturer`, or `make`
 - **Material type** from `type`, `material`, or `material_type`
 - **Sub-type** from `subtype`, `sub_type`, or `variant`
-- **Color** from `color_hex`, `color`, `colour`, or `hex` (`#RRGGBB` or `RRGGBB`)
+- **Color** from `color_hex`, `color`, `colour`, or `hex` (`#RRGGBB` or `RRGGBB`), plus up to four more from
+  `additional_color_hexes`
 - **Nozzle min / max** from `min_temp` / `max_temp` (also `nozzle_*`, `hotend_*`, `temp_*`)
 - **Bed temp** from `bed_temp`, `bed_max_temp`, `bed_min_temp`, or `bed`
 - **Diameter** from `diameter` or `diameter_mm` (mm)

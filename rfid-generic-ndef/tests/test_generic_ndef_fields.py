@@ -80,3 +80,31 @@ def test_falls_back_to_defaults_for_missing_numbers() -> None:
     assert info["HOTEND_MIN_TEMP"] == 0
     assert info["DIAMETER"] == 175
     assert info["RGB_1"] == 0xFFFFFF
+
+
+def test_decodes_additional_colors() -> None:
+    # Same field and format as OpenSpool: up to 4 extra hex strings after color_hex.
+    tag = {"type": "PLA", "color_hex": "AFAFAF", "additional_color_hexes": ["EEFFEE", "#FF00FF"]}
+    info = build_struct([json_record(tag)], CARD_UID, dict(TEMPLATE))
+    assert info is not None
+    assert info["COLOR_NUMS"] == 3
+    assert [info["RGB_1"], info["RGB_2"], info["RGB_3"]] == [0xAFAFAF, 0xEEFFEE, 0xFF00FF]
+    assert info["RGB_4"] == 0xFFFFFF
+    assert info["ARGB_COLOR"] == 0xFFAFAFAF
+
+
+def test_keeps_at_most_four_additional_colors() -> None:
+    extra_hexes = ["010101", "020202", "030303", "040404", "050505"]
+    tag = {"type": "PLA", "color_hex": "000000", "additional_color_hexes": extra_hexes}
+    info = build_struct([json_record(tag)], CARD_UID, dict(TEMPLATE))
+    assert info is not None
+    assert info["COLOR_NUMS"] == 5
+    assert info["RGB_5"] == 0x040404
+
+
+def test_ignores_additional_colors_that_are_not_a_list() -> None:
+    tag = {"type": "PLA", "color_hex": "AFAFAF", "additional_color_hexes": "EEFFEE"}
+    info = build_struct([json_record(tag)], CARD_UID, dict(TEMPLATE))
+    assert info is not None
+    assert info["COLOR_NUMS"] == 1
+    assert info["RGB_2"] == 0xFFFFFF

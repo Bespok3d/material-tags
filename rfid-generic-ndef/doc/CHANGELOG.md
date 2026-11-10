@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.1
+
+- A tag that lists extra colors now shows all of them, up to five in total, instead of only the first.
+
 ## 0.1.0
 
 - First release. Best-effort decoder for untagged JSON-over-NDEF filament tags:

@@ -43,6 +43,9 @@ TEMPERATURE_ALIASES: dict[str, tuple[str, ...]] = {
 WEIGHT_ALIASES = ("weight", "weight_g", "net_weight")
 DIAMETER_ALIASES = ("diameter", "diameter_mm")
 COLOR_ALIASES = ("color_hex", "color", "colour", "hex")
+# The OpenSpool name for a multi-colour spool's extra colours: a list of hex strings.
+EXTRA_COLORS_FIELD = "additional_color_hexes"
+MAX_EXTRA_COLORS = 4   # the printer shows at most five colours per spool
 BED_ALIASES = ("bed_temp", "bed_max_temp", "bed_min_temp", "bed")
 KNOWN_FIELDS = (
     "brand", "vendor", "type", "material", "color_hex", "color", "min_temp", "max_temp",
@@ -118,10 +121,18 @@ def _apply_numbers(data: Json, info: dict[str, Any]) -> None:
     info["OTHER_LAYER_TEMP"] = info["HOTEND_MIN_TEMP"]
 
 
+def _extra_colors(data: Json) -> list[int]:
+    extra_hexes = data.get(EXTRA_COLORS_FIELD)
+    if not isinstance(extra_hexes, list):
+        return []
+    return [_parse_hex_color(extra_hex) for extra_hex in extra_hexes[:MAX_EXTRA_COLORS]]
+
+
 def _apply_color(data: Json, info: dict[str, Any]) -> None:
     rgb = _parse_hex_color(_first_alias(data, COLOR_ALIASES))
-    info["RGB_1"] = rgb
-    info["COLOR_NUMS"] = 1
+    colors = [rgb, *_extra_colors(data)]
+    info.update({f"RGB_{slot}": color for slot, color in enumerate(colors, start=1)})
+    info["COLOR_NUMS"] = len(colors)
     info["ALPHA"] = OPAQUE_ALPHA
     info["ARGB_COLOR"] = OPAQUE_ALPHA << ALPHA_SHIFT | rgb
 
