@@ -3,7 +3,7 @@
 Clean-room decoder for the filament block on **factory Elegoo (Centauri)** spool tags, anchored on
 Elegoo's `36 EE EE EE EE` header and manufacturer marker.
 
-- **Status:** experiment. No key, no reader of its own: rfid-ntag's stock `NtagReader` reads the tag
+- **Status:** testing. No key, no reader of its own: rfid-ntag's stock `NtagReader` reads the tag
   and hands the pages to this payload parser. Needs rfid-ntag **0.1.15+** (its chunked page reader;
   older versions discard the whole read of this 44-page tag).
 - **Decodes:** material, color (RGB888), nozzle temperature range, diameter, weight, UID.

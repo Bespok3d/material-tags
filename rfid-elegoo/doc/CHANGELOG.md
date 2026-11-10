@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.6
+
+- Text only: the description no longer says experimental; the plugin is already on the testing
+  channel, and the doc now says so.
+
 ## 0.1.5
 
 - Factory Elegoo spools now read on a Snapmaker U1. On a real U1 (2026-09-23) a factory Elegoo

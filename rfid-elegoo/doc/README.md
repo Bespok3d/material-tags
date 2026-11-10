@@ -1,4 +1,4 @@
-# Elegoo Filament Tag (EXPERIMENTAL)
+# Elegoo Filament Tag
 
 > **Status: factory Elegoo spools read on a Snapmaker U1, with one extra step when loading.**
 > Elegoo's tag is small, sits inside the cardboard, and sits further out than the U1's reader reaches
@@ -213,7 +213,7 @@ U1, please report:
 
 ## Status
 
-Experiment channel. The decode is unit-tested against the complete memory of a real factory spool,
+Testing channel. The decode is unit-tested against the complete memory of a real factory spool,
 every decoded field matches that spool's label, and the spool reads on a real U1 once its tag is
-held over the reader. It stays on the experiment channel until more spools, materials and printers
+held over the reader. It stays on the testing channel until more spools, materials and printers
 confirm it.
