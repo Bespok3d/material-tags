@@ -67,21 +67,23 @@ SINGLE_COLOR = 1
 
 CARD_UID_INDEXES = (0, 1, 2, 4, 5, 6, 7)
 CARD_UID_MIN_BYTES = 8
-RED_SHIFT = 16
-GREEN_SHIFT = 8
+ONE_BYTE_SHIFT = 8
+TWO_BYTES_SHIFT = 16
 ALPHA_SHIFT = 24
 
 
 def _u16_be(dump: bytes, offset: int) -> int:
-    return (dump[offset] << GREEN_SHIFT) | dump[offset + 1]
+    return (dump[offset] << ONE_BYTE_SHIFT) | dump[offset + 1]
 
 
 def _u24_be(dump: bytes, offset: int) -> int:
-    return (dump[offset] << RED_SHIFT) | (dump[offset + 1] << GREEN_SHIFT) | dump[offset + 2]
+    return (
+        (dump[offset] << TWO_BYTES_SHIFT) | (dump[offset + 1] << ONE_BYTE_SHIFT) | dump[offset + 2]
+    )
 
 
 def _u32_be(dump: bytes, offset: int) -> int:
-    return (_u16_be(dump, offset) << RED_SHIFT) | _u16_be(dump, offset + 2)
+    return (_u16_be(dump, offset) << TWO_BYTES_SHIFT) | _u16_be(dump, offset + 2)
 
 
 def _card_uid(dump: bytes) -> list[int]:
