@@ -11,6 +11,7 @@ import pytest
 REPO_ROOT = Path(__file__).resolve().parents[1]
 COLLECTIONS = ("all-the-tags", "materials-tracker-plus")
 FLOOR_PREFIX = ">="
+PRERELEASE_SEPARATOR = "-"
 
 FLOORS_FIXES_NEED = {
     # Both sides of a Bambu spool name one shared spool identity, so it stays one spool, and a
@@ -36,7 +37,10 @@ def member_floors(collection: str) -> dict[str, str]:
 
 
 def version_parts(version: str) -> tuple[int, ...]:
-    return tuple(int(part) for part in version.split("."))
+    # A staging prerelease (0.2.0-pre) carries the same code as the release it becomes, so it
+    # reaches the same floors; the app ranks versions the same way.
+    release = version.split(PRERELEASE_SEPARATOR)[0]
+    return tuple(int(part) for part in release.split("."))
 
 
 def version_numbers(floor: str) -> tuple[int, ...]:
