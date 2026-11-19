@@ -157,7 +157,7 @@ def _apply_date(main: dict[Any, Any], info: dict[str, Any]) -> None:
     seconds = main.get(KEY_MANUFACTURED_DATE)
     if not isinstance(seconds, int) or isinstance(seconds, bool) or seconds <= 0:
         return
-    moment = datetime.datetime.fromtimestamp(seconds, datetime.timezone.utc)
+    moment = datetime.datetime.fromtimestamp(seconds, datetime.UTC)
     info["MF_DATE"] = moment.strftime("%Y%m%d")
 
 
